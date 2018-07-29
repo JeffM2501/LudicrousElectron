@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LudicrousElectron.Engine", "Engine\LudicrousElectron.Engine.csproj", "{547B86A8-43A9-4683-A862-3D8136B3CF3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2DNet", "Box2DNet\Box2DNet\Box2DNet.csproj", "{8DCE88BD-5355-4AED-B7FA-6844EC4FB9B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{547B86A8-43A9-4683-A862-3D8136B3CF3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{547B86A8-43A9-4683-A862-3D8136B3CF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{547B86A8-43A9-4683-A862-3D8136B3CF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{547B86A8-43A9-4683-A862-3D8136B3CF3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DCE88BD-5355-4AED-B7FA-6844EC4FB9B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DCE88BD-5355-4AED-B7FA-6844EC4FB9B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DCE88BD-5355-4AED-B7FA-6844EC4FB9B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DCE88BD-5355-4AED-B7FA-6844EC4FB9B2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BCE62487-6690-44E2-8EB2-44E949D2B912}
+	EndGlobalSection
+EndGlobal
