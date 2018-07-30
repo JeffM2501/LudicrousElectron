@@ -56,7 +56,13 @@ namespace LudicrousElectron.Engine.RenderChain
 		private List<RenderLayerItem> RenderItemList = new List<RenderLayerItem>();
 		private List<IRenderable> ChildLayers = new List<IRenderable>();
 
-		public void AddChildLayer(IRenderable child)
+        public RenderLayer(IRenderable child = null)
+        {
+            if (child != null)
+                AddChildLayer(child);
+        }
+
+        public void AddChildLayer(IRenderable child)
 		{
 			ChildLayers.Add(child);
 		}

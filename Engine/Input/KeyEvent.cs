@@ -15,5 +15,25 @@ namespace LudicrousElectron.Engine.Input
         public bool Control = false;    //< Is the Control key pressed?
         public bool Shift = false;      //< Is the Shift key pressed?
         public bool Meta = false;       //< Is the System key pressed?
+
+        public static bool operator == (KeyEvent lhs, KeyEvent rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(KeyEvent lhs, KeyEvent rhs)
+        {
+            return !lhs.Equals(rhs);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj as KeyEvent == null)
+                return false;
+
+            KeyEvent other = obj as KeyEvent;
+
+            return (Code == other.Code && Alt == other.Alt && Control == other.Control && Shift == other.Shift && Meta == other.Meta);
+        }
     }
 }

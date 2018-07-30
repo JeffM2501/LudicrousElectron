@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using LudicrousElectron.Engine.Collisions;
 using LudicrousElectron.Engine.Graphics.Textures;
+using LudicrousElectron.Engine.Window;
 
 namespace LudicrousElectron.Engine
 {
@@ -30,5 +31,30 @@ namespace LudicrousElectron.Engine
 
 			Running = true;
 		}
+
+        public static void Run()
+        {
+           WindowManager.MainWindow?.Run();
+        }
+
+        internal static void UpdateMain()
+        {
+
+        }
+
+        internal static void UpdateChild(int childID)
+        {
+
+        }
+
+        internal static void RenderMain()
+        {
+
+        }
+
+        internal static void RenderChild(int childID)
+        {
+
+        }
 	}
 }
