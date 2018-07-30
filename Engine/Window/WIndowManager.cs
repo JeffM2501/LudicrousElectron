@@ -21,9 +21,13 @@ namespace LudicrousElectron.Engine.Window
 			public virtual void Render() { }
 
 			public List<Window> Children = new List<Window>();
+
+            internal int ContextID = int.MinValue;
 		}
 
 		private static Window MainWindow = null;
+
+        internal static int CurrentContextID = int.MinValue;
 
 		public class WindowInfo
 		{
@@ -39,8 +43,11 @@ namespace LudicrousElectron.Engine.Window
 				return false;
 
 			MainWindow = new Window(info.Size.x, info.Size.y, GraphicsMode.Default, "LEWindow", info.Fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.FixedWindow);
+            MainWindow.ContextID = 1;
 
-			return true;
+            CurrentContextID = MainWindow.ContextID;
+
+            return true;
 		}
 	}
 }

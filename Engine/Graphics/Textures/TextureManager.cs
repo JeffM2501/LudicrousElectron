@@ -114,27 +114,6 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			texture.FullPath = string.Empty;
 			texture.ImageData = bitmap;
 
-			GL.GenTextures(1, out texture.GLID);
-
-			GL.Enable(EnableCap.Texture2D);
-
-			GL.BindTexture(TextureTarget.Texture2D, texture.GLID);
-
-			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-			//GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
-			bitmap.UnlockBits(data);
-			//bitmap.Dispose();
-
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, GetRepeat());
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, GetRepeat());
-
-			GL.BindTexture(TextureTarget.Texture2D, texture.GLID);
-
 			return texture;
 		}
 
