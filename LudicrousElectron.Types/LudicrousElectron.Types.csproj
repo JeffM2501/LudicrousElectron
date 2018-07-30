@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{547B86A8-43A9-4683-A862-3D8136B3CF3D}</ProjectGuid>
+    <ProjectGuid>{FB7F6B89-80BB-4F09-8384-39107B57B754}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LudicrousElectron.Engine</RootNamespace>
-    <AssemblyName>LudicrousElectron.Engine</AssemblyName>
+    <RootNamespace>LudicrousElectron.Types</RootNamespace>
+    <AssemblyName>LudicrousElectron.Types</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\LunarLambda\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,34 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AssetManager.cs" />
-    <Compile Include="Assets\IAssetProvider.cs" />
-    <Compile Include="Assets\Providers\DirectoryAssetProvider.cs" />
-    <Compile Include="Assets\Providers\PackAssetProvider.cs" />
-    <Compile Include="Collisions\CollisionManager.cs" />
-    <Compile Include="Collisions\ICollisionable.cs" />
-    <Compile Include="Core.cs" />
-    <Compile Include="Graphics\Textures\TextureInfo.cs" />
-    <Compile Include="Graphics\Textures\TextureManager.cs" />
-    <Compile Include="IO\StreamUtils.cs" />
+    <Compile Include="Rect2Df.cs" />
+    <Compile Include="Rect2Di.cs" />
+    <Compile Include="Vector2f.cs" />
+    <Compile Include="Vector2i.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RenderChain\IRenderable.cs" />
-    <Compile Include="RenderChain\RenderLayer.cs" />
-    <Compile Include="Window\WindowManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Box2DNet\Box2DNet\Box2DNet.csproj">
-      <Project>{8dce88bd-5355-4aed-b7fa-6844ec4fb9b2}</Project>
-      <Name>Box2DNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LudicrousElectron.Types\LudicrousElectron.Types.csproj">
-      <Project>{fb7f6b89-80bb-4f09-8384-39107b57b754}</Project>
-      <Name>LudicrousElectron.Types</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
