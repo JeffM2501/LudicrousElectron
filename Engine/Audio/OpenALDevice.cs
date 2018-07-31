@@ -29,7 +29,6 @@ using OpenTK;
 using OpenTK.Audio.OpenAL;
 
 #endregion
-using LudicrousElectron.Types;
 
 namespace Microsoft.Xna.Framework.Audio
 {
@@ -130,11 +129,13 @@ namespace Microsoft.Xna.Framework.Audio
 		// OpenAL Filter Handle
 		private uint INTERNAL_alFilter;
 
-		#endregion
+        #endregion
 
-		#region Public Constructor
+        #region Public Constructor
 
-		public OpenALDevice()
+        private EffectsExtension Effects = null;
+
+        public OpenALDevice()
 		{
 			string envDevice = Environment.GetEnvironmentVariable("FNA_AUDIO_DEVICE_NAME");
 			if (String.IsNullOrEmpty(envDevice))
@@ -173,11 +174,13 @@ namespace Microsoft.Xna.Framework.Audio
 				0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f
 			};
 			AL.Listener(ALListenerfv.Orientation, ref ori);
-			AL.Listener(AL10.AL_POSITION, 0.0f, 0.0f, 0.0f);
-			AL.Listener(AL10.AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-			AL.Listener(AL10.AL_GAIN, 1.0f);
+			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
+			AL.Listener(ALListener3f.Velocity, 0.0f, 0.0f, 0.0f);
+			AL.Listener(ALListenerf.Gain, 1.0f);
 
-			EFX.alGenFilters(1, out INTERNAL_alFilter);
+            Effects = new EffectsExtension();
+
+            Effects.GenFilters(1, out INTERNAL_alFilter);
 		}
 
 		#endregion
@@ -186,17 +189,18 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public void Dispose()
 		{
-			EFX.alDeleteFilters(1, ref INTERNAL_alFilter);
+            Effects.DeleteFilters(1, ref INTERNAL_alFilter);
 
-			ALC10.alcMakeContextCurrent(IntPtr.Zero);
-			if (alContext != IntPtr.Zero)
+            Alc.MakeContextCurrent(ContextHandle.Zero);
+
+			if (alContext != ContextHandle.Zero)
 			{
-				ALC10.alcDestroyContext(alContext);
-				alContext = IntPtr.Zero;
+                Alc.DestroyContext(alContext);
+				alContext = ContextHandle.Zero;
 			}
 			if (alDevice != IntPtr.Zero)
 			{
-				ALC10.alcCloseDevice(alDevice);
+                Alc.CloseDevice(alDevice);
 				alDevice = IntPtr.Zero;
 			}
 		}
@@ -226,12 +230,12 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public void SetDopplerScale(float scale)
 		{
-			AL10.alDopplerFactor(scale);
+            AL.DopplerFactor(scale);
 		}
 
 		public void SetSpeedOfSound(float speed)
 		{
-			AL11.alSpeedOfSound(speed);
+            AL.SpeedOfSound(speed);
 		}
 
 		#endregion
@@ -241,7 +245,7 @@ namespace Microsoft.Xna.Framework.Audio
 		public IALBuffer GenBuffer(int sampleRate, AudioChannels channels)
 		{
 			uint result;
-			AL10.alGenBuffers(1, out result);
+            AL.GenBuffers(1, out result);
 #if VERBOSE_AL_DEBUGGING
 			CheckALError();
 #endif
@@ -260,10 +264,11 @@ namespace Microsoft.Xna.Framework.Audio
 			uint result;
 
 			// Generate the buffer now, in case we need to perform alBuffer ops.
-			AL10.alGenBuffers(1, out result);
+			AL.GenBuffers(1, out result);
 #if VERBOSE_AL_DEBUGGING
 			CheckALError();
 #endif
+
 
 			int format;
 			int length = data.Length;
@@ -272,7 +277,7 @@ namespace Microsoft.Xna.Framework.Audio
 				format = (channels == 2) ?
 					ALEXT.AL_FORMAT_STEREO_MSADPCM_SOFT :
 					ALEXT.AL_FORMAT_MONO_MSADPCM_SOFT;
-				AL10.alBufferi(
+				AL.Bufferi(
 					result,
 					ALEXT.AL_UNPACK_BLOCK_ALIGNMENT_SOFT,
 					(int) formatParameter
@@ -631,7 +636,7 @@ namespace Microsoft.Xna.Framework.Audio
 #endif
 		}
 
-		public void SetSourcePosition(IALSource source, Vector3f pos)
+		public void SetSourcePosition(IALSource source, Vector3 pos)
 		{
 			AL10.alSource3f(
 				(source as OpenALSource).Handle,
@@ -1183,8 +1188,8 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public void StopDeviceCapture(IntPtr handle)
 		{
-			ALC11.alcCaptureStop(handle);
-			ALC11.alcCaptureCloseDevice(handle);
+			Alc.CaptureStop(handle);
+			Alc.CaptureCloseDevice(handle);
 #if VERBOSE_AL_DEBUGGING
 			if (CheckALCError())
 			{
@@ -1196,16 +1201,11 @@ namespace Microsoft.Xna.Framework.Audio
 		public int CaptureSamples(IntPtr handle, IntPtr buffer, int count)
 		{
 			int[] samples = new int[1] { 0 };
-			ALC10.alcGetIntegerv(
-				handle,
-				ALC11.ALC_CAPTURE_SAMPLES,
-				1,
-				samples
-			);
-			samples[0] = Math.Min(samples[0], count / 2);
+            Alc.GetInteger(handle, AlcGetInteger.CaptureSamples, 1, samples);
+            samples[0] = Math.Min(samples[0], count / 2);
 			if (samples[0] > 0)
 			{
-				ALC11.alcCaptureSamples(handle, buffer, samples[0]);
+				Alc.CaptureSamples(handle, buffer, samples[0]);
 			}
 #if VERBOSE_AL_DEBUGGING
 			if (CheckALCError())
@@ -1219,12 +1219,7 @@ namespace Microsoft.Xna.Framework.Audio
 		public bool CaptureHasSamples(IntPtr handle)
 		{
 			int[] samples = new int[1] { 0 };
-			ALC10.alcGetIntegerv(
-				handle,
-				ALC11.ALC_CAPTURE_SAMPLES,
-				1,
-				samples
-			);
+		    Alc.GetInteger(handle, AlcGetInteger.CaptureSamples,1,samples);
 			return samples[0] > 0;
 		}
 
@@ -1234,14 +1229,14 @@ namespace Microsoft.Xna.Framework.Audio
 
 		private void CheckALError()
 		{
-			int err = AL10.alGetError();
+			ALError err = AL.GetError();
 
-			if (err == AL10.AL_NO_ERROR)
+            if (err == ALError.NoError)
 			{
 				return;
 			}
 
-			FNALoggerEXT.LogError("OpenAL Error: " + err.ToString("X4"));
+//			FNALoggerEXT.LogError("OpenAL Error: " + err.ToString("X4"));
 #if VERBOSE_AL_DEBUGGING
 			throw new InvalidOperationException("OpenAL Error!");
 #endif
@@ -1249,14 +1244,14 @@ namespace Microsoft.Xna.Framework.Audio
 
 		private bool CheckALCError()
 		{
-			int err = ALC10.alcGetError(alDevice);
+			AlcError err = Alc.GetError(alDevice);
 
-			if (err == ALC10.ALC_NO_ERROR)
+			if (err == AlcError.NoError)
 			{
 				return false;
 			}
 
-			FNALoggerEXT.LogError("OpenAL Device Error: " + err.ToString("X4"));
+//			FNALoggerEXT.LogError("OpenAL Device Error: " + err.ToString("X4"));
 			return true;
 		}
 
@@ -1266,16 +1261,17 @@ namespace Microsoft.Xna.Framework.Audio
 
 		private static readonly int[] XNAToShort = new int[]
 		{
-			AL10.AL_NONE,			// NOPE
-			AL10.AL_FORMAT_MONO16,		// AudioChannels.Mono
-			AL10.AL_FORMAT_STEREO16,	// AudioChannels.Stereo
+   
+			0,			                // NOPE
+			(int)ALFormat.Mono16,		// AudioChannels.Mono
+			(int)ALFormat.Stereo16,	    // AudioChannels.Stereo
 		};
 
 		private static readonly int[] XNAToFloat = new int[]
 		{
-			AL10.AL_NONE,			// NOPE
-			ALEXT.AL_FORMAT_MONO_FLOAT32,	// AudioChannels.Mono
-			ALEXT.AL_FORMAT_STEREO_FLOAT32	// AudioChannels.Stereo
+			0,			        // NOPE
+			(int)ALFormat.MonoFloat32Ext,	// AudioChannels.Mono
+			(int)ALFormat.StereoFloat32Ext	// AudioChannels.Stereo
 		};
 
 		#endregion
@@ -1284,20 +1280,18 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public ReadOnlyCollection<RendererDetail> GetDevices()
 		{
-			IntPtr deviceList = ALC10.alcGetString(IntPtr.Zero, ALC11.ALC_ALL_DEVICES_SPECIFIER);
+			var deviceList = Alc.GetString(IntPtr.Zero, AlcGetStringList.AllDevicesSpecifier);
 			List<RendererDetail> renderers = new List<RendererDetail>();
 
-			int i = 0;
-			string curString = Marshal.PtrToStringAnsi(deviceList);
-			while (!String.IsNullOrEmpty(curString))
+            int i = -1;
+			foreach (var curString in deviceList)
 			{
-				renderers.Add(new RendererDetail(
-					curString,
-					i.ToString()
-				));
-				i += 1;
-				deviceList += curString.Length + 1;
-				curString = Marshal.PtrToStringAnsi(deviceList);
+                i++;
+
+                if (String.IsNullOrEmpty(curString))
+                    continue;
+
+				renderers.Add(new RendererDetail( curString, i.ToString() ));
 			}
 
 			return new ReadOnlyCollection<RendererDetail>(renderers);
@@ -1305,15 +1299,13 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public ReadOnlyCollection<Microphone> GetCaptureDevices()
 		{
-			IntPtr deviceList = ALC10.alcGetString(IntPtr.Zero, ALC11.ALC_CAPTURE_DEVICE_SPECIFIER);
+			string curString = Alc.GetString(IntPtr.Zero, AlcGetString.CaptureDefaultDeviceSpecifier);
 			List<Microphone> microphones = new List<Microphone>();
 
-			string curString = Marshal.PtrToStringAnsi(deviceList);
-			while (!String.IsNullOrEmpty(curString))
+
+			if (!String.IsNullOrEmpty(curString))
 			{
 				microphones.Add(new Microphone(curString));
-				deviceList += curString.Length + 1;
-				curString = Marshal.PtrToStringAnsi(deviceList);
 			}
 
 			return new ReadOnlyCollection<Microphone>(microphones);
