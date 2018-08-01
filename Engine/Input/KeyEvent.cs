@@ -35,5 +35,10 @@ namespace LudicrousElectron.Engine.Input
 
             return (Code == other.Code && Alt == other.Alt && Control == other.Control && Shift == other.Shift && Meta == other.Meta);
         }
+
+        public override int GetHashCode()
+        {
+            return Code.GetHashCode();
+        }
     }
 }

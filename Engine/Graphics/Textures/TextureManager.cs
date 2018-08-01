@@ -47,8 +47,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
 			if (subDiv.x > 0 || subDiv.y > 0)
 			{
-				subDiv.x = Math.Max(subDiv.x, 1);
-				subDiv.y = Math.Max(subDiv.y, 1);
+				subDiv.x = System.Math.Max(subDiv.x, 1);
+				subDiv.y = System.Math.Max(subDiv.y, 1);
 
 				int w = info.ImageData.Width / subDiv.x;
 				int h = info.ImageData.Height / subDiv.y;
