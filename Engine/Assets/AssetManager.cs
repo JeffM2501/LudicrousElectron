@@ -45,5 +45,18 @@ namespace LudicrousElectron.Assets
 			}
 			return outStream;
 		}
+
+        public static string GetAssetFullPath(string assetPath)
+        {
+            string outPath = string.Empty;
+            foreach (var provider in AssetProviders)
+            {
+                outPath = provider.GetAssetFullPath(assetPath);
+                if (outPath != string.Empty)
+                    return outPath;
+            }
+
+            return outPath;
+        }
 	}
 }

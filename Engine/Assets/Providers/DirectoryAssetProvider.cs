@@ -64,7 +64,7 @@ namespace LudicrousElectron.Assets.Providers
 			if (Path.DirectorySeparatorChar == '\\')
 				path = path.Replace("/", "\\");
 
-			return Path.Combine(RootDir.FullName, path);
+			return new FileInfo(Path.Combine(RootDir.FullName, path)).FullName;
 		}
 
 		public virtual Stream GetAssetStream(string assetPath)
@@ -78,5 +78,17 @@ namespace LudicrousElectron.Assets.Providers
 
 			return new FileInfo(fullPath).OpenRead();
 		}
-	}
+
+        public virtual string GetAssetFullPath(string assetPath)
+        {
+            if (assetPath.Contains(".."))
+                return string.Empty;
+
+            string fullPath = GetAbsPath(assetPath);
+            if (!File.Exists(fullPath))
+                return string.Empty;
+
+            return fullPath;
+        }
+    }
 }

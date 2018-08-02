@@ -13,6 +13,8 @@ namespace LudicrousElectron.Assets.Providers
 	{
 		protected FileInfo BaseFile = null;
 
+        protected Dictionary<string, FileInfo> TempFiles = new Dictionary<string, FileInfo>();
+
 		protected class PackedAssetInfo
 		{
 			public string FileName = string.Empty;
@@ -59,7 +61,15 @@ namespace LudicrousElectron.Assets.Providers
 				fs.Close();
 		}
 
-		public List<string> FindAssets(string searchPattern)
+        ~PackAssetProvider()
+        {
+            foreach (var tmp in TempFiles)
+                tmp.Value.Delete();
+
+            TempFiles.Clear();
+        }
+
+        public List<string> FindAssets(string searchPattern)
 		{
 			return new List<string>(Assets.Keys.ToArray());
 		}
@@ -90,5 +100,33 @@ namespace LudicrousElectron.Assets.Providers
 
 			return ms;
 		}
-	}
+
+        public string GetAssetFullPath(string assetPath)
+        {
+            if (TempFiles.ContainsKey(assetPath))
+                return TempFiles[assetPath].FullName;
+
+            Stream s = GetAssetStream(assetPath);
+            if (s == null)
+                return string.Empty;
+
+            FileInfo tmp = new FileInfo(Path.GetTempFileName());
+            FileStream fs = tmp.OpenWrite();
+
+            byte[] buffer = new byte[1024 * 100];
+            while (true)
+            {
+                int read = s.Read(buffer, 0, buffer.Length);
+                fs.Write(buffer, 0, read);
+                if (read < buffer.Length)
+                    break;
+            }
+
+            fs.Close();
+            s.Close();
+            TempFiles.Add(assetPath, tmp);
+
+            return tmp.FullName;
+        }
+    }
 }

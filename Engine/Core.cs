@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using LudicrousElectron.Engine.Audio;
 using LudicrousElectron.Engine.Collisions;
 using LudicrousElectron.Engine.Graphics.Textures;
 using LudicrousElectron.Engine.Window;
+using Microsoft.Xna.Framework;
 
 namespace LudicrousElectron.Engine
 {
@@ -27,19 +28,24 @@ namespace LudicrousElectron.Engine
 
 		public static void Setup()
 		{
-			CollisionManager.Initalize();
+            FrameworkDispatcher.Update();
+
+            CollisionManager.Initalize();
 
 			Running = true;
 		}
 
         public static void Run()
         {
-           WindowManager.MainWindow?.Run();
+            WindowManager.MainWindow?.Run();
+
+            SoundManager.Cleanup();
         }
 
         internal static void UpdateMain()
         {
-
+            FrameworkDispatcher.Update();
+            SoundManager.Update();
         }
 
         internal static void UpdateChild(int childID)
