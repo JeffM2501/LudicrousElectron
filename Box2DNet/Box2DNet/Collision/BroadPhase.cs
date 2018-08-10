@@ -57,7 +57,7 @@ namespace Box2DNet.Collision
 		public ushort[/*2*/] LowerValues = new ushort[2];
 		public ushort[/*2*/] UpperValues = new ushort[2];
 	}
-#warning "CAS"
+//#warning "CAS"
 	public class Bound
 	{
 		public bool IsLower { get { return (Value & (ushort)1) == (ushort)0; } }
