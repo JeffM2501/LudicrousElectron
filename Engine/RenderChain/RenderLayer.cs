@@ -1,91 +1,144 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+
+using LudicrousElectron.Engine.Graphics;
 using LudicrousElectron.Engine.Window;
+
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace LudicrousElectron.Engine.RenderChain
 {
-	public class RenderLayerItem : IRenderable, IDisposable
+	public class RenderLayer
 	{
-		private RenderLayer LinkedLayer = null;
+		public Stack<Matrix4> MatrixStack = new Stack<Matrix4>();
 
-		public RenderLayerItem(RenderLayer _layer = null)
-		{
-			LinkedLayer = _layer;
-			if (LinkedLayer == null)
-				LinkedLayer = RenderLayer.DefaultLayer;
-
-			if (LinkedLayer != null)
-				LinkedLayer.AddItem(this);
-		}
-
-	
-		public virtual void Render(WindowManager.Window target) { }
-
-		public virtual void MoveToRenderLayer(RenderLayer newLayer)
-		{
-			if (LinkedLayer != null)
-				LinkedLayer.RemoveItem(this);
-
-			LinkedLayer = newLayer;
-			if (LinkedLayer != null)
-				LinkedLayer.AddItem(this);
-		}
-
-		public void Dispose()
-		{
-			if (LinkedLayer != null)
-				LinkedLayer.RemoveItem(this);
-
-			LinkedLayer = null;
-		}
-
-		~RenderLayerItem()
-		{
-			Dispose();
-		}
-	}
-
-
-	public class RenderLayer : IRenderable
-	{
 		public static RenderLayer DefaultLayer = new RenderLayer();
 
-		private List<RenderLayerItem> RenderItemList = new List<RenderLayerItem>();
-		private List<IRenderable> ChildLayers = new List<IRenderable>();
+		protected List<IRenderable> RenderItemList = new List<IRenderable>();
+		protected List<RenderLayer> ChildLayers = new List<RenderLayer>();
 
-        public RenderLayer(IRenderable child = null)
+		public class RenderInfo : IComparable
+		{
+			public Matrix4 objectMatrix = Matrix4.Identity;
+			public Drawable DrawObject = null;
+
+			public RenderInfo(Drawable d, ref Matrix4 mat)
+			{
+				DrawObject = d;
+				objectMatrix = mat;
+			}
+
+			public int CompareTo(object obj)
+			{
+				RenderInfo other = obj as RenderInfo;
+				if (other == null)
+					return 1;
+
+				if ((DrawObject.Mat == null) != (other.DrawObject.Mat == null))
+					return 1;
+
+				if (DrawObject.Mat == null)
+					return 1;
+
+				int textureComp = string.Compare(DrawObject.Mat.DiffuseName, other.DrawObject.Mat.DiffuseName);
+				if (textureComp != 0)
+					return textureComp;
+
+				if (DrawObject.Mat.DiffuseColor.ToArgb() != other.DrawObject.Mat.DiffuseColor.ToArgb())
+					return DrawObject.Mat.DiffuseColor.ToArgb() > other.DrawObject.Mat.DiffuseColor.ToArgb() ? 1 : -1;
+
+				return 0;
+			}
+		}
+		public List<RenderInfo> Drawables = new List<RenderInfo>();
+
+        public RenderLayer()
         {
-            if (child != null)
-                AddChildLayer(child);
-        }
+			MatrixStack.Push(Matrix4.Identity);
+		}
 
-        public void AddChildLayer(IRenderable child)
+        public void AddChildLayer(RenderLayer child)
 		{
 			ChildLayers.Add(child);
 		}
 
-		public void RemoveItem(RenderLayerItem item)
+		public void RemoveItem(IRenderable item)
 		{
 			if (RenderItemList.Contains(item))
 				RenderItemList.Remove(item);
 		}
 
-		public void AddItem(RenderLayerItem item)
+		public void AddItem(IRenderable item)
 		{
 			if (!RenderItemList.Contains(item))
 				RenderItemList.Add(item);
 		}
 
-		public void Render(WindowManager.Window target)
+		public void AddDrawable(Drawable draw)
 		{
+			Matrix4 currMat = MatrixStack.Peek();
+			AddDrawable(draw, ref currMat);
+		}
+
+		public void AddDrawable(Drawable draw, ref Matrix4 matrix)
+		{
+			Drawables.Add(new RenderInfo(draw, ref matrix));
+		}
+
+		public void ClearDrawables()
+		{
+			Drawables.Clear();
+		}
+
+		public virtual void RenderSetup(WindowManager.Window target)
+		{
+			if (MatrixStack.Count == 0)
+				MatrixStack.Push(Matrix4.Identity);
+		}
+
+		public virtual void Render(WindowManager.Window target)
+		{
+			RenderSetup(target);
+			if (Drawables.Count == 0)
+			{
+				foreach (var item in RenderItemList)
+					item.Render(this);
+				Sort();
+			}
+			Draw();
+
 			foreach (var child in ChildLayers)
 				child.Render(target);
+		}
 
-			foreach (var item in RenderItemList)
-				item.Render(target);
+		public virtual void Sort()
+		{
+			Drawables.Sort();
+		}
+
+		protected virtual void BindMaterial(Material mat)
+		{
+			if (mat == null)
+				return;
+			mat.Bind();
+		}
+
+		public virtual void Draw()
+		{
+			Material lastMat = null;
+			foreach (var item in Drawables)
+			{
+				if (item.DrawObject.Mat != lastMat)
+				{
+					BindMaterial(item.DrawObject.Mat);
+					lastMat = item.DrawObject.Mat;
+				}
+				GL.LoadMatrix(ref item.objectMatrix);
+				if (item.DrawObject.Draw())
+					lastMat = null;
+			}
 		}
 	}
 }

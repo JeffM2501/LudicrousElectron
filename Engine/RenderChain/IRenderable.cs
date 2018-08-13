@@ -10,6 +10,6 @@ namespace LudicrousElectron.Engine.RenderChain
 {
 	public interface IRenderable
 	{
-		void Render(WindowManager.Window target);
+		void Render(RenderLayer targetLayer);
 	}
 }

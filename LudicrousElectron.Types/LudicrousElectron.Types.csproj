@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Angles.cs" />
+    <Compile Include="MathUtils.cs" />
     <Compile Include="Rect2Df.cs" />
     <Compile Include="Rect2Di.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

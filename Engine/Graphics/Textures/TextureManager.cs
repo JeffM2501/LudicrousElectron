@@ -20,7 +20,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
 		private Dictionary<string, TextureInfo> Textures = new Dictionary<string, TextureInfo>();
 
-		public TextureInfo GetTexture(string name, Vector2i subDiv)
+		public TextureInfo GetTexture(string name, Vector2i subDiv = null)
 		{
 			if (!Textures.ContainsKey(name))
 				LoadTexture(name, subDiv);
@@ -45,7 +45,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
 			Color clearColor = Color.FromArgb(255, 0, 255);
 
-			if (subDiv.x > 0 || subDiv.y > 0)
+			if (subDiv != null && (subDiv.x > 0 || subDiv.y > 0))
 			{
 				subDiv.x = System.Math.Max(subDiv.x, 1);
 				subDiv.y = System.Math.Max(subDiv.y, 1);

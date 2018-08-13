@@ -36,10 +36,13 @@ namespace LudicrousElectron.Engine
 		}
 
         public static void Run()
-        {
-            WindowManager.MainWindow?.Run();
+		{
+			Running = true;
+			WindowManager.MainWindow?.Run();
+			Running = false;
 
-            SoundManager.Cleanup();
+
+			SoundManager.Cleanup();
         }
 
         internal static void UpdateMain()
@@ -55,7 +58,6 @@ namespace LudicrousElectron.Engine
 
         internal static void RenderMain()
         {
-
         }
 
         internal static void RenderChild(int childID)
