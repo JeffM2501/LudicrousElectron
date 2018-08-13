@@ -9,7 +9,7 @@ namespace LudicrousElectron.GUI
 {
 	public class Canvas
 	{
-		public List<IGUIElement> GUIElements = new List<IGUIElement>();
+		public List<GUIElement> GUIElements = new List<GUIElement>();
 
 		public virtual void Render(GUIRenderLayer layer)
 		{
@@ -20,7 +20,7 @@ namespace LudicrousElectron.GUI
 		public virtual void Resize(WindowManager.Window window)
 		{
 			foreach (var element in GUIElements)
-				element.Resize(window);
+				element.Resize(window.Width,window.Height);
 		}
 	}
 }

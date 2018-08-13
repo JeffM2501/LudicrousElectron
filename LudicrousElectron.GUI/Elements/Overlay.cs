@@ -33,19 +33,11 @@ namespace LudicrousElectron.GUI.Elements
 			layer.AddDrawable(this);
 		}
 
-		public override void Resize(WindowManager.Window window)
-		{
-			if (Texture == string.Empty || ImageMode == ImageTextureMode.None)
-				ShapeBuffer.FilledRect(this, new Vector2(window.Width * -0.5f, window.Height * -0.5f), new Vector2(window.Width, window.Height));
-			else
-			{
-				if (ImageMode == ImageTextureMode.Centered)
-				{
-
-				}
-				ShapeBuffer.TexturedRect(this, Vector2.Zero, new Vector2(window.Width, window.Height));
-			}
-
-		}
-	}
+        public override void Resize(int x, int y)
+        {
+            base.Resize(x, y);
+            
+            ShapeBuffer.TexturedRect(this, Vector2.Zero, Rect.GetPixelSize());
+        }
+    }
 }

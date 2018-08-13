@@ -58,7 +58,10 @@
     <Compile Include="Drawing\ShapeBuffer.cs" />
     <Compile Include="Drawing\ShapeDraw.cs" />
     <Compile Include="Elements\Overlay.cs" />
-    <Compile Include="IGUIElement.cs" />
+    <Compile Include="Geometry\RelativeLoc.cs" />
+    <Compile Include="Geometry\RelativeRect.cs" />
+    <Compile Include="Geometry\RelativeSize.cs" />
+    <Compile Include="GUIElement.cs" />
     <Compile Include="GUIManager.cs" />
     <Compile Include="GUIRenderLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
