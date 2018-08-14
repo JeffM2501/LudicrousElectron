@@ -44,12 +44,15 @@ namespace LudicrousElectron.GUI
 			{
 				ContextInfo info = new ContextInfo();
 				info.ContextID = WindowManager.MainWindowID;
-				Contexts.Add(info.ContextID, info);
+                info.Layer.CurrentContext = WindowManager.MainWindow;
 
-				foreach (var id in WindowManager.ChildWindowIDs)
+                Contexts.Add(info.ContextID, info);
+
+				foreach (var window in WindowManager.ChildWindows)
 				{
 					info = new ContextInfo();
-					info.ContextID = id;
+					info.ContextID = window.ContextID;
+                    info.Layer.CurrentContext = window;
 					Contexts.Add(info.ContextID, info);
 				}
 			}
@@ -61,7 +64,7 @@ namespace LudicrousElectron.GUI
 			if (win == null || !Contexts.ContainsKey(win.ContextID) || Contexts[win.ContextID].Canvases.Count == 0)
 				return;
 
-			Contexts[win.ContextID].Canvases.Peek().Resize(win);
+			Contexts[win.ContextID].Canvases.Peek().Resize();
 		}
 
 		private static void WindowManager_WindowRemoved(object sender, EventArgs e)
@@ -81,6 +84,7 @@ namespace LudicrousElectron.GUI
 
 			ContextInfo info = new ContextInfo();
 			info.ContextID = win.ContextID;
+            info.Layer.CurrentContext = win;
 			Contexts.Add(win.ContextID, info);
 		}
 
@@ -102,8 +106,9 @@ namespace LudicrousElectron.GUI
 
 			if (!Contexts.ContainsKey(context))
 				return;
+            canvas.BoundWindow = Contexts[context].Layer.CurrentContext;
 
-			Contexts[context].Canvases.Push(canvas);
+            Contexts[context].Canvases.Push(canvas);
 			Contexts[context].Layer.ChangeCanvas(canvas);
 		}
 

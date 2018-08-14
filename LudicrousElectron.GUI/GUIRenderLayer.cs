@@ -16,11 +16,9 @@ namespace LudicrousElectron.GUI
     {
 		internal Canvas CurrentCanvas = null;
 
-		internal WindowManager.Window CurrentContext = null;
+        internal WindowManager.Window CurrentContext = null;
 
-		public Matrix4 OrthoMatrix = Matrix4.Identity;
-
-		protected Matrix4 InitalMatrix = Matrix4.CreateTranslation(Vector3.UnitZ * -100);
+        public Matrix4 OrthoMatrix = Matrix4.Identity;
 
 		public override void RenderSetup(WindowManager.Window target)
 		{
@@ -34,7 +32,7 @@ namespace LudicrousElectron.GUI
 
 			ClearDrawables();
 			MatrixStack.Clear();
-			MatrixStack.Push(InitalMatrix);
+			MatrixStack.Push(Matrix4.CreateTranslation(target.Width * -0.5f, target.Height * -0.5f, -800));
 		}
 
 		public override void Sort()
@@ -59,7 +57,7 @@ namespace LudicrousElectron.GUI
 		internal void ChangeCanvas(Canvas newCanvas)
 		{
 			CurrentCanvas = newCanvas;
-			CurrentCanvas.Resize(CurrentContext);
+			CurrentCanvas.Resize();
 		}
 	}
 }

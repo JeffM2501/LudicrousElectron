@@ -37,7 +37,7 @@ namespace LudicrousElectron.GUI.Elements
         {
             base.Resize(x, y);
             
-            ShapeBuffer.TexturedRect(this, Vector2.Zero, Rect.GetPixelSize());
+            ShapeBuffer.TexturedRect(this, Rect);
         }
     }
 }

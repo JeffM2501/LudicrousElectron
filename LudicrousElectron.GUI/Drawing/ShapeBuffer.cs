@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using LudicrousElectron.Engine.Graphics;
-
+using LudicrousElectron.GUI.Geometry;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -40,7 +40,13 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(center.X - size.X, center.Y + size.Y);
 		}
 
-		public static void FilledGradientRect(PrimitivBuffer target, Vector2 center, Vector2 size, Color maxColor, Color minColor, bool horizontal)
+        public static void FilledGradientRect(PrimitivBuffer target, RelativeRect rect, Color maxColor, Color minColor, bool horizontal)
+        {
+            FilledGradientRect(target, rect.GetPixelOrigin(), rect.GetPixelSize(), maxColor, minColor,horizontal);
+        }
+
+
+        public static void FilledGradientRect(PrimitivBuffer target, Vector2 center, Vector2 size, Color maxColor, Color minColor, bool horizontal)
 		{
 			target.Clear();
 			target.DrawType = PrimitiveType.Quads;
@@ -70,7 +76,15 @@ namespace LudicrousElectron.GUI.Drawing
 			}
 		}
 
-		public static void OutlineRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, float width)
+        public static void OutlineRect(PrimitivBuffer target, RelativeRect rect, float width = 1)
+        {
+            var origin = rect.GetPixelOrigin();
+            var size = rect.GetPixelSize();
+
+            OutlineRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, width);
+        }
+
+        public static void OutlineRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, float width)
 		{
 			OutlineRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y, width);
 		}
@@ -92,7 +106,15 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(maxiumX, minimumY);
 		}
 
-		public static void FilledRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium)
+        public static void FilledRect(PrimitivBuffer target, RelativeRect rect)
+        {
+            var origin = rect.GetPixelOrigin();
+            var size = rect.GetPixelSize();
+
+            FilledRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y);
+        }
+
+        public static void FilledRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium)
 		{
 			FilledRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y);
 		}
@@ -107,8 +129,16 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(maxiumX, maxiumY);
 			target.Vertex(minimumX, maxiumY);
 		}
+         
+        public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, float uvScale = 1)
+        {
+            var origin = rect.GetPixelOrigin();
+            var size = rect.GetPixelSize();
 
-		public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, float uvScale = 1)
+            TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale);
+        }
+
+        public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, float uvScale = 1)
 		{
 			TexturedRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y, uvScale);
 		}
