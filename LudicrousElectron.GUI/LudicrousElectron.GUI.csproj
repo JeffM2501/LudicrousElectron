@@ -57,7 +57,9 @@
     <Compile Include="Canvas.cs" />
     <Compile Include="Drawing\ShapeBuffer.cs" />
     <Compile Include="Drawing\ShapeDraw.cs" />
-    <Compile Include="Elements\Overlay.cs" />
+    <Compile Include="Drawing\UVTools.cs" />
+    <Compile Include="Elements\Image.cs" />
+    <Compile Include="Elements\Panel.cs" />
     <Compile Include="Geometry\RelativeLoc.cs" />
     <Compile Include="Geometry\RelativeRect.cs" />
     <Compile Include="Geometry\RelativeSize.cs" />

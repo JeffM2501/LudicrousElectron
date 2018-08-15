@@ -79,4 +79,10 @@ namespace LudicrousElectron.GUI.Geometry
         }
     }
 
+	public class RelativePoint
+	{
+		public RelativeLoc X = new RelativeLoc();
+		public RelativeLoc Y = new RelativeLoc();
+	}
+
 }

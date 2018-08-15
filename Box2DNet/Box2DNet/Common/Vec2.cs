@@ -163,15 +163,14 @@ namespace Box2DNet.Common
 			return a.X == b.X && a.Y == b.Y;
 		}
 
-		public override int GetHashCode()
-		{
-			return X.GetHashCode() | Y.GetHashCode();
-		}
-
-
 		public static bool operator !=(Vec2 a, Vec2 b)
 		{
 			return a.X != b.X || a.Y != b.Y;
+		}
+
+		public override int GetHashCode()
+		{
+			return X.GetHashCode() | Y.GetHashCode();
 		}
 
 		public static Vec2 Zero { get { return new Vec2(0, 0); } }

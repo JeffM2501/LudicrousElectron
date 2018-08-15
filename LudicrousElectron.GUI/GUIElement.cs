@@ -21,32 +21,38 @@ namespace LudicrousElectron.GUI
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
 
-        public abstract void Draw(GUIRenderLayer layer);
+		public GUIElement() { }
+		public GUIElement(RelativeRect rect) { Rect = rect; }
+
+		public abstract void Draw(GUIRenderLayer layer);
         public virtual void Resize(int x, int y)
         {
             Rect.Resize(x, y);
             var PixelSize = Rect.GetPixelSize();
             foreach (var child in Children)
             {
-                child.Resize((int)PixelSize.X * 2, (int)PixelSize.Y * 2);
+                child.Resize((int)PixelSize.X, (int)PixelSize.Y);
             }
         }
 
         public void Render(GUIRenderLayer layer)
         {
-            var origin = Rect.GetPixelOrigin();
-            layer.MatrixStack.Push(Matrix4.CreateTranslation(origin.X, origin.Y, 0.25f));
-            int stackSize = layer.MatrixStack.Count;
+			var origin = Rect.GetPixelOrigin();
+            
+			int stackSize = layer.MatrixStackSize();
 
-            Draw();
+            Draw(layer);
 
-            while (layer.MatrixStack.Count > stackSize) // clean out an extra matrices that drawing may have left on the stack
-                layer.MatrixStack.Pop();
+            while (layer.MatrixStackSize() > stackSize) // clean out an extra matrices that drawing may have left on the stack
+                layer.PopMatrix();
 
-            foreach (var child in Children)
-                child.Render(layer);
-
-            layer.MatrixStack.Pop();
+			// move to our origin, so the children can be relative.
+ 			layer.PushTranslation(origin.X, origin.Y, 0.25f);
+ 
+ 			foreach (var child in Children)
+                 child.Render(layer);
+ 
+            layer.PopMatrix();
         }
 	}
 
@@ -54,6 +60,20 @@ namespace LudicrousElectron.GUI
 	{
 		public Color BaseColor = Color.White;
 		public string Texture = string.Empty;
+
+		public SingleDrawGUIItem():base(){ }
+		public SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
+
+		public SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
+		{
+			BaseColor = color;
+		}
+
+		public SingleDrawGUIItem(RelativeRect rect, Color color, string textureName) : base(rect)
+		{
+			BaseColor = color;
+			Texture = textureName;
+		}
 
 		public override void Draw(GUIRenderLayer layer)
 		{

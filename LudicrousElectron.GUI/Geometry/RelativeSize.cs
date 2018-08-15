@@ -11,6 +11,8 @@ namespace LudicrousElectron.GUI.Geometry
         public bool UseWidth = true;
         public float Paramater = 0;
 
+		public bool Raw = false; // param is a raw pixel value already
+
         public RelativeSize() { }
 
         public RelativeSize(float param, bool width)
@@ -27,7 +29,7 @@ namespace LudicrousElectron.GUI.Geometry
 
         public float ToScreen(int x, int y)
         {
-            return (UseWidth ? x : y) * Paramater;
+            return Raw ? Paramater : ((UseWidth ? x : y) * Paramater);
         }
 
         public static RelativeSize FullWidth = new RelativeSize(1, true);

@@ -85,7 +85,6 @@ namespace LudicrousElectron.GUI.Drawing
 			FillArc(0, 360, center, radius);
 		}
 
-
 		public static void DrawCenteredRect(Vector2 center, Vector2 size, double width)
 		{
 			GL.LineWidth((float)width);

@@ -4,6 +4,8 @@ using System.Drawing;
 
 using LudicrousElectron.Engine.Graphics;
 using LudicrousElectron.GUI.Geometry;
+using LudicrousElectron.Engine.Graphics.Textures;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -122,7 +124,7 @@ namespace LudicrousElectron.GUI.Drawing
 		public static void FilledRect(PrimitivBuffer target, float minimumX, float minimumY, float maxiumX, float maxiumY)
 		{
 			target.Clear();
-			target.DrawType = PrimitiveType.Polygon;
+			target.DrawType = PrimitiveType.Quads;
 
 			target.Vertex(minimumX, minimumY);
 			target.Vertex(maxiumX, minimumY);
@@ -130,35 +132,40 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(minimumX, maxiumY);
 		}
          
-        public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, float uvScale = 1)
+        public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, TextureInfo texture)
         {
             var origin = rect.GetPixelOrigin();
             var size = rect.GetPixelSize();
 
+			if (texture == null || texture.ImageData == null || texture.ImageData.Width == 0 || texture.ImageData.Height == 0)
+				return;
+
+			Vector2 uvScale = new Vector2(size.X / texture.ImageData.Width, size.Y / texture.ImageData.Height);
+
             TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale);
         }
 
-        public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, float uvScale = 1)
+        public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, Vector2 uvScale)
 		{
 			TexturedRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y, uvScale);
 		}
 
-		public static void TexturedRect(PrimitivBuffer target, float minimumX, float minimumY, float maxiumX, float maxiumY, float uvScale = 1)
+		public static void TexturedRect(PrimitivBuffer target, float minimumX, float minimumY, float maxiumX, float maxiumY, Vector2 uvScale )
 		{
 			target.Clear();
-			target.DrawType = PrimitiveType.Polygon;
+			target.DrawType = PrimitiveType.Quads;
 
 			target.Vertex(minimumX, minimumY);
-			target.UVs.Add(new Vector2(0, uvScale));
+			target.UVs.Add(new Vector2(0, uvScale.Y));
 
 			target.Vertex(maxiumX, minimumY);
-			target.UVs.Add(new Vector2(1, uvScale));
+			target.UVs.Add(new Vector2(uvScale.X, uvScale.Y));
 
 			target.Vertex(maxiumX, maxiumY);
-			target.UVs.Add(new Vector2(1, uvScale));
+			target.UVs.Add(new Vector2(uvScale.X, 0));
 
 			target.Vertex(minimumX, maxiumY);
-			target.UVs.Add(new Vector2(1, uvScale));
+			target.UVs.Add(new Vector2(0, 0));
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace LudicrousElectron.Engine.RenderChain
 {
 	public class RenderLayer
 	{
-		public Stack<Matrix4> MatrixStack = new Stack<Matrix4>();
+		protected Stack<Matrix4> MatrixStack = new Stack<Matrix4>();
 
 		public static RenderLayer DefaultLayer = new RenderLayer();
 
@@ -139,6 +139,37 @@ namespace LudicrousElectron.Engine.RenderChain
 				if (item.DrawObject.Draw())
 					lastMat = null;
 			}
+		}
+
+		public virtual void PushMatrix(Matrix4 mat, bool contact = true)
+		{
+			MatrixStack.Push(mat * MatrixStack.Peek());
+		}
+
+		public virtual void PopMatrix()
+		{
+			MatrixStack.Pop();
+		}
+
+		public virtual Matrix4 PeekMatrix()
+		{
+			return MatrixStack.Peek();
+		}
+
+		public virtual void Clear()
+		{
+			MatrixStack.Clear();
+			MatrixStack.Push(Matrix4.Identity);
+		}
+
+		public void PushTranslation(float x, float y, float z)
+		{
+			PushMatrix(Matrix4.CreateTranslation(x, y, z), true);
+		}
+
+		public int MatrixStackSize()
+		{
+			return MatrixStack.Count;
 		}
 	}
 }

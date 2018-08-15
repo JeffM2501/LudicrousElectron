@@ -71,6 +71,7 @@
     <Compile Include="Graphics\Textures\TextureManager.cs" />
     <Compile Include="Input\KeyEvent.cs" />
     <Compile Include="Input\KeyMap.cs" />
+    <Compile Include="IO\ParseUtils.cs" />
     <Compile Include="IO\StreamUtils.cs" />
     <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Multiplayer\GameServer.cs" />

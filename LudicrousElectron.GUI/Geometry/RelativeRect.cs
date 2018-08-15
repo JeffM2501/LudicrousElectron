@@ -7,7 +7,9 @@ namespace LudicrousElectron.GUI.Geometry
 {
     public class RelativeRect
     {
-        public enum OriginLocation
+		public static readonly RelativeRect Full = new RelativeRect(RelativeLoc.XLeft, RelativeLoc.YLower, RelativeSize.FullWidth, RelativeSize.FullHeight);
+
+		public enum OriginLocation
         {
             Center,
             LowerLeft,
@@ -102,39 +104,39 @@ namespace LudicrousElectron.GUI.Geometry
             switch (origin)
             {
                 case OriginLocation.LowerLeft: // where we start
-                    layer.MatrixStack.Push(Matrix4.Identity);
+                    layer.PushMatrix(Matrix4.Identity);
                     break;
 
                 case OriginLocation.MiddleLeft:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(0, PixelSize.Y, 0));
+                    layer.PushTranslation(0, PixelSize.Y, 0);
                     break;
 
                 case OriginLocation.UpperLeft:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(0, PixelSize.Y * 2, 0));
+                    layer.PushTranslation(0, PixelSize.Y * 2, 0);
                     break;
 
                 case OriginLocation.UpperCenter:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X, PixelSize.Y, 0));
+                    layer.PushTranslation(PixelSize.X, PixelSize.Y, 0);
                     break;
 
                 case OriginLocation.UpperRight:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X * 2, PixelSize.Y * 2, 0));
+                    layer.PushTranslation(PixelSize.X * 2, PixelSize.Y * 2, 0);
                     break;
 
                 case OriginLocation.MiddleRight:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X * 2, PixelSize.Y, 0));
+                    layer.PushTranslation(PixelSize.X * 2, PixelSize.Y, 0);
                     break;
 
                 case OriginLocation.LowerRight:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X * 2, 0, 0));
+                    layer.PushTranslation(PixelSize.X * 2, 0, 0);
                     break;
 
                 case OriginLocation.LowerCenter:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X, 0, 0));
+                    layer.PushTranslation(PixelSize.X, 0, 0);
                     break;
 
                 case OriginLocation.Center:
-                    layer.MatrixStack.Push(Matrix4.CreateTranslation(PixelSize.X, PixelSize.Y, 0));
+                    layer.PushTranslation(PixelSize.X, PixelSize.Y, 0);
                     break;
             }
         }

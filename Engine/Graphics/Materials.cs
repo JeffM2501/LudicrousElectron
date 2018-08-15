@@ -16,18 +16,55 @@ namespace LudicrousElectron.Engine.Graphics
 		public string Name = string.Empty;
 
 		public string DiffuseName = string.Empty;
-		internal TextureInfo DiffuseTexture = null;
+		internal TextureInfo _DiffuseTexture = null;
+		public TextureInfo DiffuseTexture
+		{
+			get
+			{
+				if (_DiffuseTexture == null)
+					_DiffuseTexture = Core.Textures.GetTexture(DiffuseName);
+				return _DiffuseTexture;
+			}
+		}
+
 		public Color DiffuseColor = Color.White;
 
 		public string NormalMapName = string.Empty;
-		internal TextureInfo NormalMapTexture = null;
+		internal TextureInfo _NormalMapTexture = null;
+		public TextureInfo NormalMapTexture
+		{
+			get
+			{
+				if (_NormalMapTexture == null)
+					_NormalMapTexture = Core.Textures.GetTexture(NormalMapName);
+				return _NormalMapTexture;
+			}
+		}
 
 		public string SpecularMapName = string.Empty;
-		internal TextureInfo SpecularTexture = null;
+		internal TextureInfo _SpecularTexture = null;
+		public TextureInfo SpecularTexture
+		{
+			get
+			{
+				if (_SpecularTexture == null)
+					_SpecularTexture = Core.Textures.GetTexture(SpecularMapName);
+				return _SpecularTexture;
+			}
+		}
 		public Color SpecularColor = Color.Transparent;
 
 		public string EmissionMapName = string.Empty;
-		internal TextureInfo EmissionTexture = null;
+		internal TextureInfo _EmissionTexture = null;
+		public TextureInfo EmissionTexture
+		{
+			get
+			{
+				if (_EmissionTexture == null)
+					_EmissionTexture = Core.Textures.GetTexture(EmissionMapName);
+				return _EmissionTexture;
+			}
+		}
 		public Color EmissionColor = Color.Transparent;
 
 		public static readonly Material Default = new Material();
@@ -42,9 +79,6 @@ namespace LudicrousElectron.Engine.Graphics
 			else
 			{
 				GL.Enable(EnableCap.Texture2D);
-
-				if (DiffuseTexture == null)
-					DiffuseTexture = Core.Textures.GetTexture(DiffuseName);
 
 				if (DiffuseTexture == null)
 				{
