@@ -68,23 +68,25 @@ namespace LudicrousElectron.GUI.Geometry
             ParrentPixelSize = new Size(x, y);
 
             // figure out how big we are in pixels
-            PixelSize = new Vector2(Width.ToScreen(x, y) / 2.0f, Width.ToScreen(x, y) / 2.0f);
+            PixelSize = new Vector2(Width.ToScreen(x, y), Height.ToScreen(x, y));
+
+            Vector2 halfSize = PixelSize * 0.5f;
 
             // see where our lower left is relative to our parent in pixels
             float xOffset = (float)X.Paramater * x;
             float yOffset = (float)Y.Paramater * y;
 
             if (X.RelativeTo == RelativeLoc.Edge.Middle)       // middle alignment means our center X is xOffset from parent center
-                PixelOrigin.X = ((ParrentPixelSize.Width * 0.5f) + xOffset) - PixelSize.X;
+                PixelOrigin.X = ((ParrentPixelSize.Width * 0.5f) + xOffset) - halfSize.X;
             else if (X.RelativeTo == RelativeLoc.Edge.Maximal) // maximal alignment means our right X is xOffset from parent right
-                PixelOrigin.X = ((ParrentPixelSize.Width) - xOffset) - (PixelSize.X * 2.0f);
+                PixelOrigin.X = ((ParrentPixelSize.Width) - xOffset) - (PixelSize.X);
             else
                 PixelOrigin.X = xOffset;                                                     // minimal alignment means our left X is xOffset from parent left(aka 0)
 
             if (Y.RelativeTo == RelativeLoc.Edge.Middle)       // middle alignment means our center X is xOffset from parent center
-                PixelOrigin.Y = ((ParrentPixelSize.Height * 0.5f) + yOffset) - PixelSize.Y;
+                PixelOrigin.Y = ((ParrentPixelSize.Height * 0.5f) + yOffset) - halfSize.Y;
             else if (Y.RelativeTo == RelativeLoc.Edge.Maximal) // maximal alignment means our right X is xOffset from parent right
-                PixelOrigin.Y = ((ParrentPixelSize.Height) + yOffset) - (PixelSize.Y * 2.0f);
+                PixelOrigin.Y = ((ParrentPixelSize.Height) + yOffset) - (PixelSize.Y);
             else
                 PixelOrigin.Y = yOffset;                                                     // minimal alignment means our left X is xOffset from parent left(aka 0)
 
