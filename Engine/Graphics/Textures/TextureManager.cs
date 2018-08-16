@@ -31,12 +31,40 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			return Textures[name];
 		}
 
+		public TextureInfo CreateTexture(string name, Bitmap image, bool isAlpha = false)
+		{
+			if (Textures.ContainsKey(name))
+			{
+				Textures[name].Unbind();
+				Textures[name].ImageData = image;
+			}
+			else
+				MakeTexture(name, image);
+
+			if (!Textures.ContainsKey(name))
+				return null;
+
+			Textures[name].IsAlpha = true;
+
+			return Textures[name];
+		}
+
 		protected int GetRepeat()
 		{
 			if (DefaultRepeat)
 				return (int)TextureWrapMode.Repeat;
 			else
 				return (int)TextureWrapMode.ClampToEdge;
+		}
+
+		protected void MakeTexture(string name, Bitmap image)
+		{
+			TextureInfo texture = new TextureInfo();
+			texture.RelativeName = name;
+			texture.FullPath = string.Empty;
+			texture.ImageData = image;
+
+			Textures.Add(name, texture);
 		}
 
 		protected void LoadTexture(string name, Vector2i subDiv)

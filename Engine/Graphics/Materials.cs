@@ -69,6 +69,16 @@ namespace LudicrousElectron.Engine.Graphics
 
 		public static readonly Material Default = new Material();
 
+
+		public Material() { }
+
+		public Material(Color color, TextureInfo texture)
+		{
+			DiffuseName = texture.RelativeName;
+			DiffuseColor = color;
+			_DiffuseTexture = texture;
+		}
+
 		public void Bind()
 		{
 			// load shaders here when we have them

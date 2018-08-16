@@ -5,30 +5,49 @@ using OpenTK;
 
 namespace LudicrousElectron.GUI.Geometry
 {
-    public class RelativeRect
+	public enum OriginLocation
+	{
+		Center,
+		LowerLeft,
+		MiddleLeft,
+		UpperLeft,
+		UpperCenter,
+		UpperRight,
+		MiddleRight,
+		LowerRight,
+		LowerCenter,
+	}
+
+	public class RelativeRect
     {
-		public static readonly RelativeRect Full = new RelativeRect(RelativeLoc.XLeft, RelativeLoc.YLower, RelativeSize.FullWidth, RelativeSize.FullHeight);
+		public static readonly RelativeRect Full = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullHeight);
 
-		public enum OriginLocation
-        {
-            Center,
-            LowerLeft,
-            MiddleLeft,
-            UpperLeft,
-            UpperCenter,
-            UpperRight,
-            MiddleRight,
-            LowerRight,
-            LowerCenter,
-        }
-
+		/// <summary>
+		/// X position of the origin relative to the parent.
+		/// </summary>
         public RelativeLoc X = new RelativeLoc();
-        public RelativeLoc Y = new RelativeLoc();
 
-        public RelativeSize Width = new RelativeSize();
-        public RelativeSize Height = new RelativeSize();
+		/// <summary>
+		/// Y position of the origin relative to the parent
+		/// </summary>
+		public RelativeLoc Y = new RelativeLoc();
 
-        protected Vector2 PixelOrigin = Vector2.Zero;
+		/// <summary>
+		///  total width of the rect relative to its parent.
+		/// </summary>
+		public RelativeSize Width = new RelativeSize();
+
+		/// <summary>
+		///  total height of the rect relative to its parent.
+		/// </summary>
+		public RelativeSize Height = new RelativeSize();
+
+		/// <summary>
+		/// What point on the rect the X and Y origin represent
+		/// </summary>
+		public OriginLocation AnchorLocation = OriginLocation.Center;
+
+		protected Vector2 PixelOrigin = Vector2.Zero;
         protected Vector2 PixelSize = Vector2.Zero;
         protected Size ParrentPixelSize = new Size(0, 0);
         protected float InscribedRadius = 0;
@@ -47,13 +66,52 @@ namespace LudicrousElectron.GUI.Geometry
             Set(x, y, w, h);
         }
 
-        public virtual void Set(RelativeLoc x, RelativeLoc y, RelativeSize w, RelativeSize h)
+		public RelativeRect(RelativeLoc x, RelativeLoc y, RelativeSize w, RelativeSize h, OriginLocation anchor)
+		{
+			Set(x, y, w, h);
+			AnchorLocation = anchor;
+		}
+
+		public virtual void Set(RelativeLoc x, RelativeLoc y, RelativeSize w, RelativeSize h)
         {
             SetLocation(x, y);
             SetSize(w, h);
         }
 
-        public virtual void SetLocation(RelativeLoc x, RelativeLoc y)
+		public virtual void Set(RelativeLoc x, RelativeLoc y, RelativeSize w, RelativeSize h, OriginLocation anchor)
+		{
+			SetLocation(x, y);
+			SetSize(w, h);
+			AnchorLocation = anchor;
+		}
+
+		public RelativeRect(RelativePoint origin, RelativeSizeXY size)
+		{
+			SetLocation(origin.X, origin.Y);
+			SetSize(size.Width, size.Height);
+		}
+
+		public RelativeRect(RelativePoint origin, RelativeSizeXY size, OriginLocation anchor)
+		{
+			SetLocation(origin.X, origin.Y);
+			SetSize(size.Width, size.Height);
+			AnchorLocation = anchor;
+		}
+
+		public virtual void Set(RelativePoint origin, RelativeSizeXY size)
+		{
+			SetLocation(origin.X, origin.Y);
+			SetSize(size.Width, size.Height);
+		}
+
+		public virtual void Set(RelativePoint origin, RelativeSizeXY size, OriginLocation anchor)
+		{
+			SetLocation(origin.X, origin.Y);
+			SetSize(size.Width, size.Height);
+			AnchorLocation = anchor;
+		}
+
+		public virtual void SetLocation(RelativeLoc x, RelativeLoc y)
         {
             X = x;
             Y= y;
@@ -64,6 +122,68 @@ namespace LudicrousElectron.GUI.Geometry
             Width = w;
             Height = h;
         }
+		public virtual void SetAnchor(OriginLocation anchor)
+		{
+			AnchorLocation = anchor;
+		}
+
+		protected Vector2 ComputePixelOrigin(int x, int y)
+		{
+			Vector2 halfSize = PixelSize * 0.5f;
+
+			// where is the origin relative to our parent
+			float xOffset = X.ToScreen(x);
+			float yOffset = Y.ToScreen(y);
+			
+			switch(AnchorLocation)
+			{
+				case OriginLocation.Center:
+					xOffset -= halfSize.X;
+					yOffset -= halfSize.Y;
+					break;
+
+				case OriginLocation.UpperCenter:
+					xOffset -= halfSize.X;
+					yOffset -= halfSize.Y + (PixelSize.Y * 0.5f);
+					break;
+
+				case OriginLocation.LowerCenter:
+					xOffset -= halfSize.X;
+					yOffset -= halfSize.Y - (PixelSize.Y * 0.5f);
+					break;
+
+				case OriginLocation.LowerLeft:
+					break;
+
+				case OriginLocation.LowerRight:
+					xOffset -= halfSize.X * 2;
+					break;
+
+				case OriginLocation.MiddleLeft:
+					yOffset -= halfSize.Y;
+					break;
+
+				case OriginLocation.MiddleRight:
+					xOffset -= halfSize.X * 2;
+					yOffset -= halfSize.Y;
+					break;
+
+				case OriginLocation.UpperLeft:
+					yOffset -= halfSize.Y + (PixelSize.Y * 0.5f);
+					break;
+
+				case OriginLocation.UpperRight:
+					xOffset -= halfSize.X * 2;
+					yOffset -= halfSize.Y + (PixelSize.Y * 0.5f);
+					break;
+
+				default:
+					break;
+			}
+
+
+			return new Vector2(xOffset, yOffset);
+		}
 
         public virtual void Resize(int x, int y)
         {
@@ -71,27 +191,7 @@ namespace LudicrousElectron.GUI.Geometry
 
             // figure out how big we are in pixels
             PixelSize = new Vector2(Width.ToScreen(x, y), Height.ToScreen(x, y));
-
-            Vector2 halfSize = PixelSize * 0.5f;
-
-            // see where our lower left is relative to our parent in pixels
-            float xOffset = (float)X.Paramater * x;
-            float yOffset = (float)Y.Paramater * y;
-
-            if (X.RelativeTo == RelativeLoc.Edge.Middle)       // middle alignment means our center X is xOffset from parent center
-                PixelOrigin.X = ((ParrentPixelSize.Width * 0.5f) + xOffset) - halfSize.X;
-            else if (X.RelativeTo == RelativeLoc.Edge.Maximal) // maximal alignment means our right X is xOffset from parent right
-                PixelOrigin.X = ((ParrentPixelSize.Width) - xOffset) - (PixelSize.X);
-            else
-                PixelOrigin.X = xOffset;                                                     // minimal alignment means our left X is xOffset from parent left(aka 0)
-
-            if (Y.RelativeTo == RelativeLoc.Edge.Middle)       // middle alignment means our center X is xOffset from parent center
-                PixelOrigin.Y = ((ParrentPixelSize.Height * 0.5f) + yOffset) - halfSize.Y;
-            else if (Y.RelativeTo == RelativeLoc.Edge.Maximal) // maximal alignment means our right X is xOffset from parent right
-                PixelOrigin.Y = ((ParrentPixelSize.Height) + yOffset) - (PixelSize.Y);
-            else
-                PixelOrigin.Y = yOffset;                                                     // minimal alignment means our left X is xOffset from parent left(aka 0)
-
+			PixelOrigin = ComputePixelOrigin(x, y);
 
             // pick the smallest value, that's the largest radius we can fit
             InscribedRadius = (float)PixelSize.X;

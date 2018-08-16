@@ -58,15 +58,18 @@
     <Compile Include="Drawing\ShapeBuffer.cs" />
     <Compile Include="Drawing\ShapeDraw.cs" />
     <Compile Include="Drawing\UVTools.cs" />
-    <Compile Include="Elements\Image.cs" />
-    <Compile Include="Elements\Panel.cs" />
+    <Compile Include="Elements\UIImage.cs" />
+    <Compile Include="Elements\UILabel.cs" />
+    <Compile Include="Elements\UIPanel.cs" />
     <Compile Include="Geometry\RelativeLoc.cs" />
     <Compile Include="Geometry\RelativeRect.cs" />
     <Compile Include="Geometry\RelativeSize.cs" />
+    <Compile Include="Geometry\RelativeTools.cs" />
     <Compile Include="GUIElement.cs" />
     <Compile Include="GUIManager.cs" />
     <Compile Include="GUIRenderLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Text\FontManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\LudicrousElectron.Engine.csproj">

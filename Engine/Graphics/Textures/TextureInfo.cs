@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL;
 
 using LudicrousElectron.Types;
 using LudicrousElectron.Engine.Window;
@@ -26,6 +26,15 @@ namespace LudicrousElectron.Engine.Graphics.Textures
         internal int RepeatType = 0;
         internal bool BuildMippams = false;
 
+		internal bool IsAlpha = false;
+
+		public void Unbind()
+		{
+			int GLID = ContextIDs[WindowManager.CurrentContextID];
+			ContextIDs.Remove(WindowManager.CurrentContextID);
+			GL.DeleteTextures(1, ref GLID);
+		}
+
         public void Bind()
         {
             if (ContextIDs.ContainsKey(WindowManager.CurrentContextID))
@@ -42,8 +51,10 @@ namespace LudicrousElectron.Engine.Graphics.Textures
             GL.BindTexture(TextureTarget.Texture2D, GLID);
 
             BitmapData data = ImageData.LockBits(new Rectangle(0, 0, ImageData.Width, ImageData.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, IsAlpha ? OpenTK.Graphics.OpenGL.PixelFormat.Alpha : OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+
+			if (!IsAlpha)
+				GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             ImageData.UnlockBits(data);
             //bitmap.Dispose();

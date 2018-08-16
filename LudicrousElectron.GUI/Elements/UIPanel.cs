@@ -9,19 +9,19 @@ using OpenTK;
 
 namespace LudicrousElectron.GUI.Elements
 {
-	public class Panel : SingleDrawGUIItem
+	public class UIPanel : SingleDrawGUIItem
 	{
-		public Panel(RelativeRect rect, Color color) : base(rect,color)
+		public UIPanel(RelativeRect rect, Color color) : base(rect,color)
 		{
 
 		}
 
-		public Panel(RelativeRect rect, Color color, string texture) : base(rect, color, texture)
+		public UIPanel(RelativeRect rect, Color color, string texture) : base(rect, color, texture)
 		{
 
 		}
 
-		public Panel(RelativeRect rect, string texture) : base(rect, Color.White, texture)
+		public UIPanel(RelativeRect rect, string texture) : base(rect, Color.White, texture)
 		{
 
 		}

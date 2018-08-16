@@ -40,7 +40,8 @@ namespace LudicrousElectron.GUI.Geometry
         public static RelativeSize EightWidth = new RelativeSize(0.125f, true);
 
         public static RelativeSize FullHeight = new RelativeSize(1, false);
-        public static RelativeSize TwoThirdHeight = new RelativeSize(2.0f / 3.0f, false);
+		public static RelativeSize ThreeQuarterHeight = new RelativeSize(0.75f, false);
+		public static RelativeSize TwoThirdHeight = new RelativeSize(2.0f / 3.0f, false);
         public static RelativeSize HalfHeight = new RelativeSize(0.5f, false);
         public static RelativeSize ThirdHeight = new RelativeSize(1.0f / 3.0f, false);
         public static RelativeSize QuarterHeight = new RelativeSize(0.25f, false);
@@ -62,4 +63,29 @@ namespace LudicrousElectron.GUI.Geometry
             return new RelativeSize(o, -offset);
         }
     }
+
+	public class RelativeSizeXY
+	{
+		public RelativeSize Width = RelativeSize.FullWidth;
+		public RelativeSize Height = RelativeSize.HalfHeight;
+
+		public RelativeSizeXY() { }
+
+		public RelativeSizeXY(RelativeSize widht, RelativeSize height)
+		{
+			Width = widht;
+			Height = height;
+		}
+
+		public static RelativeSizeXY Full = new RelativeSizeXY(RelativeSize.FullWidth, RelativeSize.FullHeight);
+		public static RelativeSizeXY ThreeQuarter = new RelativeSizeXY(RelativeSize.ThreeQuarterWidth, RelativeSize.ThreeQuarterHeight);
+		public static RelativeSizeXY Half = new RelativeSizeXY(RelativeSize.HalfWidth, RelativeSize.HalfHeight);
+		public static RelativeSizeXY Third = new RelativeSizeXY(RelativeSize.ThirdWidth, RelativeSize.ThirdHeight);
+		public static RelativeSizeXY Quarter = new RelativeSizeXY(RelativeSize.QuarterWidth, RelativeSize.QuarterHeight);
+		public static RelativeSizeXY Eight = new RelativeSizeXY(RelativeSize.EightWidth, RelativeSize.EightHeight);
+
+		public static RelativeSizeXY BorderInset = new RelativeSizeXY(RelativeSize.BorderInsetWidth, RelativeSize.BorderInsetHeight);
+		public static RelativeSizeXY Border = new RelativeSizeXY(RelativeSize.BorderWidth, RelativeSize.BorderWidth);
+
+	}
 }

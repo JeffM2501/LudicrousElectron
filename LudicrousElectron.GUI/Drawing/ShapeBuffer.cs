@@ -131,8 +131,16 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(maxiumX, maxiumY);
 			target.Vertex(minimumX, maxiumY);
 		}
-         
-        public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, TextureInfo texture)
+
+		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect)
+		{
+			var origin = rect.GetPixelOrigin();
+			var size = rect.GetPixelSize();
+
+			TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, Vector2.One);
+		}
+
+		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, TextureInfo texture)
         {
             var origin = rect.GetPixelOrigin();
             var size = rect.GetPixelSize();

@@ -4,6 +4,7 @@ using System.Drawing;
 
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.Engine.Graphics;
+using LudicrousElectron.Engine.Graphics.Textures;
 
 namespace LudicrousElectron.GUI
 {
@@ -19,6 +20,17 @@ namespace LudicrousElectron.GUI
 				Material mat = new Material();
 				mat.DiffuseColor = color;
 				mat.DiffuseName = texture;
+				MaterialCache.Add(id, mat);
+			}
+			return MaterialCache[id];
+		}
+
+		internal static Material GetMaterial(TextureInfo texture, Color color)
+		{
+			Tuple<string, Color> id = new Tuple<string, Color>(texture.RelativeName, color);
+			if (!MaterialCache.ContainsKey(id))
+			{
+				Material mat = new Material(color,texture);
 				MaterialCache.Add(id, mat);
 			}
 			return MaterialCache[id];
