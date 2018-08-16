@@ -31,14 +31,17 @@ namespace LudicrousElectron.GUI.Text
 
 			if (Workspace == null)
 			{
-				Workspace = new Bitmap(2048, 2048, PixelFormat.Format32bppArgb);
-				WorkspaceGraphics = Graphics.FromImage(Workspace);
-			}
+				//Workspace = new Bitmap(2048, 2048, PixelFormat.Format32bppArgb);
+                Workspace = new Bitmap(2048, 2048,PixelFormat.Format32bppArgb);
+                WorkspaceGraphics = Graphics.FromImage(Workspace);
+                WorkspaceGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            }
 
 			Fonts.AddFontFile(fontFile);
 			TypefaceCache.Add(Fonts.Families[Fonts.Families.Length - 1]);
 
-			return FontCache.Count - 1;
+			return TypefaceCache.Count - 1;
 		}
 
 		internal static Dictionary<Tuple<int, int, string>, FontDrawInfo> StringCache = new Dictionary<Tuple<int, int, string>, FontDrawInfo>();
@@ -56,7 +59,7 @@ namespace LudicrousElectron.GUI.Text
 
 		public static FontDrawInfo DrawText(int fontID, int size, string text)
 		{
-			if (fontID < 0 || fontID >= FontCache.Count)
+			if (fontID < 0 || fontID >= TypefaceCache.Count)
 				return null;
 
 			Tuple<int, int, string> infoId = new Tuple<int, int, string>(fontID, size, text);
@@ -70,14 +73,18 @@ namespace LudicrousElectron.GUI.Text
 					FontCache.Add(fontkey, new Font(TypefaceCache[fontID], size));
 				Font font = FontCache[fontkey];
 
-				WorkspaceGraphics.Clear(Color.Black);
+				WorkspaceGraphics.Clear(Color.Transparent);
 				var bounds = WorkspaceGraphics.MeasureString(text, font);
 				WorkspaceGraphics.DrawString(text, font, Brushes.White, 10, 10);
 				WorkspaceGraphics.Flush();
 
-				Bitmap stringMap = Workspace.Clone(new Rectangle(10, 10, (int)(bounds.Width + 1), (int)(bounds.Height + 1)), PixelFormat.Format32bppArgb);
+              //  Workspace.Save("d:\\Test\\Full.png");
 
-				info.CachedTexture = Core.Textures.CreateTexture("FONTMAN:" + fontID.ToString() + ":" + size.ToString() +":" + text, stringMap);
+                Bitmap stringMap = Workspace.Clone(new Rectangle(10, 10, (int)(bounds.Width + 1), (int)(bounds.Height + 1)), PixelFormat.Format32bppArgb);
+
+             //   stringMap.Save("d:\\Test\\small.png");
+
+                info.CachedTexture = Core.Textures.CreateTexture("FONTMAN:" + fontID.ToString() + ":" + size.ToString() +":" + text, stringMap);
 
 				info.FontID = fontID;
 				info.FontSize = size;
