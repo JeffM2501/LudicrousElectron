@@ -18,6 +18,8 @@ namespace LudicrousElectron.GUI
 {
 	public abstract class GUIElement : PrimitivBuffer
 	{
+		public string Name = string.Empty;
+
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
 
