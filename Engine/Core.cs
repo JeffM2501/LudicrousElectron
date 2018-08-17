@@ -24,15 +24,14 @@ namespace LudicrousElectron.Engine
 		private static double GameSpeed = 1.0;
 		private static bool Running = false;
 
-		public static TextureManager Textures = new TextureManager();
-
 		public static void Setup()
 		{
             FrameworkDispatcher.Update();
 
             CollisionManager.Initalize();
+            TextureManager.Startup();
 
-			Running = true;
+            Running = true;
 		}
 
         public static void Run()
@@ -41,8 +40,8 @@ namespace LudicrousElectron.Engine
 			WindowManager.MainWindow?.Run();
 			Running = false;
 
-
-			SoundManager.Cleanup();
+            TextureManager.Cleanup();
+            SoundManager.Cleanup();
         }
 
         internal static void UpdateMain()

@@ -57,7 +57,34 @@ namespace LudicrousElectron.GUI.Text
 			public TextureInfo CachedTexture = null;
 		}
 
-		public static FontDrawInfo DrawText(int fontID, int size, string text)
+        internal static Bitmap RemakeTextureData(TextureInfo info)
+        {
+            FontDrawInfo stringInfo = info.Tag as FontDrawInfo;
+            if (stringInfo == null)
+                return null;
+
+            return GetTextBitmap(stringInfo);
+        }
+
+        internal static Bitmap GetTextBitmap(FontDrawInfo info)
+        {
+            Tuple<int, int> fontkey = new Tuple<int, int>(info.FontID, info.FontSize);
+
+            if (!FontCache.ContainsKey(fontkey))
+                FontCache.Add(fontkey, new Font(TypefaceCache[info.FontID], info.FontSize));
+            Font font = FontCache[fontkey];
+
+            WorkspaceGraphics.Clear(Color.Transparent);
+            var bounds = WorkspaceGraphics.MeasureString(info.Text, font);
+            WorkspaceGraphics.DrawString(info.Text, font, Brushes.White, 10, 10);
+            WorkspaceGraphics.Flush();
+
+            Bitmap stringMap = Workspace.Clone(new Rectangle(10, 10, (int)(bounds.Width + 1), (int)(bounds.Height + 1)), PixelFormat.Format32bppArgb);
+
+            return stringMap;
+        }
+
+        public static FontDrawInfo DrawText(int fontID, int size, string text)
 		{
 			if (fontID < 0 || fontID >= TypefaceCache.Count)
 				return null;
@@ -66,30 +93,18 @@ namespace LudicrousElectron.GUI.Text
 			if (!StringCache.ContainsKey(infoId))
 			{
 				FontDrawInfo info = new FontDrawInfo();
+                info.FontID = fontID;
+                info.FontSize = size;
+                info.Text = text;
 
-				Tuple<int, int> fontkey = new Tuple<int, int>(fontID, size);
+                Bitmap stringMap = GetTextBitmap(info);
 
-				if (!FontCache.ContainsKey(fontkey))
-					FontCache.Add(fontkey, new Font(TypefaceCache[fontID], size));
-				Font font = FontCache[fontkey];
+                info.CachedTexture = TextureManager.CreateTexture("FONTMAN:" + fontID.ToString() + ":" + size.ToString() + ":" + text, stringMap, TextureInfo.TextureFormats.Text);
+                info.Size = new Vector2(stringMap.Width, stringMap.Height);
 
-				WorkspaceGraphics.Clear(Color.Transparent);
-				var bounds = WorkspaceGraphics.MeasureString(text, font);
-				WorkspaceGraphics.DrawString(text, font, Brushes.White, 10, 10);
-				WorkspaceGraphics.Flush();
-
-              //  Workspace.Save("d:\\Test\\Full.png");
-
-                Bitmap stringMap = Workspace.Clone(new Rectangle(10, 10, (int)(bounds.Width + 1), (int)(bounds.Height + 1)), PixelFormat.Format32bppArgb);
-
-             //   stringMap.Save("d:\\Test\\small.png");
-
-                info.CachedTexture = Core.Textures.CreateTexture("FONTMAN:" + fontID.ToString() + ":" + size.ToString() +":" + text, stringMap);
-
-				info.FontID = fontID;
-				info.FontSize = size;
-				info.Text = text;
-				info.Size = new Vector2(stringMap.Width, stringMap.Height);
+                info.CachedTexture.Tag = info;
+                info.CachedTexture.CacheImageData = false;
+                info.CachedTexture.GenerateImageData = RemakeTextureData;
 
 				StringCache.Add(infoId, info);
 

@@ -16,6 +16,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 	{
 		public string RelativeName = string.Empty;
 		public string FullPath = string.Empty;
+        public object Tag = null;
 
 		public Bitmap ImageData = null;
 
@@ -23,12 +24,34 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
         public Dictionary<int, int> ContextIDs = new Dictionary<int, int>();
 
-        internal int RepeatType = 0;
-        internal bool BuildMippams = false;
+        public delegate Bitmap GenerateImageDataCB(TextureInfo info);
+        public GenerateImageDataCB GenerateImageData = null;
 
-		internal bool IsAlpha = false;
+        public bool CacheImageData = true;
 
-		public void Unbind()
+        public long LastUseFrame = 0;
+
+        public enum TextureFormats
+        {
+            TextureMap, // mip mapped
+            Sprite,
+            Text,
+        }
+
+        protected TextureFormats TextureFormat = TextureFormats.TextureMap;
+
+        public void SetTextureFormat(TextureFormats format)
+        {
+            TextureFormat = format;
+            Unbind();
+        }
+
+        public TextureFormats GetTextureFormat()
+        {
+            return TextureFormat;
+        }
+
+        public void Unbind()
 		{
             if (!ContextIDs.ContainsKey(WindowManager.CurrentContextID))
                 return;
@@ -40,12 +63,24 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
         public void Bind()
         {
+            LastUseFrame = TextureManager.UseageTimer.ElapsedMilliseconds;
+
             if (ContextIDs.ContainsKey(WindowManager.CurrentContextID))
             {
                 GL.BindTexture(TextureTarget.Texture2D, ContextIDs[WindowManager.CurrentContextID]);
                 return;
-
             }
+
+            if (ImageData == null)
+            {
+                if (GenerateImageData == null)
+                    return;
+
+                ImageData = GenerateImageData(this);
+                if (ImageData == null)
+                    return;
+            }
+
             int GLID = int.MinValue;
             GL.GenTextures(1, out GLID);
 
@@ -53,30 +88,46 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
             GL.BindTexture(TextureTarget.Texture2D, GLID);
 
-//             if (IsAlpha && ImageData.PixelFormat != System.Drawing.Imaging.PixelFormat.Format32bppRgb)
-//             {
-//                 BitmapData data = ImageData.LockBits(new Rectangle(0, 0, ImageData.Width, ImageData.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-//                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
-//                 ImageData.UnlockBits(data);
-//             }
-//             else
+            BitmapData data = ImageData.LockBits(new Rectangle(0, 0, ImageData.Width, ImageData.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+
+            switch (TextureFormat)
             {
-                BitmapData data = ImageData.LockBits(new Rectangle(0, 0, ImageData.Width, ImageData.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-                ImageData.UnlockBits(data);
+                case TextureFormats.TextureMap:
+                  
+                    GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+                    break;
+
+                case TextureFormats.Sprite:
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                    break;
+
+                case TextureFormats.Text:
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
+                    break;
+
             }
-            //bitmap.Dispose();
-
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, RepeatType);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, RepeatType);
 
             GL.BindTexture(TextureTarget.Texture2D, GLID);
+            ImageData.UnlockBits(data);
 
             ContextIDs[WindowManager.CurrentContextID] = GLID;
+
+            if (!CacheImageData)
+                ImageData.Dispose();
         }
 	}
 }

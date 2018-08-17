@@ -40,7 +40,7 @@ namespace LudicrousElectron.GUI.Geometry
 		{
 			RelativeSizeXY size = new RelativeSizeXY();
 
-			TextureInfo info = Core.Textures.GetTexture(texture);
+			TextureInfo info = TextureManager.GetTexture(texture);
 			if (info != null && info.ImageData != null && info.ImageData.Width != 0 && info.ImageData.Height != 0)
 			{
 				if (useWidth)

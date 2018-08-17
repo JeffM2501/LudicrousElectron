@@ -2,25 +2,41 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
+using System.Diagnostics;
 
 using LudicrousElectron.Types;
 using LudicrousElectron.Assets;
 
 using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL4;
-using System.Drawing.Imaging;
+using OpenTK.Graphics.OpenGL;
+
 
 namespace LudicrousElectron.Engine.Graphics.Textures
 {
-	public class TextureManager
+	public static class TextureManager
 	{
-		public bool DefaultRepeat = false;
-		public bool DefaultSmooth = false;
-		public bool AutoSprite = false;
+		public static bool AutoSprite = false;
 
-		private Dictionary<string, TextureInfo> Textures = new Dictionary<string, TextureInfo>();
+		private static Dictionary<string, TextureInfo> Textures = new Dictionary<string, TextureInfo>();
 
-		public TextureInfo GetTexture(string name, Vector2i subDiv = null)
+        internal static Stopwatch UseageTimer = null;
+
+        public static void Startup()
+        {
+            if (UseageTimer == null)
+            {
+                UseageTimer = new Stopwatch();
+                UseageTimer.Start();
+            }
+        }
+
+        public static void Cleanup()
+        {
+            if (UseageTimer != null)
+                UseageTimer.Stop();
+        }
+
+        public static TextureInfo GetTexture(string name, Vector2i subDiv = null, TextureInfo.TextureFormats format = TextureInfo.TextureFormats.TextureMap)
 		{
 			if (!Textures.ContainsKey(name))
 				LoadTexture(name, subDiv);
@@ -31,7 +47,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			return Textures[name];
 		}
 
-		public TextureInfo CreateTexture(string name, Bitmap image, bool isAlpha = false)
+		public static TextureInfo CreateTexture(string name, Bitmap image, TextureInfo.TextureFormats format = TextureInfo.TextureFormats.TextureMap)
 		{
 			if (Textures.ContainsKey(name))
 			{
@@ -39,35 +55,26 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 				Textures[name].ImageData = image;
 			}
 			else
-				MakeTexture(name, image);
+				MakeTexture(name, image, format);
 
 			if (!Textures.ContainsKey(name))
 				return null;
 
-			Textures[name].IsAlpha = true;
-
 			return Textures[name];
 		}
 
-		protected int GetRepeat()
-		{
-			if (DefaultRepeat)
-				return (int)TextureWrapMode.Repeat;
-			else
-				return (int)TextureWrapMode.ClampToEdge;
-		}
-
-		protected void MakeTexture(string name, Bitmap image)
+        private static void MakeTexture(string name, Bitmap image, TextureInfo.TextureFormats format = TextureInfo.TextureFormats.Text)
 		{
 			TextureInfo texture = new TextureInfo();
 			texture.RelativeName = name;
 			texture.FullPath = string.Empty;
 			texture.ImageData = image;
+            texture.SetTextureFormat(format);
 
-			Textures.Add(name, texture);
+            Textures.Add(name, texture);
 		}
 
-		protected void LoadTexture(string name, Vector2i subDiv)
+        private static void LoadTexture(string name, Vector2i subDiv)
 		{
 			TextureInfo info = LoadTextureData(name);
 
@@ -121,7 +128,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			Textures.Add(name, info);
 		}
 
-		protected TextureInfo LoadTextureData(string name)
+		private static TextureInfo LoadTextureData(string name)
 		{
 			Stream fs = AssetManager.GetAssetStream(name);
 			if (fs == null)
