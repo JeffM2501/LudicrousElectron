@@ -33,6 +33,21 @@ namespace LudicrousElectron.GUI.Geometry
             Paramater = o.Paramater + offset;
         }
 
+        public void Shift(float offset)
+        {
+            Paramater += offset;
+        }
+
+        public void Shift(RelativeLoc offset)
+        {
+            Paramater += offset.Paramater;
+        }
+
+        public void Shift(RelativeSize offset)
+        {
+            Paramater += offset.Paramater;
+        }
+
         public float ToScreen(int pixel)
         {
             float pixelOffset = pixel * Paramater;
@@ -79,6 +94,25 @@ namespace LudicrousElectron.GUI.Geometry
         {
             return new RelativeLoc(o, -offset);
         }
+
+        public static RelativeLoc operator *(RelativeLoc o, float factor)
+        {
+            RelativeLoc loc = new RelativeLoc(o, 0);
+            loc.Paramater *= factor;
+            return loc;
+        }
+
+        public static RelativeLoc operator /(RelativeLoc o, float factor)
+        {
+            RelativeLoc loc = new RelativeLoc(o,0);
+            loc.Paramater /= factor;
+            return loc;
+        }
+
+        public RelativeLoc Clone()
+        {
+            return new RelativeLoc(this, 0);
+        }
     }
 
 	public class RelativePoint
@@ -93,7 +127,12 @@ namespace LudicrousElectron.GUI.Geometry
 			Y = _y;
 		}
 
-		public static RelativePoint operator + (RelativePoint p, Vector2 shift)
+        public RelativePoint Clone()
+        {
+            return new RelativePoint(X.Clone(), Y.Clone());
+        }
+
+        public static RelativePoint operator + (RelativePoint p, Vector2 shift)
 		{
 			return new RelativePoint(p.X + shift.X, p.Y + shift.Y);
 		}

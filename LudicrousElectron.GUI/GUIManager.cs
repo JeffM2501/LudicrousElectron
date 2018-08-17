@@ -8,22 +8,36 @@ using LudicrousElectron.Engine.Graphics.Textures;
 
 namespace LudicrousElectron.GUI
 {
+    public class GUIMaterial
+    {
+        public Tuple<string, Color> ID = new Tuple<string, Color>(string.Empty, Color.White);
+
+        public string Texture { get { return ID.Item1; } set { ID = new Tuple<string, Color>(value, ID.Item2); }}
+        public System.Drawing.Color Color { get { return ID.Item2; } set { ID = new Tuple<string, Color>(ID.Item1,value); } }
+
+        public GUIMaterial() { }
+        public GUIMaterial(string texture, System.Drawing.Color color)
+        {
+            ID = new Tuple<string, Color>(texture, color);
+        }
+    }
+
+
 	public static class GUIManager
 	{
 		internal static Dictionary<Tuple<string, Color>, Material> MaterialCache = new Dictionary<Tuple<string, Color>, Material>();
 
-		internal static Material GetMaterial(string texture, Color color)
+		internal static Material GetMaterial(GUIMaterial matDef)
 		{
-			Tuple<string, Color> id = new Tuple<string, Color>(texture, color);
-			if (!MaterialCache.ContainsKey(id))
+			if (!MaterialCache.ContainsKey(matDef.ID))
 			{
 				Material mat = new Material();
                 mat.DefaultDiffuseFormat = TextureInfo.TextureFormats.Sprite;
-				mat.DiffuseColor = color;
-				mat.DiffuseName = texture;
-				MaterialCache.Add(id, mat);
+				mat.DiffuseColor = matDef.Color;
+				mat.DiffuseName = matDef.Texture;
+				MaterialCache.Add(matDef.ID, mat);
 			}
-			return MaterialCache[id];
+			return MaterialCache[matDef.ID];
 		}
 
 		internal static Material GetMaterial(TextureInfo texture, Color color)

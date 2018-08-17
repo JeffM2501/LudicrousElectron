@@ -14,6 +14,8 @@ namespace LudicrousElectron.GUI.Elements
 		public string Text = string.Empty;
 		public int Font = -1;
 
+        protected FontManager.FontDrawInfo DrawInfo = null;
+
         public enum TextFittingModes
         {
             ByHeightExtend,
@@ -59,7 +61,7 @@ namespace LudicrousElectron.GUI.Elements
             if (width == null)
                 width = RelativeSize.FullWidth;
 
-            DefaultColor = Color.White;
+            DefaultMaterial.Color = Color.White;
             Rect = new RelativeRect(origin.X, origin.Y, width, height, anchor);
         }
 
@@ -72,7 +74,7 @@ namespace LudicrousElectron.GUI.Elements
             if (width == null)
                 width = RelativeSize.FullWidth;
 
-            DefaultColor = color;
+            DefaultMaterial.Color = color;
             Rect = new RelativeRect(origin.X, origin.Y, width,  height, anchor);
         }
 
@@ -81,7 +83,7 @@ namespace LudicrousElectron.GUI.Elements
             FittingMode = mode;
             Text = text;
             Font = font;
-            DefaultColor = Color.White;
+            DefaultMaterial.Color = Color.White;
             Rect = new RelativeRect(RelativeLoc.XCenter,RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullWidth, OriginLocation.Center);
         }
 
@@ -90,24 +92,25 @@ namespace LudicrousElectron.GUI.Elements
             FittingMode = mode;
             Text = text;
             Font = font;
-            DefaultColor = color;
+            DefaultMaterial.Color = color;
             Rect = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullWidth, OriginLocation.Center);
         }
 
-        public override void Draw(GUIRenderLayer layer)
-		{
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
+        protected override void CheckMaterial()
+        {
+            if (CurrentMaterial == null  || DrawInfo == null || CurrentMaterial.DiffuseTexture != DrawInfo.CachedTexture)
+            {
+                if (DrawInfo == null)
+                    CurrentMaterial = GUIManager.GetMaterial(DefaultMaterial);
+                else
+                    CurrentMaterial = GUIManager.GetMaterial(DrawInfo.CachedTexture, DefaultMaterial.Color);
+            }
+        }
 
-			layer.AddDrawable(this);
-		}
-
-		public override void Resize(int x, int y)
+        public override void Resize(int x, int y)
 		{
             RelativeSize heightCache = Rect.Height;
             RelativeSize widthCache = Rect.Width;
-
-            FontManager.FontDrawInfo drawInfo = null;
 
             float pixelHeight = heightCache.ToScreen(x, y) * 0.75f;
             float pixelWidth = widthCache.ToScreen(x, y);
@@ -152,21 +155,22 @@ namespace LudicrousElectron.GUI.Elements
 
             }
 
-            drawInfo = FontManager.DrawText(Font, fontHeight, effectiveText);
-            if (drawInfo == null)
+            DrawInfo = FontManager.DrawText(Font, fontHeight, effectiveText);
+            if (DrawInfo == null)
                 return;
 
-            Rect.Width = new RelativeSize(drawInfo.Size.X, true);
+            Rect.Width = new RelativeSize(DrawInfo.Size.X, true);
             Rect.Width.Raw = true;
 
-            Rect.Height = new RelativeSize(drawInfo.Size.Y, true);
+            Rect.Height = new RelativeSize(DrawInfo.Size.Y, true);
             Rect.Height.Raw = true;
 
             Rect.Resize(x, y);
             var pixelSize = Rect.GetPixelSize();
 
-            if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture != drawInfo.CachedTexture)
-                CurrentMaterial = GUIManager.GetMaterial(drawInfo.CachedTexture, DefaultColor);
+            if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture != DrawInfo.CachedTexture)
+                CurrentMaterial = GUIManager.GetMaterial(DrawInfo.CachedTexture, DefaultMaterial.Color);
+
             ShapeBuffer.TexturedRect(this, Rect);
 
             foreach (var child in Children)

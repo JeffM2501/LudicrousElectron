@@ -21,30 +21,41 @@ namespace LudicrousElectron.GUI
 	public abstract class GUIElement : PrimitivBuffer
 	{
 		public string Name = string.Empty;
+        public object Tag = null;
 
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
 
+        protected bool Inited = false;
+
         public event EventHandler<GUIElement> GotDirty = null;
-        public void SetDirty() { GotDirty?.Invoke(this, this); }
+        public void SetDirty() { if (Inited) GotDirty?.Invoke(this, this); }
 
 		public GUIElement() { }
-		public GUIElement(RelativeRect rect) { Rect = rect; }
+		public GUIElement(RelativeRect rect)
+        {
+            Rect = rect.Clone();
+        }
+
+        public virtual void AddChild(GUIElement child)
+        {
+            Children.Add(child);
+        }
 
 		public abstract void Draw(GUIRenderLayer layer);
         public virtual void Resize(int x, int y)
         {
+            Inited = true;
+
             Rect.Resize(x, y);
             var PixelSize = Rect.GetPixelSize();
             foreach (var child in Children)
-            {
                 child.Resize((int)PixelSize.X, (int)PixelSize.Y);
-            }
         }
 
         public void Render(GUIRenderLayer layer)
         {
-			var origin = Rect.GetPixelOrigin();
+            var origin = Rect.GetPixelOrigin();
             
 			int stackSize = layer.MatrixStackSize();
 
@@ -75,9 +86,7 @@ namespace LudicrousElectron.GUI
 
     public abstract class SingleDrawGUIItem :  GUIElement
 	{
-		public Color DefaultColor = Color.White;
-		public string DefaultTexture = string.Empty;
-
+        public GUIMaterial DefaultMaterial = new GUIMaterial();
         public UIFillModes FillMode = UIFillModes.Tilled;
 
         public SingleDrawGUIItem():base(){ }
@@ -85,21 +94,35 @@ namespace LudicrousElectron.GUI
 
 		public SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
 		{
-			DefaultColor = color;
+            DefaultMaterial.Color = color;
 		}
 
 		public SingleDrawGUIItem(RelativeRect rect, Color color, string textureName) : base(rect)
 		{
-			DefaultColor = color;
-			DefaultTexture = textureName;
-		}
+            DefaultMaterial = new GUIMaterial(textureName, color);
+        }
 
-		public override void Draw(GUIRenderLayer layer)
+        public virtual GUIMaterial GetCurrentMaterial()
+        {
+            return DefaultMaterial;
+        }
+
+        public virtual void FlushMaterial()
+        {
+            CurrentMaterial = null;
+        }
+
+        protected virtual void CheckMaterial()
+        {
+            if (CurrentMaterial == null)
+                CurrentMaterial = GUIManager.GetMaterial(GetCurrentMaterial());
+        }
+
+        public override void Draw(GUIRenderLayer layer)
 		{
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
-			layer.AddDrawable(this);
+            CheckMaterial();
+            layer.AddDrawable(this);
 		}
 
         protected void HandleTexturedRect()

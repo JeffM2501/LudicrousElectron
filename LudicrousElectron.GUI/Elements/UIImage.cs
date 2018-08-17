@@ -13,9 +13,8 @@ namespace LudicrousElectron.GUI.Elements
 	{
 		public UIImage(RelativePoint origin, string texture) : base()
 		{
-			CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
-			if (CurrentMaterial == null)
-				return;
+            DefaultMaterial = new GUIMaterial(texture, Color.White);
+            CheckMaterial();
 
 			Rect.X = origin.X;
 			Rect.Y = origin.Y;
@@ -24,26 +23,25 @@ namespace LudicrousElectron.GUI.Elements
 			Rect.Width.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.X;
 			Rect.Height.Raw = true;
 			Rect.Height.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.Y;
-
-			DefaultColor = Color.White;
 		}
 
 		public UIImage(RelativeRect rect, string texture) : base()
 		{
-			CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
-			if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)
+            DefaultMaterial = new GUIMaterial(texture, Color.White);
+            CheckMaterial();
+
+            if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)
 				return;
 
 			Rect = new RelativeRect(rect.X, rect.Y, rect.Width, rect.Height);
-
-			DefaultColor = Color.White;
 		}
 
 		public UIImage(string texture, RelativePoint origin, OriginLocation anchor = OriginLocation.Center,  RelativeSize width = null, RelativeSize height = null) : base()
 		{
-			DefaultTexture = texture;
-			CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
-			if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)
+            DefaultMaterial = new GUIMaterial(texture, Color.White);
+            CheckMaterial();
+
+            if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)
 				return;
 
 			if (width == null && height == null)
@@ -64,24 +62,13 @@ namespace LudicrousElectron.GUI.Elements
 				height = RelativeTools.GetRelativeHeightInAspect(width, CurrentMaterial.DiffuseTexture.PixelSize.X, CurrentMaterial.DiffuseTexture.PixelSize.Y);
 
 			Rect = new RelativeRect(origin.X, origin.Y, width, height, anchor);
-
-			DefaultColor = Color.White;
-		}
-
-		public override void Draw(GUIRenderLayer layer)
-		{
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
-
-			layer.AddDrawable(this);
 		}
 
 		public override void Resize(int x, int y)
 		{
 			base.Resize(x, y);
 
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
+            CheckMaterial();
 
 			if (CurrentMaterial.DiffuseTexture == null)
 				ShapeBuffer.FilledRect(this, Rect);

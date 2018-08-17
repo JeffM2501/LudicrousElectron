@@ -98,6 +98,18 @@ namespace LudicrousElectron.GUI.Geometry
 			AnchorLocation = anchor;
 		}
 
+        public RelativeRect Clone()
+        {
+            RelativeRect rect = new RelativeRect(X.Clone(), Y.Clone(), Width.Clone(), Height.Clone());
+
+            rect.InscribedRadius = InscribedRadius;
+            rect.PixelOrigin = PixelOrigin;
+            rect.ParrentPixelSize = ParrentPixelSize;
+            rect.AnchorLocation = AnchorLocation;
+
+            return rect;
+        }
+
 		public virtual void Set(RelativePoint origin, RelativeSizeXY size)
 		{
 			SetLocation(origin.X, origin.Y);

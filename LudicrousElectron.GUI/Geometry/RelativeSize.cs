@@ -25,6 +25,12 @@ namespace LudicrousElectron.GUI.Geometry
         {
             Paramater = o.Paramater - offset;
             UseWidth = o.UseWidth;
+            Raw = o.Raw;
+        }
+
+        public RelativeSize Clone()
+        {
+            return new RelativeSize(this, 0);
         }
 
         public float ToScreen(int x, int y)
@@ -53,14 +59,30 @@ namespace LudicrousElectron.GUI.Geometry
         public static RelativeSize BorderWidth = new RelativeSize(RelativeLoc.BorderOffset, true);
         public static RelativeSize BorderHeight = new RelativeSize(RelativeLoc.BorderOffset, false);
 
-        public static RelativeSize operator +(RelativeSize o, float offset)
+        public static RelativeSize FixedPixelSize (int pixels) { RelativeSize r = new RelativeSize(); r.Paramater = pixels; r.Raw = true; return r; }
+
+        public static RelativeSize operator + (RelativeSize o, float offset)
         {
             return new RelativeSize(o, offset);
         }
 
-        public static RelativeSize operator -(RelativeSize o, float offset)
+        public static RelativeSize operator - (RelativeSize o, float offset)
         {
             return new RelativeSize(o, -offset);
+        }
+
+        public static RelativeSize operator * (RelativeSize o, float factor)
+        {
+            RelativeSize loc = new RelativeSize(o, 0);
+            loc.Paramater *= factor;
+            return loc;
+        }
+
+        public static RelativeSize operator / (RelativeSize o, float factor)
+        {
+            RelativeSize loc = new RelativeSize(o, 0);
+            loc.Paramater /= factor;
+            return loc;
         }
     }
 
@@ -76,6 +98,11 @@ namespace LudicrousElectron.GUI.Geometry
 			Width = widht;
 			Height = height;
 		}
+
+        public RelativeSizeXY Clone()
+        {
+            return new RelativeSizeXY(Width.Clone(), Height.Clone());
+        }
 
 		public static RelativeSizeXY Full = new RelativeSizeXY(RelativeSize.FullWidth, RelativeSize.FullHeight);
 		public static RelativeSizeXY ThreeQuarter = new RelativeSizeXY(RelativeSize.ThreeQuarterWidth, RelativeSize.ThreeQuarterHeight);

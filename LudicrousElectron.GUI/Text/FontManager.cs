@@ -16,6 +16,8 @@ namespace LudicrousElectron.GUI.Text
 {
 	public static class FontManager
 	{
+        public static int DefaultFont = -1;
+
 		private static PrivateFontCollection Fonts = new PrivateFontCollection();
 
 		public static List<FontFamily> TypefaceCache = new List<FontFamily> ();

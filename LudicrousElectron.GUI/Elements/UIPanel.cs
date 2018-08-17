@@ -29,20 +29,11 @@ namespace LudicrousElectron.GUI.Elements
 
 		}
 
-		public override void Draw(GUIRenderLayer layer)
-		{
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
-
-			layer.AddDrawable(this);
-		}
-
         public override void Resize(int x, int y)
         {
             base.Resize(x, y);
 
-			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
+            CheckMaterial();
 
             if (CurrentMaterial.DiffuseTexture == null)
                 ShapeBuffer.FilledRect(this, Rect);
