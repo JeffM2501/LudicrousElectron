@@ -36,18 +36,18 @@ namespace LudicrousElectron.Engine.RenderChain
 				if (other == null)
 					return 1;
 
-				if ((DrawObject.Mat == null) != (other.DrawObject.Mat == null))
+				if ((DrawObject.CurrentMaterial == null) != (other.DrawObject.CurrentMaterial == null))
 					return 1;
 
-				if (DrawObject.Mat == null)
+				if (DrawObject.CurrentMaterial == null)
 					return 1;
 
-				int textureComp = string.Compare(DrawObject.Mat.DiffuseName, other.DrawObject.Mat.DiffuseName);
+				int textureComp = string.Compare(DrawObject.CurrentMaterial.DiffuseName, other.DrawObject.CurrentMaterial.DiffuseName);
 				if (textureComp != 0)
 					return textureComp;
 
-				if (DrawObject.Mat.DiffuseColor.ToArgb() != other.DrawObject.Mat.DiffuseColor.ToArgb())
-					return DrawObject.Mat.DiffuseColor.ToArgb() > other.DrawObject.Mat.DiffuseColor.ToArgb() ? 1 : -1;
+				if (DrawObject.CurrentMaterial.DiffuseColor.ToArgb() != other.DrawObject.CurrentMaterial.DiffuseColor.ToArgb())
+					return DrawObject.CurrentMaterial.DiffuseColor.ToArgb() > other.DrawObject.CurrentMaterial.DiffuseColor.ToArgb() ? 1 : -1;
 
 				return 0;
 			}
@@ -130,10 +130,10 @@ namespace LudicrousElectron.Engine.RenderChain
 			Material lastMat = null;
 			foreach (var item in Drawables)
 			{
-				if (item.DrawObject.Mat != lastMat)
+				if (item.DrawObject.CurrentMaterial != lastMat)
 				{
-					BindMaterial(item.DrawObject.Mat);
-					lastMat = item.DrawObject.Mat;
+					BindMaterial(item.DrawObject.CurrentMaterial);
+					lastMat = item.DrawObject.CurrentMaterial;
 				}
 				GL.LoadMatrix(ref item.objectMatrix);
 				if (item.DrawObject.Draw())

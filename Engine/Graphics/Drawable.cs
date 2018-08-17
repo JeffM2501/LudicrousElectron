@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LudicrousElectron.Engine.Graphics
 {
-	public class Drawable
+	public class Drawable : EventArgs
 	{
-		public Material Mat = null;
+		public Material CurrentMaterial = null;
 
 		public virtual bool Draw() { return false; }
 	}

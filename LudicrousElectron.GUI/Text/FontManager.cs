@@ -112,5 +112,22 @@ namespace LudicrousElectron.GUI.Text
 			}
 			return StringCache[infoId];
 		}
-	}
+
+        public static Vector2 MeasureText(int fontID, int size, string text)
+        {
+            if (fontID < 0 || fontID >= TypefaceCache.Count)
+                return Vector2.Zero;
+
+            Tuple<int, int> fontkey = new Tuple<int, int>(fontID, size);
+
+            if (!FontCache.ContainsKey(fontkey))
+                FontCache.Add(fontkey, new Font(TypefaceCache[fontID], size));
+            Font font = FontCache[fontkey];
+
+            var bounds = WorkspaceGraphics.MeasureString(text, font);
+
+            return new Vector2(bounds.Width, bounds.Height);
+        }
+
+    }
 }

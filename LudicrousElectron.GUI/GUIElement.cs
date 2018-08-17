@@ -23,6 +23,9 @@ namespace LudicrousElectron.GUI
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
 
+        public event EventHandler<GUIElement> GotDirty = null;
+        public void SetDirty() { GotDirty?.Invoke(this, this); }
+
 		public GUIElement() { }
 		public GUIElement(RelativeRect rect) { Rect = rect; }
 
@@ -79,8 +82,8 @@ namespace LudicrousElectron.GUI
 
 		public override void Draw(GUIRenderLayer layer)
 		{
-			if (Mat == null)
-				Mat = GUIManager.GetMaterial(Texture, BaseColor);
+			if (CurrentMaterial == null)
+				CurrentMaterial = GUIManager.GetMaterial(Texture, BaseColor);
 
 			layer.AddDrawable(this);
 		}

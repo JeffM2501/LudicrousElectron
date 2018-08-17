@@ -25,8 +25,8 @@ namespace LudicrousElectron.GUI.Elements
 
 		public override void Draw(GUIRenderLayer layer)
 		{
-			if (Mat == null)
-				Mat = GUIManager.GetMaterial(DefaultTexture, Color.White);
+			if (CurrentMaterial == null)
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, Color.White);
 
 			layer.AddDrawable(this);
 		}
@@ -35,10 +35,10 @@ namespace LudicrousElectron.GUI.Elements
 		{
 			base.Resize(x, y);
 
-			if (Mat == null)
-				Mat = GUIManager.GetMaterial(DefaultTexture, Color.White);
+			if (CurrentMaterial == null)
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, Color.White);
 
-			if (Mat.DiffuseTexture == null)
+			if (CurrentMaterial.DiffuseTexture == null)
 				ShapeBuffer.FilledRect(this, Rect);
 			else
 				StrechedBuffer.Stretched(this, Rect);
