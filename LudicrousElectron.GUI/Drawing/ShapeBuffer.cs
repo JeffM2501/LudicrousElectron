@@ -145,10 +145,10 @@ namespace LudicrousElectron.GUI.Drawing
             var origin = rect.GetPixelOrigin();
             var size = rect.GetPixelSize();
 
-			if (texture == null || texture.ImageData == null || texture.ImageData.Width == 0 || texture.ImageData.Height == 0)
+			if (texture == null || texture.PixelSize.X == 0 || texture.PixelSize.Y == 0)
 				return;
 
-			Vector2 uvScale = new Vector2(size.X / texture.ImageData.Width, size.Y / texture.ImageData.Height);
+			Vector2 uvScale = new Vector2(size.X / texture.PixelSize.X, size.Y / texture.PixelSize.Y);
 
             TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale);
         }

@@ -8,6 +8,8 @@ using LudicrousElectron.Engine.Graphics;
 
 using LudicrousElectron.Types;
 using LudicrousElectron.GUI.Geometry;
+using LudicrousElectron.GUI.Drawing;
+using LudicrousElectron.GUI.Drawing.Sprite;
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -61,31 +63,70 @@ namespace LudicrousElectron.GUI
         }
 	}
 
-	public abstract class SingleDrawGUIItem :  GUIElement
-	{
-		public Color BaseColor = Color.White;
-		public string Texture = string.Empty;
+    public enum UIFillModes
+    {
+        Tilled,
+        Stretch,
+        StretchMiddle,
+        Stretch4Quad,
+        Fill9Sprite,
+    }
 
-		public SingleDrawGUIItem():base(){ }
+
+    public abstract class SingleDrawGUIItem :  GUIElement
+	{
+		public Color DefaultColor = Color.White;
+		public string DefaultTexture = string.Empty;
+
+        public UIFillModes FillMode = UIFillModes.Tilled;
+
+        public SingleDrawGUIItem():base(){ }
 		public SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
 
 		public SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
 		{
-			BaseColor = color;
+			DefaultColor = color;
 		}
 
 		public SingleDrawGUIItem(RelativeRect rect, Color color, string textureName) : base(rect)
 		{
-			BaseColor = color;
-			Texture = textureName;
+			DefaultColor = color;
+			DefaultTexture = textureName;
 		}
 
 		public override void Draw(GUIRenderLayer layer)
 		{
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(Texture, BaseColor);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
 			layer.AddDrawable(this);
 		}
+
+        protected void HandleTexturedRect()
+        {
+            switch (FillMode)
+            {
+                default:
+                case UIFillModes.Tilled:
+                    ShapeBuffer.TexturedRect(this, Rect, CurrentMaterial.DiffuseTexture);
+                    break;
+
+                case UIFillModes.Stretch:
+                    ShapeBuffer.TexturedRect(this, Rect);
+                    break;
+
+                case UIFillModes.StretchMiddle:
+                    StrechedBuffer.Stretched(this, Rect);
+                    break;
+
+                case UIFillModes.Stretch4Quad:
+                    SlicedSprite.FourSlice(this, Rect, CurrentMaterial.DiffuseTexture.PixelSize);
+                    break;
+
+                case UIFillModes.Fill9Sprite:
+                    SlicedSprite.NineSlice(this, Rect, CurrentMaterial.DiffuseTexture.PixelSize);
+                    break;
+            }      
+        }
 	}
 }

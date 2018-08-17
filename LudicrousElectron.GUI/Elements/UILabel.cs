@@ -59,7 +59,7 @@ namespace LudicrousElectron.GUI.Elements
             if (width == null)
                 width = RelativeSize.FullWidth;
 
-            BaseColor = Color.White;
+            DefaultColor = Color.White;
             Rect = new RelativeRect(origin.X, origin.Y, width, height, anchor);
         }
 
@@ -72,7 +72,7 @@ namespace LudicrousElectron.GUI.Elements
             if (width == null)
                 width = RelativeSize.FullWidth;
 
-            BaseColor = color;
+            DefaultColor = color;
             Rect = new RelativeRect(origin.X, origin.Y, width,  height, anchor);
         }
 
@@ -81,7 +81,7 @@ namespace LudicrousElectron.GUI.Elements
             FittingMode = mode;
             Text = text;
             Font = font;
-            BaseColor = Color.White;
+            DefaultColor = Color.White;
             Rect = new RelativeRect(RelativeLoc.XCenter,RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullWidth, OriginLocation.Center);
         }
 
@@ -90,14 +90,14 @@ namespace LudicrousElectron.GUI.Elements
             FittingMode = mode;
             Text = text;
             Font = font;
-            BaseColor = color;
+            DefaultColor = color;
             Rect = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullWidth, OriginLocation.Center);
         }
 
         public override void Draw(GUIRenderLayer layer)
 		{
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(Texture, BaseColor);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
 			layer.AddDrawable(this);
 		}
@@ -166,7 +166,7 @@ namespace LudicrousElectron.GUI.Elements
             var pixelSize = Rect.GetPixelSize();
 
             if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture != drawInfo.CachedTexture)
-                CurrentMaterial = GUIManager.GetMaterial(drawInfo.CachedTexture, BaseColor);
+                CurrentMaterial = GUIManager.GetMaterial(drawInfo.CachedTexture, DefaultColor);
             ShapeBuffer.TexturedRect(this, Rect);
 
             foreach (var child in Children)

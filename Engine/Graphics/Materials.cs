@@ -15,14 +15,19 @@ namespace LudicrousElectron.Engine.Graphics
 	{
 		public string Name = string.Empty;
 
+        public TextureInfo.TextureFormats DefaultDiffuseFormat = TextureInfo.TextureFormats.TextureMap;
+
 		public string DiffuseName = string.Empty;
 		internal TextureInfo _DiffuseTexture = null;
 		public TextureInfo DiffuseTexture
 		{
 			get
 			{
+                if (DiffuseName == string.Empty)
+                    return null;
+
 				if (_DiffuseTexture == null)
-					_DiffuseTexture = TextureManager.GetTexture(DiffuseName);
+					_DiffuseTexture = TextureManager.GetTexture(DiffuseName, null, DefaultDiffuseFormat);
 				return _DiffuseTexture;
 			}
 		}
@@ -35,7 +40,10 @@ namespace LudicrousElectron.Engine.Graphics
 		{
 			get
 			{
-				if (_NormalMapTexture == null)
+                if (NormalMapName == string.Empty)
+                    return null;
+
+                if (_NormalMapTexture == null)
 					_NormalMapTexture = TextureManager.GetTexture(NormalMapName);
 				return _NormalMapTexture;
 			}
@@ -47,7 +55,10 @@ namespace LudicrousElectron.Engine.Graphics
 		{
 			get
 			{
-				if (_SpecularTexture == null)
+                if (SpecularMapName == string.Empty)
+                    return null;
+
+                if (_SpecularTexture == null)
 					_SpecularTexture = TextureManager.GetTexture(SpecularMapName);
 				return _SpecularTexture;
 			}
@@ -59,8 +70,11 @@ namespace LudicrousElectron.Engine.Graphics
 		public TextureInfo EmissionTexture
 		{
 			get
-			{
-				if (_EmissionTexture == null)
+            {
+                if (EmissionMapName == string.Empty)
+                    return null;
+
+                if (_EmissionTexture == null)
 					_EmissionTexture = TextureManager.GetTexture(EmissionMapName);
 				return _EmissionTexture;
 			}

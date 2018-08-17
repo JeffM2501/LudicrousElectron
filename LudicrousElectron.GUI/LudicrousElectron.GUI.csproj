@@ -57,6 +57,7 @@
     <Compile Include="Canvas.cs" />
     <Compile Include="Drawing\ShapeBuffer.cs" />
     <Compile Include="Drawing\ShapeDraw.cs" />
+    <Compile Include="Drawing\Sprite\SlicedSprite.cs" />
     <Compile Include="Drawing\Sprite\StrechedBuffer.cs" />
     <Compile Include="Drawing\UVTools.cs" />
     <Compile Include="Elements\UIButton.cs" />

@@ -39,7 +39,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
         public static TextureInfo GetTexture(string name, Vector2i subDiv = null, TextureInfo.TextureFormats format = TextureInfo.TextureFormats.TextureMap)
 		{
 			if (!Textures.ContainsKey(name))
-				LoadTexture(name, subDiv);
+				LoadTexture(name, subDiv, format);
 
 			if (!Textures.ContainsKey(name))
 				return null;
@@ -53,7 +53,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			{
 				Textures[name].Unbind();
 				Textures[name].ImageData = image;
-			}
+                Textures[name].PixelSize = new OpenTK.Vector2(image.Width, image.Height);
+            }
 			else
 				MakeTexture(name, image, format);
 
@@ -69,16 +70,21 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			texture.RelativeName = name;
 			texture.FullPath = string.Empty;
 			texture.ImageData = image;
+            texture.PixelSize = new OpenTK.Vector2(image.Width, image.Height);
             texture.SetTextureFormat(format);
 
             Textures.Add(name, texture);
 		}
 
-        private static void LoadTexture(string name, Vector2i subDiv)
+        private static void LoadTexture(string name, Vector2i subDiv, TextureInfo.TextureFormats format)
 		{
 			TextureInfo info = LoadTextureData(name);
+            if (info == null)
+                return;
 
-			Color clearColor = Color.FromArgb(255, 0, 255);
+            info?.SetTextureFormat(format);
+
+            Color clearColor = Color.FromArgb(255, 0, 255);
 
 			if (subDiv != null && (subDiv.x > 0 || subDiv.y > 0))
 			{
@@ -148,8 +154,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			texture.RelativeName = name;
 			texture.FullPath = string.Empty;
 			texture.ImageData = bitmap;
-
-			return texture;
+            texture. PixelSize = new OpenTK.Vector2(bitmap.Width, bitmap.Height);
+            return texture;
 		}
 
 	}

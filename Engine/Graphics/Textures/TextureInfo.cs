@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 using LudicrousElectron.Types;
@@ -18,7 +19,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 		public string FullPath = string.Empty;
         public object Tag = null;
 
-		public Bitmap ImageData = null;
+		internal Bitmap ImageData = null;
 
 		public List<Rect2Di> Sprites = new List<Rect2Di>();
 
@@ -30,6 +31,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
         public bool CacheImageData = true;
 
         public long LastUseFrame = 0;
+
+        public Vector2 PixelSize = Vector2.Zero;
 
         public enum TextureFormats
         {
@@ -123,6 +126,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
             GL.BindTexture(TextureTarget.Texture2D, GLID);
             ImageData.UnlockBits(data);
+
+            PixelSize = new Vector2(ImageData.Width, ImageData.Height);
 
             ContextIDs[WindowManager.CurrentContextID] = GLID;
 

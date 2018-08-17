@@ -10,23 +10,21 @@ using System.Threading.Tasks;
 
 namespace LudicrousElectron.GUI.Elements
 {
-	public class UIButton : GUIElement
-	{
-		public string DefaultTexture = string.Empty;
-
+	public class UIButton : SingleDrawGUIItem
+    {
 		public string ActiveTexture = string.Empty;
 		public string DisabledTexture = string.Empty;
 		public string HoverTexture = string.Empty;
 
 		public UIButton(RelativeRect rect) : base(rect)
 		{
-
+            FillMode = UIFillModes.StretchMiddle;
 		}
 
 		public override void Draw(GUIRenderLayer layer)
 		{
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, Color.White);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
 			layer.AddDrawable(this);
 		}
@@ -36,12 +34,12 @@ namespace LudicrousElectron.GUI.Elements
 			base.Resize(x, y);
 
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, Color.White);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
-			if (CurrentMaterial.DiffuseTexture == null)
-				ShapeBuffer.FilledRect(this, Rect);
-			else
-				StrechedBuffer.Stretched(this, Rect);
+            if (CurrentMaterial.DiffuseTexture == null)
+                ShapeBuffer.FilledRect(this, Rect);
+            else
+                HandleTexturedRect();
 		}
 	}
 }

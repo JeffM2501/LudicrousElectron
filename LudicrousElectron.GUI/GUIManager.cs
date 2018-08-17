@@ -18,6 +18,7 @@ namespace LudicrousElectron.GUI
 			if (!MaterialCache.ContainsKey(id))
 			{
 				Material mat = new Material();
+                mat.DefaultDiffuseFormat = TextureInfo.TextureFormats.Sprite;
 				mat.DiffuseColor = color;
 				mat.DiffuseName = texture;
 				MaterialCache.Add(id, mat);

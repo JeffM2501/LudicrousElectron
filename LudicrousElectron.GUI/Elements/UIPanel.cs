@@ -9,9 +9,12 @@ using OpenTK;
 
 namespace LudicrousElectron.GUI.Elements
 {
+
 	public class UIPanel : SingleDrawGUIItem
 	{
-		public UIPanel(RelativeRect rect, Color color) : base(rect,color)
+        public UIFillModes FillMode = UIFillModes.Tilled;
+
+        public UIPanel(RelativeRect rect, Color color) : base(rect,color)
 		{
 
 		}
@@ -29,7 +32,7 @@ namespace LudicrousElectron.GUI.Elements
 		public override void Draw(GUIRenderLayer layer)
 		{
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(Texture, BaseColor);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
 			layer.AddDrawable(this);
 		}
@@ -39,12 +42,13 @@ namespace LudicrousElectron.GUI.Elements
             base.Resize(x, y);
 
 			if (CurrentMaterial == null)
-				CurrentMaterial = GUIManager.GetMaterial(Texture, BaseColor);
+				CurrentMaterial = GUIManager.GetMaterial(DefaultTexture, DefaultColor);
 
-			if (CurrentMaterial.DiffuseTexture == null)
-				ShapeBuffer.FilledRect(this, Rect);
-			else
-				ShapeBuffer.TexturedRect(this, Rect, CurrentMaterial.DiffuseTexture);
+            if (CurrentMaterial.DiffuseTexture == null)
+                ShapeBuffer.FilledRect(this, Rect);
+            else
+                HandleTexturedRect();
+           
         }
     }
 }
