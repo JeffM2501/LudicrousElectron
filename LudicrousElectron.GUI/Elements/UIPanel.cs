@@ -12,8 +12,6 @@ namespace LudicrousElectron.GUI.Elements
 
 	public class UIPanel : SingleDrawGUIItem
 	{
-        public UIFillModes FillMode = UIFillModes.Tilled;
-
         public UIPanel(RelativeRect rect, Color color) : base(rect,color)
 		{
 
