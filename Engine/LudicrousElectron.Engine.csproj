@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\LunarLambda\packages\SharpFont.4.0.1\build\SharpFont.props" Condition="Exists('..\..\LunarLambda\packages\SharpFont.4.0.1\build\SharpFont.props')" />
-  <Import Project="..\..\LunarLambda\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props" Condition="Exists('..\..\LunarLambda\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,12 +35,6 @@
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\LunarLambda\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="QuickFont, Version=4.4.6159.26433, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\LunarLambda\packages\QuickFont.Desktop.4.4.6159.26433\lib\net45\QuickFont.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
-      <HintPath>..\..\LunarLambda\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -102,11 +94,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\LunarLambda\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\LunarLambda\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))" />
-    <Error Condition="!Exists('..\..\LunarLambda\packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\LunarLambda\packages\SharpFont.4.0.1\build\SharpFont.props'))" />
-  </Target>
 </Project>

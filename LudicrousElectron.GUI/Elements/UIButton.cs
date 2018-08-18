@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
-
+using LudicrousElectron.Engine.Window;
 using LudicrousElectron.GUI.Drawing;
 using LudicrousElectron.GUI.Drawing.Sprite;
 using LudicrousElectron.GUI.Geometry;
@@ -77,6 +76,9 @@ namespace LudicrousElectron.GUI.Elements
 
         protected virtual void SetupLabel()
         {
+			if (!WindowManager.Inited())
+				return;
+
             if (Font == -1)
                 Font = FontManager.DefaultFont;
 
@@ -125,6 +127,9 @@ namespace LudicrousElectron.GUI.Elements
 
         public override void Resize(int x, int y)
 		{
+			if (LabelText != string.Empty && LabelControl == null)
+				SetupLabel();
+
 			base.Resize(x, y);
 
             CheckMaterial();
