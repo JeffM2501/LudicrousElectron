@@ -13,7 +13,8 @@ namespace LudicrousElectron.GUI.Elements
 	{
 		public UIImage(RelativePoint origin, string texture) : base()
 		{
-            DefaultMaterial = new GUIMaterial(texture, Color.White);
+			IgnoreMouse = true;
+			DefaultMaterial = new GUIMaterial(texture, Color.White);
             CheckMaterial();
 
 			Rect.X = origin.X;
@@ -27,7 +28,9 @@ namespace LudicrousElectron.GUI.Elements
 
 		public UIImage(RelativeRect rect, string texture) : base()
 		{
-            DefaultMaterial = new GUIMaterial(texture, Color.White);
+			IgnoreMouse = true;
+
+			DefaultMaterial = new GUIMaterial(texture, Color.White);
             CheckMaterial();
 
             if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)
@@ -38,7 +41,9 @@ namespace LudicrousElectron.GUI.Elements
 
 		public UIImage(string texture, RelativePoint origin, OriginLocation anchor = OriginLocation.Center,  RelativeSize width = null, RelativeSize height = null) : base()
 		{
-            DefaultMaterial = new GUIMaterial(texture, Color.White);
+			IgnoreMouse = true;
+
+			DefaultMaterial = new GUIMaterial(texture, Color.White);
             CheckMaterial();
 
             if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)

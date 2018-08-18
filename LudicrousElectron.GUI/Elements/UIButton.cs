@@ -7,6 +7,7 @@ using LudicrousElectron.GUI.Drawing;
 using LudicrousElectron.GUI.Drawing.Sprite;
 using LudicrousElectron.GUI.Geometry;
 using LudicrousElectron.GUI.Text;
+using OpenTK;
 
 namespace LudicrousElectron.GUI.Elements
 {
@@ -140,7 +141,31 @@ namespace LudicrousElectron.GUI.Elements
                 HandleTexturedRect();
 		}
 
-        public virtual void Enable()
+		public override List<GUIElement> GetElementsUnderPoint(Vector2 location)
+		{
+			List<GUIElement> elements = new List<GUIElement>();
+
+			if (Inited)
+			{
+				if (Rect.PointInRect(location))
+					elements.Add(this);
+
+				Vector2 childLoc = location - Rect.GetPixelOrigin();
+				foreach (var child in Children)
+				{
+					if (child == LabelControl)
+						continue;
+
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					if (childElements.Count > 0)
+						elements.AddRange(childElements.ToArray());
+				}
+			}
+
+			return elements;
+		}
+
+		public virtual void Enable()
         {
             Enabled = true;
             FlushMaterial();
@@ -154,7 +179,9 @@ namespace LudicrousElectron.GUI.Elements
             ButtonDisabled?.Invoke(this, this);
         }
 
-        public virtual void Activate()
+		public virtual bool IsEnabled() { return Enabled;  }
+
+		public virtual void Activate()
         {
             Activated = true;
             FlushMaterial();
@@ -168,9 +195,11 @@ namespace LudicrousElectron.GUI.Elements
             ButtonDeactivated?.Invoke(this, this);
         }
 
-        public virtual void StartHover()
+		public virtual bool IsActive() { return Activated; }
+
+		public virtual void StartHover()
         {
-            Hovered = false;
+            Hovered = true;
             FlushMaterial();
             ButtonStartHover?.Invoke(this, this);
         }
@@ -181,5 +210,12 @@ namespace LudicrousElectron.GUI.Elements
             FlushMaterial();
             ButtonEndHover?.Invoke(this, this);
         }
+
+		public virtual bool IsHovered() { return Hovered; }
+
+		public virtual void Click()
+		{
+			Clicked?.Invoke(this, this);
+		}
     }
 }

@@ -36,25 +36,28 @@ namespace LudicrousElectron.GUI.Elements
             SetDirty();
         }
 
-        public UILabel() { }
+        public UILabel() { IgnoreMouse = true; }
 
         public UILabel(int font, string text, RelativeRect rect, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base(rect, Color.White)
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
         }
 
         public UILabel(int font, string text, RelativeRect rect, Color color, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base(rect, color)
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
         }
 
         public UILabel(int font, string text, RelativePoint origin, RelativeSize height, RelativeSize width = null, OriginLocation anchor = OriginLocation.Center, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base()
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
 
@@ -67,7 +70,8 @@ namespace LudicrousElectron.GUI.Elements
 
         public UILabel(int font, string text, Color color, RelativePoint origin, RelativeSize height, RelativeSize width = null, OriginLocation anchor = OriginLocation.Center, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base()
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
 
@@ -80,7 +84,8 @@ namespace LudicrousElectron.GUI.Elements
 
         public UILabel(int font, string text, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base()
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
             DefaultMaterial.Color = Color.White;
@@ -89,7 +94,8 @@ namespace LudicrousElectron.GUI.Elements
 
         public UILabel(int font, string text, Color color, TextFittingModes mode = TextFittingModes.ByHeightExtend) : base()
         {
-            FittingMode = mode;
+			IgnoreMouse = true;
+			FittingMode = mode;
             Text = text;
             Font = font;
             DefaultMaterial.Color = color;

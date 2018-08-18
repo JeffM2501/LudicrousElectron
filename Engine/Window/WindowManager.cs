@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
+using LudicrousElectron.Engine.Input;
 using LudicrousElectron.Engine.RenderChain;
 using LudicrousElectron.Types;
 
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 
 namespace LudicrousElectron.Engine.Window
 {
@@ -66,7 +68,11 @@ namespace LudicrousElectron.Engine.Window
 
             protected override void OnUpdateFrame(FrameEventArgs e)
             {
-                if (IsMasterDisplay)
+				CurrentContextID = ContextID;
+
+				InputManager.PollInput(CurrentContextID);
+
+				if (IsMasterDisplay)
                     Core.UpdateMain();
                 else
                     Core.UpdateChild(ContextID);

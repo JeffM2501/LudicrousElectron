@@ -5,6 +5,7 @@ using System.Drawing;
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.Engine.Graphics;
 using LudicrousElectron.Engine.Graphics.Textures;
+using LudicrousElectron.Engine.Input;
 
 namespace LudicrousElectron.GUI
 {
@@ -21,7 +22,6 @@ namespace LudicrousElectron.GUI
             ID = new Tuple<string, Color>(texture, color);
         }
     }
-
 
 	public static class GUIManager
 	{
@@ -67,6 +67,8 @@ namespace LudicrousElectron.GUI
 			WindowManager.WindowRemoved += WindowManager_WindowRemoved;
 			WindowManager.WindowResized += WindowManager_WindowResized;
 
+			InputManager.ProcessMouseInput += InputManager_ProcessMouseInput;
+
 			if (WindowManager.Inited())
 			{
 				ContextInfo info = new ContextInfo();
@@ -83,6 +85,14 @@ namespace LudicrousElectron.GUI
 					Contexts.Add(info.ContextID, info);
 				}
 			}
+		}
+
+		private static void InputManager_ProcessMouseInput(object sender, InputManager.MouseFrameEventArgs e)
+		{
+			if (!Contexts.ContainsKey(e.ContextID) || Contexts[e.ContextID].Layer == null|| Contexts[e.ContextID].Canvases.Count ==0)
+				return;
+
+			Contexts[e.ContextID].Layer.HandleMouseInput(e);
 		}
 
 		private static void WindowManager_WindowResized(object sender, EventArgs e)

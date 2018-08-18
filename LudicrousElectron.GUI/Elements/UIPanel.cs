@@ -14,17 +14,17 @@ namespace LudicrousElectron.GUI.Elements
 	{
         public UIPanel(RelativeRect rect, Color color) : base(rect,color)
 		{
-
+			IgnoreMouse = true;
 		}
 
 		public UIPanel(RelativeRect rect, Color color, string texture) : base(rect, color, texture)
 		{
-
+			IgnoreMouse = true;
 		}
 
 		public UIPanel(RelativeRect rect, string texture) : base(rect, Color.White, texture)
 		{
-
+			IgnoreMouse = true;
 		}
 
         public override void Resize(int x, int y)

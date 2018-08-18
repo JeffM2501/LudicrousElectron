@@ -110,6 +110,17 @@ namespace LudicrousElectron.GUI.Geometry
             return rect;
         }
 
+		public virtual bool PointInRect(Vector2 position)
+		{
+			if (position.X < PixelOrigin.X || position.Y < PixelOrigin.Y)
+				return false;
+
+			if (position.X > PixelOrigin.X + PixelSize.X || position.Y > PixelOrigin.Y + PixelSize.Y)
+				return false;
+
+			return true;
+		}
+
 		public virtual void Set(RelativePoint origin, RelativeSizeXY size)
 		{
 			SetLocation(origin.X, origin.Y);

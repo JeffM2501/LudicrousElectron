@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+
 using LudicrousElectron.Assets;
-using LudicrousElectron.Engine.Math;
 
 namespace LudicrousElectron.Engine.Audio
 {
@@ -71,6 +72,11 @@ namespace LudicrousElectron.Engine.Audio
             Listener.Up = new Microsoft.Xna.Framework.Vector3(0, 1, 0);
         }
 
+		internal static void Setup()
+		{
+			FrameworkDispatcher.Update(); // to let sound update
+		}
+
         internal static void Cleanup()
         {
             StopTextToSpeech();
@@ -93,7 +99,8 @@ namespace LudicrousElectron.Engine.Audio
 
         internal static void Update()
         {
-            List<int> toKill = new List<int>();
+			FrameworkDispatcher.Update(); // to let sound update
+			List<int> toKill = new List<int>();
 
             foreach (var sound in ActiveSounds)
             {
@@ -260,7 +267,7 @@ namespace LudicrousElectron.Engine.Audio
 
             Listener.Position = new Microsoft.Xna.Framework.Vector3(position.X, position.Y, position.Z);
 
-            var forward = MathHelper.Vector3FromAngle(angle, false);
+            var forward = LudicrousElectron.Engine.Math.MathHelper.Vector3FromAngle(angle, false);
             Listener.Forward = new Microsoft.Xna.Framework.Vector3(forward.X, forward.Y, forward.Z);
         }
 

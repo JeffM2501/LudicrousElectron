@@ -60,6 +60,7 @@
     <Compile Include="Graphics\PimitiveBuffer.cs" />
     <Compile Include="Graphics\Textures\TextureInfo.cs" />
     <Compile Include="Graphics\Textures\TextureManager.cs" />
+    <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\KeyEvent.cs" />
     <Compile Include="Input\KeyMap.cs" />
     <Compile Include="IO\ParseUtils.cs" />

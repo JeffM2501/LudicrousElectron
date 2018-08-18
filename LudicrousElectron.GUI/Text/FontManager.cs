@@ -18,6 +18,8 @@ namespace LudicrousElectron.GUI.Text
 	{
         public static int DefaultFont = -1;
 
+		public static int MiniumFontSize = 10;
+
 		private static PrivateFontCollection Fonts = new PrivateFontCollection();
 
 		public static List<FontFamily> TypefaceCache = new List<FontFamily> ();
@@ -91,6 +93,9 @@ namespace LudicrousElectron.GUI.Text
 			if (fontID < 0 || fontID >= TypefaceCache.Count)
 				return null;
 
+			if (size < MiniumFontSize)
+				size = MiniumFontSize;
+
 			Tuple<int, int, string> infoId = new Tuple<int, int, string>(fontID, size, text);
 			if (!StringCache.ContainsKey(infoId))
 			{
@@ -120,7 +125,10 @@ namespace LudicrousElectron.GUI.Text
             if (fontID < 0 || fontID >= TypefaceCache.Count)
                 return Vector2.Zero;
 
-            Tuple<int, int> fontkey = new Tuple<int, int>(fontID, size);
+			if (size < MiniumFontSize)
+				size = MiniumFontSize;
+
+			Tuple<int, int> fontkey = new Tuple<int, int>(fontID, size);
 
             if (!FontCache.ContainsKey(fontkey))
                 FontCache.Add(fontkey, new Font(TypefaceCache[fontID], size));

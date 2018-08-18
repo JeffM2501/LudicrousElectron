@@ -27,6 +27,7 @@ namespace LudicrousElectron.GUI
         public List<GUIElement> Children = new List<GUIElement>();
 
         protected bool Inited = false;
+		protected bool IgnoreMouse = false;
 
         public event EventHandler<GUIElement> GotDirty = null;
         public void SetDirty() { if (Inited) GotDirty?.Invoke(this, this); }
@@ -72,6 +73,27 @@ namespace LudicrousElectron.GUI
  
             layer.PopMatrix();
         }
+
+		public virtual List<GUIElement> GetElementsUnderPoint(Vector2 location)
+		{
+			List<GUIElement> elements = new List<GUIElement>();
+
+			if (Inited && !IgnoreMouse)
+			{
+				if (Rect.PointInRect(location))
+					elements.Add(this);
+
+				Vector2 childLoc = location - Rect.GetPixelOrigin();
+				foreach (var child in Children)
+				{
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					if (childElements.Count > 0)
+						elements.AddRange(childElements.ToArray());
+				}
+			}
+
+			return elements;
+		}
 	}
 
     public enum UIFillModes

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using LudicrousElectron.Engine.Input;
 using LudicrousElectron.Engine.RenderChain;
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.GUI.Text;
@@ -19,7 +19,7 @@ namespace LudicrousElectron.GUI
 
         internal WindowManager.Window CurrentContext = null;
 
-        public Matrix4 OrthoMatrix = Matrix4.Identity;
+		public Matrix4 OrthoMatrix = Matrix4.Identity;
 
 		public override void RenderSetup(WindowManager.Window target)
 		{
@@ -59,6 +59,20 @@ namespace LudicrousElectron.GUI
 		{
 			CurrentCanvas = newCanvas;
 			CurrentCanvas.Resize();
+		}
+
+		internal bool HandleMouseInput(InputManager.MouseFrameEventArgs state)
+		{
+			if (state.CursorPostion.X > 0)
+			{
+				int j = 0;
+			}
+			if (CurrentContext == null || state.CursorPostion.X < 0 || state.CursorPostion.X > CurrentContext.Width || state.CursorPostion.Y < 0 || state.CursorPostion.Y > CurrentContext.Height)
+				return false;
+
+			CurrentCanvas.MouseEvent(state.CursorPostion, state.PrimaryClick, state.PrimaryDown, state.SecondaryClick, state.SecondaryDown);
+
+			return true;
 		}
 	}
 }
