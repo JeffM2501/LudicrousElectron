@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-using System.Speech.Synthesis;
-
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using LudicrousElectron.Assets;
@@ -38,8 +36,6 @@ namespace LudicrousElectron.Engine.Audio
         private static bool UsePostionalSound = true;
         private static bool NeedListenerUpdate = false;
 
-        private static object Synth = null;
-
         public class SpeachEventArgs : EventArgs
         {
             public string Text = string.Empty;
@@ -53,7 +49,8 @@ namespace LudicrousElectron.Engine.Audio
 
         public static event EventHandler<SpeachEventArgs> SetTextVoice = null;
         public static event EventHandler<SpeachEventArgs> GetTextVoice = null;
-        public static event EventHandler<SpeachEventArgs> SpeakText = null;
+		public static event EventHandler<SpeachEventArgs> GetTextVoiceList = null;
+		public static event EventHandler<SpeachEventArgs> SpeakText = null;
         public static event EventHandler<SpeachEventArgs> StopAllSpeach = null;
 
         public class SoundEventArgs : EventArgs
@@ -72,35 +69,6 @@ namespace LudicrousElectron.Engine.Audio
         {
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
             Listener.Up = new Microsoft.Xna.Framework.Vector3(0, 1, 0);
-
-            try
-            {
-                Synth = new SpeechSynthesizer();
-                (Synth as SpeechSynthesizer).SetOutputToDefaultAudioDevice();
-
-                string secondBestVoiceName = string.Empty;
-                string bestVoiceName = string.Empty;
-                foreach (var voice in (Synth as SpeechSynthesizer).GetInstalledVoices())
-                {
-                    if (voice.VoiceInfo.Gender == VoiceGender.Female)
-                    {
-                        secondBestVoiceName = voice.VoiceInfo.Name;
-                        if (voice.VoiceInfo.Age == VoiceAge.Adult)
-                            bestVoiceName = voice.VoiceInfo.Name;
-                    }
-                }
-
-                if (bestVoiceName == string.Empty && secondBestVoiceName != string.Empty)
-                    bestVoiceName = secondBestVoiceName;
-
-                SetTextToSpeachVoice(bestVoiceName);
-
-            }
-            catch (Exception)
-            {
-                Synth = null;
-                throw;
-            }
         }
 
         internal static void Cleanup()
@@ -352,79 +320,42 @@ namespace LudicrousElectron.Engine.Audio
         {
             SpeachEventArgs args = new SpeachEventArgs(name);
             SetTextVoice?.Invoke(null, args);
-            if (!args.UseInternal || Synth == null || Synth as SpeechSynthesizer == null)
-                return;
-
-            foreach (var voice in (Synth as SpeechSynthesizer).GetInstalledVoices())
-            {
-                if (voice.VoiceInfo.Name == name)
-                {
-                    (Synth as SpeechSynthesizer).SelectVoice(name);
-                    return;
-                }
-            }
         }
 
         public static string GetTextToSpeachVoice()
         {
             SpeachEventArgs args = new SpeachEventArgs(string.Empty);
             GetTextVoice?.Invoke(null, args);
-
-            if (Synth == null || Synth as SpeechSynthesizer == null)
-                return args.Text;
-
-            return (Synth as SpeechSynthesizer).Voice.Name;
+			return args.Text;
         }
 
         public static List<string> GetTextToSpeachVoices(bool female = true, bool male = true)
         {
-            List<string> names = new List<string>();
-            if (Synth == null || Synth as SpeechSynthesizer == null)
-            {
-                foreach (var voice in (Synth as SpeechSynthesizer).GetInstalledVoices())
-                {
-                    switch(voice.VoiceInfo.Gender)
-                    {
-                        case VoiceGender.Female:
-                            if (female)
-                                names.Add(voice.VoiceInfo.Name);
-                            break;
+			string t = string.Empty;
+			if (female)
+				t = "female;";
+			if (male)
+				t += "male;";
 
-                        case VoiceGender.Male:
-                            if (male)
-                                names.Add(voice.VoiceInfo.Name);
-                            break;
-                        default:
-                            if (female == male) // they want them all or they want the neutral ones
-                                names.Add(voice.VoiceInfo.Name);
-                            break;
-                    }
-                }
-                    
-            }
-            return names;
+			SpeachEventArgs args = new SpeachEventArgs(t);
+			GetTextVoiceList?.Invoke(null, args);
+
+			if (args.Text != string.Empty)
+				return new List<string>(args.Text.Split(";".ToCharArray()));
+
+			return new List<string>();
         }
 
         public static void PlayTextToSpeech(string text)
         {
             SpeachEventArgs args = new SpeachEventArgs(text);
             SpeakText?.Invoke(null, args);
-
-            if (!args.UseInternal || Synth == null || Synth as SpeechSynthesizer == null || args.Text == string.Empty)
-                return;
-
-            (Synth as SpeechSynthesizer).SpeakAsync(args.Text);
-        }
+		}
 
         public static void StopTextToSpeech()
         {
             SpeachEventArgs args = new SpeachEventArgs(string.Empty);
             StopAllSpeach?.Invoke(null, args);
-
-            if (Synth == null || Synth as SpeechSynthesizer == null)
-                return;
-
-            (Synth as SpeechSynthesizer).SpeakAsyncCancelAll();
         }
     }
 }
