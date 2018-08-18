@@ -82,7 +82,7 @@ namespace LudicrousElectron.GUI.Elements
             if (Font == -1)
                 Font = FontManager.DefaultFont;
 
-            LabelControl = new UILabel(Font, LabelText, RelativePoint.Center, RelativeSize.FullHeight + (0.3f));
+            LabelControl = new UILabel(Font, LabelText, RelativePoint.Center, RelativeSize.FullHeight + (0.35f));
             LabelControl.DefaultMaterial.Color = GetCurrentTextColor();
             AddChild(LabelControl);
         }
