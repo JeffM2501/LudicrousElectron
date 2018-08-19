@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
+using LudicrousElectron.Engine.Graphics.Textures;
 using LudicrousElectron.Engine.Input;
 using LudicrousElectron.Engine.RenderChain;
 using LudicrousElectron.Types;
@@ -20,6 +21,8 @@ namespace LudicrousElectron.Engine.Window
 
         public class Window : GameWindow
         {
+			internal WindowInfo SetupInfo = null;
+
             public Window(int width, int height, GraphicsMode mode, string title, GameWindowFlags options) : base(width, height, mode, title, options)
             {
                 IsMasterDisplay = true;
@@ -68,6 +71,13 @@ namespace LudicrousElectron.Engine.Window
 
             protected override void OnUpdateFrame(FrameEventArgs e)
             {
+				if (RestartData != null)
+				{
+					RemakeWindows();
+					this.Close();
+					return;
+				}
+
 				CurrentContextID = ContextID;
 
 				InputManager.PollInput(CurrentContextID);
@@ -82,10 +92,15 @@ namespace LudicrousElectron.Engine.Window
 
             protected override void OnRenderFrame(FrameEventArgs e)
             {
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+				if (RestartData != null)
+					return;
+
+				MakeCurrent();
+				CurrentContextID = ContextID;
+
+				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
                 GL.LoadIdentity();
 
-                CurrentContextID = ContextID;
                 if (IsMasterDisplay)
                     Core.RenderMain();
                 else
@@ -134,6 +149,37 @@ namespace LudicrousElectron.Engine.Window
 
 		public static int[] ChildWindowIDs { get; internal set; } = new int[0];
 
+		public static int MainWindowAAFactor { get; private set; } = 0;
+
+		internal class RestartInfo
+		{
+			public class WinData
+			{
+				public WindowInfo NewInfo = null;
+				public List<RenderLayer> Layers = null;
+			}
+			public WinData MainData = null;
+			public Dictionary<int, WinData> NewChildInfos = new Dictionary<int, WinData>();
+		}
+
+		internal static RestartInfo RestartData = null;
+
+		public static WindowInfo GetWindowInfo(int contextID)
+		{
+			if (contextID == MainWindowID)
+				return MainWindow?.SetupInfo;
+
+			return ChildWindowList.Find((x) => x.ContextID == contextID)?.SetupInfo;
+		}
+
+		public static Window GetWindow(int contextID)
+		{
+			if (contextID == MainWindowID)
+				return MainWindow;
+
+			return ChildWindowList.Find((x) => x.ContextID == contextID);
+		}
+
 		public static void SetClearColor(Color color)
 		{
 			ClearColor = color;
@@ -149,12 +195,18 @@ namespace LudicrousElectron.Engine.Window
 
 			MainWindowID = 1;
 
-			MainWindow = new Window(info.Size.x, info.Size.y, GraphicsMode.Default, WindowTitleText, info.Fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.FixedWindow);
+			GraphicsMode thisMode = new GraphicsMode(GraphicsMode.Default.ColorFormat, GraphicsMode.Default.Depth, GraphicsMode.Default.Stencil, info.AntiAliasingFactor);
+
+			MainWindow = new Window(info.Size.x, info.Size.y, thisMode, WindowTitleText, info.Fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.FixedWindow);
             MainWindow.ContextID = MainWindowID;
+			MainWindow.SetupInfo = info;
 
-            CurrentContextID = MainWindow.ContextID;
+			CurrentContextID = MainWindow.ContextID;
 
-			WindowAdded?.Invoke(MainWindow, EventArgs.Empty);
+			MainWindowAAFactor = MainWindow.SetupInfo.AntiAliasingFactor; // so that prefs can save it when we close, it'll be the last one that actualy worked
+
+			if (RestartData == null)
+				WindowAdded?.Invoke(MainWindow, EventArgs.Empty);
 
 			MainWindow.Resize += MainWindow_Resize;
 
@@ -173,6 +225,9 @@ namespace LudicrousElectron.Engine.Window
 
 		internal static void WindowClosed(Window win)
 		{
+			if (RestartData != null)
+				return;
+
 			WindowRemoved?.Invoke(win, EventArgs.Empty);
 			if (MainWindow == win)
 			{
@@ -196,5 +251,108 @@ namespace LudicrousElectron.Engine.Window
 				
 			return layer;
 		}
+
+		public static void SetFullscreen()
+		{
+			if (MainWindow == null || MainWindow.SetupInfo.Fullscreen)
+				return;
+
+			MainWindow.WindowState = WindowState.Fullscreen;
+			MainWindow.SetupInfo.Fullscreen = true;
+
+			foreach (var child in ChildWindowList)
+			{
+				child.WindowState = WindowState.Fullscreen;
+				child.SetupInfo.Fullscreen = true;
+			}
+		}
+
+		public static void SetNormal()
+		{
+			if (MainWindow == null || !MainWindow.SetupInfo.Fullscreen)
+				return;
+
+			MainWindow.WindowState = WindowState.Normal;
+			MainWindow.SetupInfo.Fullscreen = false;
+
+			foreach (var child in ChildWindowList)
+			{
+				child.WindowState = WindowState.Normal;
+				child.SetupInfo.Fullscreen = false;
+			}
+		}
+
+		public static void ToggleFullscreen()
+		{
+			if (MainWindow == null)
+				return;
+
+			if (MainWindow.SetupInfo.Fullscreen)
+				SetNormal();
+			else
+				SetFullscreen();
+		}
+
+		public static void SetFSAALevel(int level)
+		{
+			if (MainWindow == null || MainWindow.SetupInfo.AntiAliasingFactor == level || RestartData != null)
+				return;
+
+			RestartData = new RestartInfo();
+			RestartData.MainData = new RestartInfo.WinData();
+			RestartData.MainData.NewInfo = MainWindow.SetupInfo;
+			RestartData.MainData.NewInfo.AntiAliasingFactor = level;
+			RestartData.MainData.Layers = MainWindow.Layers;
+
+			foreach (var child in ChildWindowList)
+			{
+				RestartInfo.WinData dat = new RestartInfo.WinData();
+				dat.NewInfo = child.SetupInfo;
+				dat.NewInfo.AntiAliasingFactor = level;
+				dat.Layers = child.Layers;
+				RestartData.NewChildInfos.Add(child.ContextID, dat);
+			}
+		}
+
+		internal static void RemakeWindows()
+		{
+			if (MainWindow == null)
+				return;
+
+			MainWindow.MakeCurrent();
+			TextureManager.UnbindAll();
+
+			foreach (var child in ChildWindowList)
+			{
+				child.MakeCurrent();
+				TextureManager.UnbindAll();
+			}
+
+			MainWindow = null;
+			ChildWindowList.Clear();
+			Core.ReRun(RemakeCallback);
+		}
+
+		internal static void RemakeCallback()
+		{
+			if (RestartData == null || RestartData.MainData == null || RestartData.MainData.NewInfo == null)
+				return;
+
+			List<WindowInfo> children = new List<WindowInfo>();
+			foreach (var child in RestartData.NewChildInfos)
+				children.Add(child.Value.NewInfo);
+
+			Init(RestartData.MainData.NewInfo, children);
+
+			MainWindow.Layers = RestartData.MainData.Layers;
+
+			for (int i = 0; i < RestartData.NewChildInfos.Count; i++)
+			{
+				ChildWindowList[i].Layers = RestartData.NewChildInfos[i].Layers;
+			}
+
+			RestartData = null;
+		}
+
 	}
 }

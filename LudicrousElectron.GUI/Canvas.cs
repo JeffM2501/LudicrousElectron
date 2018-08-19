@@ -11,7 +11,8 @@ namespace LudicrousElectron.GUI
 {
 	public class Canvas
 	{
-        public WindowManager.Window BoundWindow = null;
+		public int BoundWindowID = -1;
+        public WindowManager.Window BoundWindow { get { return WindowManager.GetWindow(BoundWindowID); } }
 
 		public float LayerDepthShift = 1.0f;
 

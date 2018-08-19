@@ -158,6 +158,12 @@ namespace LudicrousElectron.Engine.Graphics.Textures
             return texture;
 		}
 
+		internal static void UnbindAll()
+		{
+			foreach (var texture in Textures.Values)
+				texture.Unbind();
+		}
+
 		public static int FramesToPurge = 10000;
 		public static int MaxPurgePerFrame = 5;
 

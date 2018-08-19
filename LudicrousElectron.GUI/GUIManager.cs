@@ -73,7 +73,7 @@ namespace LudicrousElectron.GUI
 			{
 				ContextInfo info = new ContextInfo();
 				info.ContextID = WindowManager.MainWindowID;
-                info.Layer.CurrentContext = WindowManager.MainWindow;
+                info.Layer.CurrentContextID = WindowManager.MainWindow.ContextID;
 
                 Contexts.Add(info.ContextID, info);
 
@@ -81,7 +81,7 @@ namespace LudicrousElectron.GUI
 				{
 					info = new ContextInfo();
 					info.ContextID = window.ContextID;
-                    info.Layer.CurrentContext = window;
+                    info.Layer.CurrentContextID = window.ContextID;
 					Contexts.Add(info.ContextID, info);
 				}
 			}
@@ -121,7 +121,7 @@ namespace LudicrousElectron.GUI
 
 			ContextInfo info = new ContextInfo();
 			info.ContextID = win.ContextID;
-            info.Layer.CurrentContext = win;
+            info.Layer.CurrentContextID = win.ContextID;
 			Contexts.Add(win.ContextID, info);
 		}
 
@@ -144,7 +144,7 @@ namespace LudicrousElectron.GUI
 			if (!Contexts.ContainsKey(context))
 				return;
 
-			canvas.BoundWindow = Contexts[context].Layer.CurrentContext;
+			canvas.BoundWindowID = Contexts[context].Layer.CurrentContext.ContextID;
 
             Contexts[context].Canvases.Push(canvas);
 			Contexts[context].Layer.ChangeCanvas(canvas);

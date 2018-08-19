@@ -72,6 +72,9 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			ContextIDs.Remove(WindowManager.CurrentContextID);
 			GL.DeleteTextures(1, ref GLID);
 			Loaded = false;
+
+			if (GenerateImageData != null)
+				ImageData = null;
 		}
 
 		public void ClearImageData()
@@ -150,8 +153,11 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
             ContextIDs[WindowManager.CurrentContextID] = GLID;
 
-            if (!CacheImageData)
-                ImageData.Dispose();
+			if (!CacheImageData)
+			{
+				ImageData.Dispose();
+				ImageData = null;
+			}
         }
 	}
 }

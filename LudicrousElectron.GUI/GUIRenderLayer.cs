@@ -13,17 +13,18 @@ using OpenTK.Graphics.OpenGL;
 
 namespace LudicrousElectron.GUI
 {
-    public class GUIRenderLayer : RenderLayer
-    {
+	public class GUIRenderLayer : RenderLayer
+	{
 		internal Canvas CurrentCanvas = null;
 
-        internal WindowManager.Window CurrentContext = null;
+		internal int CurrentContextID = -1;
+		internal WindowManager.Window CurrentContext { get {return WindowManager.GetWindow(CurrentContextID); } }
 
 		public Matrix4 OrthoMatrix = Matrix4.Identity;
 
 		public override void RenderSetup(WindowManager.Window target)
 		{
-			CurrentContext = target;
+			CurrentContextID = target.ContextID;
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();

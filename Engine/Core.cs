@@ -17,6 +17,11 @@ namespace LudicrousElectron.Engine
     {
 		private static bool Running = false;
 
+		internal delegate void RerunCallback();
+
+		private static RerunCallback RerunFunciton = null;
+		private static bool IsRerun = false;
+
 		public static void Setup()
 		{
 			SoundManager.Setup();
@@ -31,12 +36,33 @@ namespace LudicrousElectron.Engine
         public static void Run()
 		{
 			Running = true;
-			WindowManager.MainWindow?.Run();
+
+			bool reallyDone = false;
+			while (!reallyDone)
+			{
+				WindowManager.MainWindow?.Run();
+
+				if (IsRerun)
+				{
+					RerunFunciton?.Invoke();
+					IsRerun = false;
+					RerunFunciton = null;
+				}
+				else
+					reallyDone = true;
+			}
+			
 			Running = false;
 
             TextureManager.Cleanup();
             SoundManager.Cleanup();
         }
+
+		internal static void ReRun(RerunCallback callback)
+		{
+			RerunFunciton = callback;
+			IsRerun = true;
+		}
 
 		public static void Exit()
 		{
