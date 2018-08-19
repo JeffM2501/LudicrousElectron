@@ -158,5 +158,34 @@ namespace LudicrousElectron.Engine.Graphics.Textures
             return texture;
 		}
 
+		public static int FramesToPurge = 10000;
+		public static int MaxPurgePerFrame = 5;
+
+		public static void CheckForPurge()
+		{
+			if (UseageTimer == null)
+				return;
+
+			long now = UseageTimer.ElapsedMilliseconds;
+			int count = 0;
+			foreach (var texture in Textures.Values)
+			{
+				if (count >= MaxPurgePerFrame)
+					return;
+
+				if (!texture.IsLoaded() || texture.DissalowPurge || texture.GetTextureFormat() != TextureInfo.TextureFormats.Text)
+					continue;
+
+				if ((texture.LastUseFrame + FramesToPurge) < now)
+				{
+					count++;
+					texture.Unbind();
+					texture.ClearImageData();
+#if DEBUG
+					System.Diagnostics.Debug.WriteLine("Purged texture " + texture.RelativeName);
+#endif
+				}
+			}
+		}
 	}
 }

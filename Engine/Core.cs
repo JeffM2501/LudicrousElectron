@@ -62,7 +62,9 @@ namespace LudicrousElectron.Engine
 
         internal static void RenderMain()
         {
-        }
+			TextureManager.CheckForPurge();
+
+		}
 
         internal static void RenderChild(int childID)
         {

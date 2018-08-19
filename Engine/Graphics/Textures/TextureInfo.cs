@@ -19,6 +19,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 		public string FullPath = string.Empty;
         public object Tag = null;
 
+		public bool DissalowPurge = false;
+
 		internal Bitmap ImageData = null;
 
 		public List<Rect2Di> Sprites = new List<Rect2Di>();
@@ -33,6 +35,8 @@ namespace LudicrousElectron.Engine.Graphics.Textures
         public long LastUseFrame = 0;
 
         public Vector2 PixelSize = Vector2.Zero;
+
+		protected bool Loaded = false;
 
         public enum TextureFormats
         {
@@ -54,6 +58,11 @@ namespace LudicrousElectron.Engine.Graphics.Textures
             return TextureFormat;
         }
 
+		public bool IsLoaded()
+		{
+			return Loaded;
+		}
+
         public void Unbind()
 		{
             if (!ContextIDs.ContainsKey(WindowManager.CurrentContextID))
@@ -62,11 +71,21 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			int GLID = ContextIDs[WindowManager.CurrentContextID];
 			ContextIDs.Remove(WindowManager.CurrentContextID);
 			GL.DeleteTextures(1, ref GLID);
+			Loaded = false;
+		}
+
+		public void ClearImageData()
+		{
+			if (DissalowPurge)
+				return;
+
+			ImageData = null;
 		}
 
         public void Bind()
         {
-            LastUseFrame = TextureManager.UseageTimer.ElapsedMilliseconds;
+			Loaded = true;
+			LastUseFrame = TextureManager.UseageTimer.ElapsedMilliseconds;
 
             if (ContextIDs.ContainsKey(WindowManager.CurrentContextID))
             {
