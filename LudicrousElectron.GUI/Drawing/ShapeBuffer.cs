@@ -132,15 +132,22 @@ namespace LudicrousElectron.GUI.Drawing
 			target.Vertex(minimumX, maxiumY);
 		}
 
-		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect)
+		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, bool reverseU = false, bool revserseV = false)
 		{
 			var origin = rect.GetPixelOrigin();
 			var size = rect.GetPixelSize();
 
-			TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, Vector2.One);
+			TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, Vector2.One, reverseU, revserseV);
+		}
+		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, Vector2 uvScale, bool reverseU = false, bool revserseV = false)
+		{
+			var origin = rect.GetPixelOrigin();
+			var size = rect.GetPixelSize();
+
+			TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale, reverseU, revserseV);
 		}
 
-		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, TextureInfo texture)
+		public static void TexturedRect(PrimitivBuffer target, RelativeRect rect, TextureInfo texture, bool reverseU = false, bool revserseV = false)
         {
             var origin = rect.GetPixelOrigin();
             var size = rect.GetPixelSize();
@@ -150,30 +157,30 @@ namespace LudicrousElectron.GUI.Drawing
 
 			Vector2 uvScale = new Vector2(size.X / texture.PixelSize.X, size.Y / texture.PixelSize.Y);
 
-            TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale);
+            TexturedRect(target, origin.X, origin.Y, origin.X + size.X, origin.Y + size.Y, uvScale, reverseU, revserseV);
         }
 
-        public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, Vector2 uvScale)
+        public static void TexturedRect(PrimitivBuffer target, Vector2 minimum, Vector2 maxium, Vector2 uvScale, bool reverseU = false, bool revserseV = false)
 		{
-			TexturedRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y, uvScale);
+			TexturedRect(target, minimum.X, minimum.Y, maxium.X, maxium.Y, uvScale, reverseU, revserseV);
 		}
 
-		public static void TexturedRect(PrimitivBuffer target, float minimumX, float minimumY, float maxiumX, float maxiumY, Vector2 uvScale )
+		public static void TexturedRect(PrimitivBuffer target, float minimumX, float minimumY, float maxiumX, float maxiumY, Vector2 uvScale, bool reverseU = false, bool revserseV = false)
 		{
 			target.Clear();
 			target.DrawType = PrimitiveType.Quads;
 
 			target.Vertex(minimumX, minimumY);
-			target.UVs.Add(new Vector2(0, uvScale.Y));
+			target.UVs.Add(new Vector2(reverseU ? uvScale.X : 0, revserseV ? 0 : uvScale.Y));
 
 			target.Vertex(maxiumX, minimumY);
-			target.UVs.Add(new Vector2(uvScale.X, uvScale.Y));
+			target.UVs.Add(new Vector2(reverseU ? 0 : uvScale.X, revserseV ? 0 : uvScale.Y));
 
 			target.Vertex(maxiumX, maxiumY);
-			target.UVs.Add(new Vector2(uvScale.X, 0));
+			target.UVs.Add(new Vector2(reverseU ? 0 : uvScale.X, revserseV ? uvScale.Y : 0));
 
 			target.Vertex(minimumX, maxiumY);
-			target.UVs.Add(new Vector2(0, 0));
+			target.UVs.Add(new Vector2(reverseU ? uvScale.X : 0, revserseV ? uvScale.Y : 0));
 		}
 	}
 }

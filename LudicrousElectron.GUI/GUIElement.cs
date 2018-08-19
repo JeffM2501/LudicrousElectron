@@ -59,6 +59,12 @@ namespace LudicrousElectron.GUI
                 child.Resize((int)PixelSize.X, (int)PixelSize.Y);
         }
 
+		public virtual void ForceRefresh()
+		{
+			CurrentMaterial = null;
+			Resize((int)LastParentSize.X, (int)LastParentSize.Y);
+		}
+
         public void Render(GUIRenderLayer layer)
         {
             var origin = Rect.GetPixelOrigin();
@@ -151,6 +157,10 @@ namespace LudicrousElectron.GUI
         public GUIMaterial DefaultMaterial = new GUIMaterial();
         public UIFillModes FillMode = UIFillModes.Tilled;
 
+		protected Vector2 UVScale = new Vector2(1, 1);
+		protected bool ReverseU = false;
+		protected bool ReverseV = false;
+
         public SingleDrawGUIItem():base(){ }
 		public SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
 
@@ -187,17 +197,23 @@ namespace LudicrousElectron.GUI
             layer.AddDrawable(this);
 		}
 
+		public virtual void FlipTextureAxes(int x, int y)
+		{
+			ReverseU = x < 0;
+			ReverseV = y < 0;
+		}
+
         protected void HandleTexturedRect()
         {
             switch (FillMode)
             {
                 default:
                 case UIFillModes.Tilled:
-                    ShapeBuffer.TexturedRect(this, Rect, CurrentMaterial.DiffuseTexture);
+                    ShapeBuffer.TexturedRect(this, Rect, CurrentMaterial.DiffuseTexture, ReverseU, ReverseV);
                     break;
 
                 case UIFillModes.Stretch:
-                    ShapeBuffer.TexturedRect(this, Rect);
+                    ShapeBuffer.TexturedRect(this, Rect, UVScale, ReverseU, ReverseV);
                     break;
 
                 case UIFillModes.StretchMiddle:

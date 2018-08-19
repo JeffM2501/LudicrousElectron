@@ -115,6 +115,9 @@ namespace LudicrousElectron.GUI.Elements
 
         public override void Resize(int x, int y)
 		{
+			LastParentSize.X = x;
+			LastParentSize.Y = y;
+
             RelativeSize heightCache = Rect.Height;
             RelativeSize widthCache = Rect.Width;
 

@@ -167,6 +167,9 @@ namespace LudicrousElectron.GUI.Elements
 
 		public virtual void Enable()
         {
+			if (Enabled)
+				return;
+
             Enabled = true;
             FlushMaterial();
             ButtonEnabled?.Invoke(this, this);
@@ -174,7 +177,10 @@ namespace LudicrousElectron.GUI.Elements
 
         public virtual void Disable()
         {
-            Enabled = false;
+			if (!Enabled)
+				return;
+
+			Enabled = false;
             FlushMaterial();
             ButtonDisabled?.Invoke(this, this);
         }
@@ -183,14 +189,19 @@ namespace LudicrousElectron.GUI.Elements
 
 		public virtual void Activate()
         {
-            Activated = true;
+			if (Activated)
+				return;
+			Activated = true;
             FlushMaterial();
             ButtonAcivated?.Invoke(this, this);
         }
 
         public virtual void Deactivate()
         {
-            Activated = false;
+			if (!Activated)
+				return;
+
+			Activated = false;
             FlushMaterial();
             ButtonDeactivated?.Invoke(this, this);
         }
@@ -199,14 +210,20 @@ namespace LudicrousElectron.GUI.Elements
 
 		public virtual void StartHover()
         {
-            Hovered = true;
+			if (Hovered)
+				return;
+
+			Hovered = true;
             FlushMaterial();
             ButtonStartHover?.Invoke(this, this);
         }
 
         public virtual void EndHover()
         {
-            Hovered = false;
+			if (!Hovered)
+				return;
+
+			Hovered = false;
             FlushMaterial();
             ButtonEndHover?.Invoke(this, this);
         }
