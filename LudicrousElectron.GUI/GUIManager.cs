@@ -160,5 +160,16 @@ namespace LudicrousElectron.GUI
 			Contexts[context].Canvases.Pop();
 			Contexts[context].Layer.ChangeCanvas(Contexts[context].Canvases.Peek());
 		}
+
+		public static T PeekCanvas<T>(int context = -1) where T : Canvas
+		{
+			if (context < 0)
+				context = WindowManager.MainWindowID;
+
+			if (!Contexts.ContainsKey(context) || Contexts[context].Canvases.Count == 0)
+				return null;
+
+			return Contexts[context].Canvases.Peek() as T;
+		}
 	}
 }

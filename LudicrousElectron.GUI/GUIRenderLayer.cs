@@ -63,10 +63,6 @@ namespace LudicrousElectron.GUI
 
 		internal bool HandleMouseInput(InputManager.MouseFrameEventArgs state)
 		{
-			if (state.CursorPostion.X > 0)
-			{
-				int j = 0;
-			}
 			if (CurrentContext == null || state.CursorPostion.X < 0 || state.CursorPostion.X > CurrentContext.Width || state.CursorPostion.Y < 0 || state.CursorPostion.Y > CurrentContext.Height)
 				return false;
 

@@ -29,6 +29,8 @@ namespace LudicrousElectron.GUI
         protected bool Inited = false;
 		protected bool IgnoreMouse = false;
 
+		protected Vector2 LastParentSize = new Vector2(-1, -1);
+
         public event EventHandler<GUIElement> GotDirty = null;
         public void SetDirty() { if (Inited) GotDirty?.Invoke(this, this); }
 
@@ -46,7 +48,10 @@ namespace LudicrousElectron.GUI
 		public abstract void Draw(GUIRenderLayer layer);
         public virtual void Resize(int x, int y)
         {
-            Inited = true;
+			LastParentSize.X = x;
+			LastParentSize.Y = y;
+
+			Inited = true;
 
             Rect.Resize(x, y);
             var PixelSize = Rect.GetPixelSize();
@@ -105,8 +110,43 @@ namespace LudicrousElectron.GUI
         Fill9Sprite,
     }
 
+	public class LayoutContainer : GUIElement
+	{
+		public LayoutContainer(RelativeRect rect) : base (rect)
+		{
 
-    public abstract class SingleDrawGUIItem :  GUIElement
+		}
+
+		public override void Draw(GUIRenderLayer layer)
+		{
+			// containers don't draw
+		}
+
+		public override List<GUIElement> GetElementsUnderPoint(Vector2 location)
+		{
+			List<GUIElement> elements = new List<GUIElement>();
+
+			if (Inited)
+			{
+				if (!Rect.PointInRect(location))	// we don't add ourself, we are a container.
+					return elements;
+
+				Vector2 childLoc = location - Rect.GetPixelOrigin();
+				foreach (var child in Children)
+				{
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					if (childElements.Count > 0)
+						elements.AddRange(childElements.ToArray());
+				}
+			}
+
+			return elements;
+		}
+	}
+
+
+
+	public abstract class SingleDrawGUIItem :  GUIElement
 	{
         public GUIMaterial DefaultMaterial = new GUIMaterial();
         public UIFillModes FillMode = UIFillModes.Tilled;

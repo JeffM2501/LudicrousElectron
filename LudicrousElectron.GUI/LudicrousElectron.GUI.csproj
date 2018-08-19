@@ -66,6 +66,7 @@
     <Compile Include="GUIRenderLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\FontManager.cs" />
+    <Compile Include="VerticalLayoutGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\LudicrousElectron.Engine.csproj">

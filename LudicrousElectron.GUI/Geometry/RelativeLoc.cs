@@ -14,6 +14,7 @@ namespace LudicrousElectron.GUI.Geometry
             Maximal,
             Minimal,
             Middle,
+			Raw,
         }
 
         public Edge RelativeTo = Edge.Minimal;
@@ -62,6 +63,9 @@ namespace LudicrousElectron.GUI.Geometry
 
                 case Edge.Middle:
                     return pixel * 0.5f + pixelOffset;
+
+				case Edge.Raw:
+					return Paramater;
             }
         }
 
