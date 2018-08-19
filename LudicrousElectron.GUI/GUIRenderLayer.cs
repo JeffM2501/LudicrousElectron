@@ -57,6 +57,8 @@ namespace LudicrousElectron.GUI
 
 		internal void ChangeCanvas(Canvas newCanvas)
 		{
+			ClearDrawables();
+
 			CurrentCanvas = newCanvas;
 			CurrentCanvas.Resize();
 		}

@@ -21,7 +21,13 @@ namespace LudicrousElectron.GUI.Geometry
             UseWidth = width;
         }
 
-        public RelativeSize(RelativeSize o, float offset)
+		public RelativeSize(float param)
+		{
+			Paramater = param;
+			Raw = true;
+		}
+
+		public RelativeSize(RelativeSize o, float offset)
         {
             Paramater = o.Paramater - offset;
             UseWidth = o.UseWidth;

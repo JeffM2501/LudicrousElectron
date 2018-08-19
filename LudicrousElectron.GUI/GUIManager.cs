@@ -143,7 +143,8 @@ namespace LudicrousElectron.GUI
 
 			if (!Contexts.ContainsKey(context))
 				return;
-            canvas.BoundWindow = Contexts[context].Layer.CurrentContext;
+
+			canvas.BoundWindow = Contexts[context].Layer.CurrentContext;
 
             Contexts[context].Canvases.Push(canvas);
 			Contexts[context].Layer.ChangeCanvas(canvas);
