@@ -53,6 +53,7 @@ namespace LudicrousElectron.Engine.Window
             {
                 base.OnLoad(e);
 
+				GL.Viewport(0, 0, this.Width, this.Height);
                 SetClearColor(ClearColor);
                 GL.Enable(EnableCap.CullFace);
                 GL.CullFace(CullFaceMode.Back);
@@ -68,6 +69,11 @@ namespace LudicrousElectron.Engine.Window
 
                 GL.Disable(EnableCap.Lighting);
             }
+
+			internal void ForceReload()
+			{
+				OnLoad(null);
+			}
 
             protected override void OnUpdateFrame(FrameEventArgs e)
             {
@@ -259,11 +265,13 @@ namespace LudicrousElectron.Engine.Window
 
 			MainWindow.WindowState = WindowState.Fullscreen;
 			MainWindow.SetupInfo.Fullscreen = true;
+			MainWindow.ForceReload();
 
 			foreach (var child in ChildWindowList)
 			{
 				child.WindowState = WindowState.Fullscreen;
 				child.SetupInfo.Fullscreen = true;
+				MainWindow.ForceReload();
 			}
 		}
 
@@ -274,11 +282,13 @@ namespace LudicrousElectron.Engine.Window
 
 			MainWindow.WindowState = WindowState.Normal;
 			MainWindow.SetupInfo.Fullscreen = false;
+			MainWindow.ForceReload();
 
 			foreach (var child in ChildWindowList)
 			{
 				child.WindowState = WindowState.Normal;
 				child.SetupInfo.Fullscreen = false;
+				MainWindow.ForceReload();
 			}
 		}
 
