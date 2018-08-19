@@ -38,6 +38,14 @@ namespace LudicrousElectron.Engine
             SoundManager.Cleanup();
         }
 
+		public static void Exit()
+		{
+			if (!Running)
+				return;
+
+			WindowManager.MainWindow.Exit();
+		}
+
 		public static bool IsRunning()
 		{
 			return Running;

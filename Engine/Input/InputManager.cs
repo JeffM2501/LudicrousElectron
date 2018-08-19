@@ -39,8 +39,8 @@ namespace LudicrousElectron.Engine.Input
 			args.ContextID = currentContextID;
 			args.CursorState = Mouse.GetCursorState();
 
-			args.PrimaryDown = args.CursorState.IsButtonDown(MouseButton.Button1 + PrimaryMouseButton);
-			args.SecondaryDown = args.CursorState.IsButtonDown(MouseButton.Button1 + SecondaryMouseButton);
+			args.PrimaryDown = args.CursorState.IsButtonDown(MouseButton.Left + PrimaryMouseButton);
+			args.SecondaryDown = args.CursorState.IsButtonDown(MouseButton.Left + SecondaryMouseButton);
 			args.ScreenPosition = new Vector2(args.CursorState.X, args.CursorState.Y);
 
 			var origin = WindowManager.MainWindow.PointToClient(new System.Drawing.Point(args.CursorState.X,args.CursorState.Y));

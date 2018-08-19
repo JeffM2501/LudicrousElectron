@@ -89,10 +89,9 @@ namespace LudicrousElectron.GUI
 
 			foreach (var element in affectedElements)
 			{
-				if (element as UIButton == null)
-					continue;
-
 				UIButton button = element as UIButton;
+				if (button == null || !button.IsEnabled())
+					continue;
 
 				if (pimaryClick || primaryDown)
 				{
