@@ -61,7 +61,7 @@ namespace LudicrousElectron.Engine.Window
                 GL.ShadeModel(ShadingModel.Smooth);
                 GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
                 GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.ColorMaterial);
                 GL.ColorMaterial(MaterialFace.Front, ColorMaterialParameter.Diffuse);
                 // GL.Enable(EnableCap.LineSmooth);
