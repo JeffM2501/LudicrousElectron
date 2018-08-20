@@ -194,7 +194,7 @@ namespace LudicrousElectron.Engine.Audio
             return sound;
         }
 
-        public static int PlaySound(string name, float pitch = 1.0f, float volume = 100.0f, bool loop = false)
+        public static int PlaySound(string name, float pitch = 0.0f, float volume = 100.0f, bool loop = false)
         {
             SoundEffect sound = GetSound(name);
             if (sound == null)
@@ -215,7 +215,8 @@ namespace LudicrousElectron.Engine.Audio
                 return InvalidSoundID;
 
             SoundEffectInstance instance = sound.CreateInstance();
-            instance.Pitch = pitch;
+			if (pitch != 0)
+				instance.Pitch = pitch;
             instance.IsLooped = loop;
             instance.Volume = System.Math.Min(volume / 100.0f, 1.0f);
             instance.Play();
@@ -224,7 +225,7 @@ namespace LudicrousElectron.Engine.Audio
             return id;
         }
 
-        public static  int PlaySound(string name, OpenTK.Vector3 position, float pitch = 1.0f, float volume = 100.0f, bool loop = false)
+        public static  int PlaySound(string name, OpenTK.Vector3 position, float pitch = 0.0f, float volume = 100.0f, bool loop = false)
         {
             if (!UsePostionalSound)
                 return PlaySound(name, pitch, volume, loop);
@@ -248,8 +249,9 @@ namespace LudicrousElectron.Engine.Audio
                 return InvalidSoundID;
 
             SoundEffectInstance instance = sound.CreateInstance();
-            instance.Pitch = pitch;
-            instance.IsLooped = loop;
+			if (pitch != 0)
+				instance.Pitch = pitch;
+			instance.IsLooped = loop;
             AudioEmitter emmiter = new AudioEmitter();
             emmiter.Position = new Microsoft.Xna.Framework.Vector3(position.X, position.Y, position.Z);
             instance.Apply3D(Listener, emmiter);
