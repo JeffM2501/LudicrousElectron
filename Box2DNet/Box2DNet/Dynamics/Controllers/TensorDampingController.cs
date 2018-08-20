@@ -19,12 +19,16 @@
 using Box2DNet.Dynamics;
 using Box2DNet.Common;
 
+
+
 namespace Box2DNet.Dynamics.Controllers
 {
 
     /// <summary>
     /// This class is used to build tensor damping controllers
     /// </summary>
+#pragma warning disable CS0414, CS0169
+
     public class b2TensorDampingControllerDef
     {
         /// Tensor to use in damping model
