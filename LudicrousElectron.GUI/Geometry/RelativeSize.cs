@@ -47,11 +47,13 @@ namespace LudicrousElectron.GUI.Geometry
         public static RelativeSize FullWidth = new RelativeSize(1, true);
         public static RelativeSize ThreeQuarterWidth = new RelativeSize(0.75f, true);
         public static RelativeSize HalfWidth = new RelativeSize(0.5f, true);
-        public static RelativeSize ThirdWidth = new RelativeSize(1.0f / 3.0f, true);
+		public static RelativeSize HalfBorderInsetWidth = new RelativeSize(0.5f - (RelativeLoc.BorderOffset * 2), true);
+		public static RelativeSize ThirdWidth = new RelativeSize(1.0f / 3.0f, true);
         public static RelativeSize QuarterWidth = new RelativeSize(0.25f, true);
         public static RelativeSize EightWidth = new RelativeSize(0.125f, true);
 
         public static RelativeSize FullHeight = new RelativeSize(1, false);
+		public static RelativeSize SevenEightsHeight = new RelativeSize(7.0f/8.0f, false);
 		public static RelativeSize ThreeQuarterHeight = new RelativeSize(0.75f, false);
 		public static RelativeSize TwoThirdHeight = new RelativeSize(2.0f / 3.0f, false);
         public static RelativeSize HalfHeight = new RelativeSize(0.5f, false);

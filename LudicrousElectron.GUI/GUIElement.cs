@@ -23,6 +23,8 @@ namespace LudicrousElectron.GUI
 		public string Name = string.Empty;
         public object Tag = null;
 
+		public Canvas ParentCanvas = null;
+
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
 

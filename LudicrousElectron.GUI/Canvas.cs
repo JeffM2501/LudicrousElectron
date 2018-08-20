@@ -19,6 +19,8 @@ namespace LudicrousElectron.GUI
 
         protected SortedDictionary<int,List<GUIElement>> GUIElements = new SortedDictionary<int,List<GUIElement>>();
 
+		protected GUIElement PopUpCTL = null;
+
 		protected List<UIButton> HoveredControlls = new List<UIButton>();
 		protected List<UIButton> ActivatedControlls = new List<UIButton>();
 
@@ -27,21 +29,45 @@ namespace LudicrousElectron.GUI
 			if (!GUIElements.ContainsKey(layer))
 				GUIElements.Add(layer, new List<GUIElement>());
 
+			element.ParentCanvas = this;
+
 			GUIElements[layer].Add(element);
             if (BoundWindow != null)
                 element.Resize(BoundWindow.Width, BoundWindow.Height);
         }
 
+		public void SetPopupElement(GUIElement element)
+		{
+			if (PopUpCTL != null)
+				PopUpCTL = null;	// disable it here? it may need to flush a list?
+
+			PopUpCTL = element;
+			if (element != null)
+			{
+				element.ParentCanvas = this;
+
+				if (BoundWindow != null)
+					element.Resize(BoundWindow.Width, BoundWindow.Height);
+			}
+		}
+
 		public virtual void Render(GUIRenderLayer layer)
 		{
+			int lastLayer = 1;
 			foreach (var l in GUIElements)
 			{
+				lastLayer = l.Key;
 				layer.PushTranslation(0, 0, l.Key * LayerDepthShift);
 				foreach (var element in l.Value)
 					element.Render(layer);
 
 				layer.PopMatrix();
 			}
+
+			lastLayer++;
+			layer.PushTranslation(0, 0, lastLayer * LayerDepthShift);
+			PopUpCTL?.Render(layer);
+			layer.PopMatrix();
 		}
 
 		public virtual void Resize()
@@ -53,6 +79,8 @@ namespace LudicrousElectron.GUI
 				foreach (var element in l.Value)
 					element.Resize(BoundWindow.Width, BoundWindow.Height);
 			}
+
+			PopUpCTL?.Resize(BoundWindow.Width, BoundWindow.Height);
 		}
 
 		List<UIButton> NewHover = new List<UIButton>();
@@ -90,13 +118,25 @@ namespace LudicrousElectron.GUI
 		{
 			List<GUIElement> affectedElements = new List<GUIElement>();
 
-			List<int> keys = new List<int>(GUIElements.Keys);
-			keys.Reverse();
-
-			foreach (var layer in keys)
+			// check the popup element
+			if (PopUpCTL != null)
 			{
-				foreach (var item in GUIElements[layer])
-					affectedElements.AddRange(item.GetElementsUnderPoint(position, buttons));
+				if (PopUpCTL.Rect.PointInRect(position))
+					affectedElements.AddRange(PopUpCTL.GetElementsUnderPoint(position, buttons));
+				else
+					SetPopupElement(null);
+			}
+
+			if (PopUpCTL == null) // only check the other controls if there is not a popup.
+			{
+				List<int> keys = new List<int>(GUIElements.Keys);
+				keys.Reverse();
+
+				foreach (var layer in keys)
+				{
+					foreach (var item in GUIElements[layer])
+						affectedElements.AddRange(item.GetElementsUnderPoint(position, buttons));
+				}
 			}
 
 			if (affectedElements.Count == 0) // nothing is affected, clear out the states
