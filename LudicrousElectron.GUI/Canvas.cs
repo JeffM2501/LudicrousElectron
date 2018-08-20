@@ -29,11 +29,16 @@ namespace LudicrousElectron.GUI
 			if (!GUIElements.ContainsKey(layer))
 				GUIElements.Add(layer, new List<GUIElement>());
 
-			element.ParentCanvas = this;
+			element.SetParentCanvas(this);
 
 			GUIElements[layer].Add(element);
             if (BoundWindow != null)
                 element.Resize(BoundWindow.Width, BoundWindow.Height);
+        }
+
+        public bool PopupEnabled()
+        {
+            return PopUpCTL != null;
         }
 
 		public void SetPopupElement(GUIElement element)
@@ -64,7 +69,7 @@ namespace LudicrousElectron.GUI
 				layer.PopMatrix();
 			}
 
-			lastLayer++;
+            lastLayer *= 2;
 			layer.PushTranslation(0, 0, lastLayer * LayerDepthShift);
 			PopUpCTL?.Render(layer);
 			layer.PopMatrix();

@@ -43,6 +43,13 @@ namespace LudicrousElectron.GUI
             Rect = rect.Clone();
         }
 
+        public virtual void SetParentCanvas(Canvas canvas)
+        {
+            ParentCanvas = canvas;
+            foreach (var child in Children)
+                child.SetParentCanvas(canvas);
+        }
+
         public virtual void AddChild(GUIElement child)
         {
             child.Parent = this;
