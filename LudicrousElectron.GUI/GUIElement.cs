@@ -24,6 +24,7 @@ namespace LudicrousElectron.GUI
         public object Tag = null;
 
 		public Canvas ParentCanvas = null;
+        public GUIElement Parent = null;
 
         public RelativeRect Rect = new RelativeRect();
         public List<GUIElement> Children = new List<GUIElement>();
@@ -44,6 +45,8 @@ namespace LudicrousElectron.GUI
 
         public virtual void AddChild(GUIElement child)
         {
+            child.Parent = this;
+            child.ParentCanvas = ParentCanvas;
             Children.Add(child);
         }
 
@@ -61,7 +64,25 @@ namespace LudicrousElectron.GUI
                 child.Resize((int)PixelSize.X, (int)PixelSize.Y);
         }
 
-		public virtual void ForceRefresh()
+        public virtual Vector2 GetScreenOrigin()
+        {
+            Vector2 origin = Vector2.Zero;
+            if (Parent != null)
+                Parent.GetScreenOrigin();
+
+            return origin + Rect.GetPixelOrigin();
+        }
+
+        public virtual Vector2 GetScreenOriginCenter()
+        {
+            Vector2 origin = Vector2.Zero;
+            if (Parent != null)
+                Parent.GetScreenOrigin();
+
+            return origin + Rect.GetPixelOrigin() + (Rect.GetPixelSize() * 0.5f);
+        }
+
+        public virtual void ForceRefresh()
 		{
 			CurrentMaterial = null;
 			Resize((int)LastParentSize.X, (int)LastParentSize.Y);
