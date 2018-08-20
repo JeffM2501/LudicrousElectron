@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using LudicrousElectron.Engine.Audio;
 using LudicrousElectron.Engine.Input;
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.GUI.Drawing;
@@ -40,6 +41,9 @@ namespace LudicrousElectron.GUI.Elements
         public event EventHandler<UIButton> ButtonDeactivated = null;
         public event EventHandler<UIButton> ButtonStartHover = null;
         public event EventHandler<UIButton> ButtonEndHover = null;
+
+		public string ClickSound = string.Empty;
+		public string HoverSound = string.Empty;
 
         public UIButton(RelativeRect rect) : base(rect)
 		{
@@ -217,7 +221,10 @@ namespace LudicrousElectron.GUI.Elements
 			Hovered = true;
             FlushMaterial();
             ButtonStartHover?.Invoke(this, this);
-        }
+
+			if (HoverSound != string.Empty)
+				SoundManager.PlaySound(HoverSound);
+		}
 
         public virtual void EndHover()
         {
@@ -234,6 +241,9 @@ namespace LudicrousElectron.GUI.Elements
 		public virtual void Click()
 		{
 			Clicked?.Invoke(this, this);
+
+			if (ClickSound != string.Empty)
+				SoundManager.PlaySound(ClickSound);
 		}
     }
 }
