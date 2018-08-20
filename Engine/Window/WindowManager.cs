@@ -143,7 +143,14 @@ namespace LudicrousElectron.Engine.Window
 		{
 			public Vector2i Size = new Vector2i();
 			public Vector2i Position = null;
-			public bool Fullscreen = false;
+
+			public enum WindowSizeTypes
+			{
+				Normal,
+				Maximized,
+				Fullscreen,
+			}
+			public WindowSizeTypes SizeType = WindowSizeTypes.Normal;
 			public int AntiAliasingFactor = 0;
 		}
 
@@ -203,7 +210,7 @@ namespace LudicrousElectron.Engine.Window
 
 			GraphicsMode thisMode = new GraphicsMode(GraphicsMode.Default.ColorFormat, GraphicsMode.Default.Depth, GraphicsMode.Default.Stencil, info.AntiAliasingFactor);
 
-			MainWindow = new Window(info.Size.x, info.Size.y, thisMode, WindowTitleText, info.Fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.FixedWindow);
+			MainWindow = new Window(info.Size.x, info.Size.y, thisMode, WindowTitleText, info.SizeType == WindowInfo.WindowSizeTypes.Fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.FixedWindow);
             MainWindow.ContextID = MainWindowID;
 			MainWindow.SetupInfo = info;
 
@@ -215,6 +222,9 @@ namespace LudicrousElectron.Engine.Window
 				WindowAdded?.Invoke(MainWindow, EventArgs.Empty);
 
 			MainWindow.Resize += MainWindow_Resize;
+
+			if (info.SizeType == WindowInfo.WindowSizeTypes.Maximized)
+				SetMaximized();
 
 			return true;
 		}
@@ -260,34 +270,51 @@ namespace LudicrousElectron.Engine.Window
 
 		public static void SetFullscreen()
 		{
-			if (MainWindow == null || MainWindow.SetupInfo.Fullscreen)
+			if (MainWindow == null || MainWindow.SetupInfo.SizeType == WindowInfo.WindowSizeTypes.Fullscreen)
 				return;
 
 			MainWindow.WindowState = WindowState.Fullscreen;
-			MainWindow.SetupInfo.Fullscreen = true;
+			MainWindow.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Fullscreen;
 			MainWindow.ForceReload();
 
 			foreach (var child in ChildWindowList)
 			{
 				child.WindowState = WindowState.Fullscreen;
-				child.SetupInfo.Fullscreen = true;
+				child.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Fullscreen;
+				MainWindow.ForceReload();
+			}
+		}
+
+		public static void SetMaximized()
+		{
+			if (MainWindow == null || MainWindow.SetupInfo.SizeType == WindowInfo.WindowSizeTypes.Maximized)
+				return;
+
+			MainWindow.WindowState = WindowState.Maximized;
+			MainWindow.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Maximized;
+			MainWindow.ForceReload();
+
+			foreach (var child in ChildWindowList)
+			{
+				child.WindowState = WindowState.Maximized;
+				child.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Maximized;
 				MainWindow.ForceReload();
 			}
 		}
 
 		public static void SetNormal()
 		{
-			if (MainWindow == null || !MainWindow.SetupInfo.Fullscreen)
+			if (MainWindow == null || MainWindow.SetupInfo.SizeType == WindowInfo.WindowSizeTypes.Normal)
 				return;
 
 			MainWindow.WindowState = WindowState.Normal;
-			MainWindow.SetupInfo.Fullscreen = false;
+			MainWindow.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Normal;
 			MainWindow.ForceReload();
 
 			foreach (var child in ChildWindowList)
 			{
 				child.WindowState = WindowState.Normal;
-				child.SetupInfo.Fullscreen = false;
+				child.SetupInfo.SizeType = WindowInfo.WindowSizeTypes.Normal;
 				MainWindow.ForceReload();
 			}
 		}
@@ -297,7 +324,7 @@ namespace LudicrousElectron.Engine.Window
 			if (MainWindow == null)
 				return;
 
-			if (MainWindow.SetupInfo.Fullscreen)
+			if (MainWindow.SetupInfo.SizeType == WindowInfo.WindowSizeTypes.Fullscreen)
 				SetNormal();
 			else
 				SetFullscreen();
