@@ -35,6 +35,22 @@ namespace LudicrousElectron.Assets.Providers
 			return assetPaths;
 		}
 
+		public virtual List<string> FindAssets(string pathStart, string searchPattern)
+		{
+			if (searchPattern == string.Empty)
+				searchPattern = "*.*";
+
+			List<string> assetPaths = new List<string>();
+			if (RootDir != null)
+			{
+				DirectoryInfo subDir = new DirectoryInfo(Path.Combine(RootDir.FullName, pathStart));
+				if (subDir.Exists)
+					SearchDir(subDir, searchPattern, assetPaths);
+			}
+
+			return assetPaths;
+		}
+
 		protected virtual void SearchDir(DirectoryInfo dir, string searchPattern, List<string> assetPaths)
 		{
 			foreach (var file in dir.GetFiles(searchPattern))
@@ -61,10 +77,15 @@ namespace LudicrousElectron.Assets.Providers
 			if (RootDir == null)
 				return path;
 
+			if (path.StartsWith("/"))
+				path = path.Substring(1);
+
 			if (Path.DirectorySeparatorChar == '\\')
 				path = path.Replace("/", "\\");
 
-			return new FileInfo(Path.Combine(RootDir.FullName, path)).FullName;
+			FileInfo file = new FileInfo(Path.Combine(RootDir.FullName, path));
+
+			return file.FullName;
 		}
 
 		public virtual Stream GetAssetStream(string assetPath)

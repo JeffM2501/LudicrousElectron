@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using LudicrousElectron.Engine.Input;
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.GUI.Drawing;
 using LudicrousElectron.GUI.Drawing.Sprite;
@@ -141,7 +142,7 @@ namespace LudicrousElectron.GUI.Elements
                 HandleTexturedRect();
 		}
 
-		public override List<GUIElement> GetElementsUnderPoint(Vector2 location)
+		public override List<GUIElement> GetElementsUnderPoint(Vector2 location, InputManager.LogicalButtonState buttons)
 		{
 			List<GUIElement> elements = new List<GUIElement>();
 
@@ -156,7 +157,7 @@ namespace LudicrousElectron.GUI.Elements
 					if (child == LabelControl)
 						continue;
 
-					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc, buttons);
 					if (childElements.Count > 0)
 						elements.AddRange(childElements.ToArray());
 				}

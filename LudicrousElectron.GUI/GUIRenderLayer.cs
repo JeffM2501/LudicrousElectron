@@ -69,7 +69,7 @@ namespace LudicrousElectron.GUI
 			if (CurrentContext == null || state.CursorPostion.X < 0 || state.CursorPostion.X > CurrentContext.Width || state.CursorPostion.Y < 0 || state.CursorPostion.Y > CurrentContext.Height)
 				return false;
 
-			CurrentCanvas.MouseEvent(state.CursorPostion, state.PrimaryClick, state.PrimaryDown, state.SecondaryClick, state.SecondaryDown);
+			CurrentCanvas.MouseEvent(state.CursorPostion, state.Buttons);
 
 			return true;
 		}

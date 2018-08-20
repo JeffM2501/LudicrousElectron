@@ -5,6 +5,7 @@ using System.Drawing;
 using LudicrousElectron.Engine.RenderChain;
 using LudicrousElectron.Engine.Window;
 using LudicrousElectron.GUI.Elements;
+using LudicrousElectron.Engine.Input;
 using OpenTK;
 
 namespace LudicrousElectron.GUI
@@ -54,7 +55,38 @@ namespace LudicrousElectron.GUI
 			}
 		}
 
-		public virtual bool MouseEvent(Vector2 position, bool pimaryClick, bool primaryDown, bool secondaryClick, bool secondaryDown )
+		List<UIButton> NewHover = new List<UIButton>();
+		List<UIButton> NewActive = new List<UIButton>();
+
+		protected virtual bool HandleControlClick(UIButton button, InputManager.LogicalButtonState mouseButtons)
+		{
+			if (button == null || !button.IsEnabled())
+				return false;
+
+			if (mouseButtons.PrimaryClick || mouseButtons.PrimaryDown)
+			{
+				if (button.IsHovered())
+					button.EndHover();
+
+				if (!button.IsActive())
+					button.Activate();
+
+				if (mouseButtons.PrimaryClick)
+					button.Click();
+				NewActive.Add(button);
+			}
+			else
+			{
+				if (!button.IsHovered())
+					button.StartHover();
+
+				NewHover.Add(button);
+			}
+
+			return true;
+		}
+
+		public virtual bool MouseEvent(Vector2 position, InputManager.LogicalButtonState buttons)
 		{
 			List<GUIElement> affectedElements = new List<GUIElement>();
 
@@ -63,8 +95,8 @@ namespace LudicrousElectron.GUI
 
 			foreach (var layer in keys)
 			{
-				foreach(var item in GUIElements[layer])
-					affectedElements.AddRange(item.GetElementsUnderPoint(position));
+				foreach (var item in GUIElements[layer])
+					affectedElements.AddRange(item.GetElementsUnderPoint(position, buttons));
 			}
 
 			if (affectedElements.Count == 0) // nothing is affected, clear out the states
@@ -85,49 +117,32 @@ namespace LudicrousElectron.GUI
 				return false;
 			}
 
-			List<UIButton> newHover = new List<UIButton>();
-			List<UIButton> newActive = new List<UIButton>();
+			NewHover = new List<UIButton>();
+			NewActive = new List<UIButton>();
 
 			foreach (var element in affectedElements)
 			{
 				UIButton button = element as UIButton;
-				if (button == null || !button.IsEnabled())
+				if (HandleControlClick(button, buttons))
 					continue;
-
-				if (pimaryClick || primaryDown)
-				{
-					if(button.IsHovered())
-						button.EndHover();
-
-					if (!button.IsActive())
-						button.Activate();
-
-					if (pimaryClick)
-						button.Click();
-					newActive.Add(button);
-				}
-				else
-				{
-					if (!button.IsHovered())
-						button.StartHover();
-
-					newHover.Add(button);
-				}
 			}
 
 			foreach(var item in ActivatedControlls)
 			{
-				if (!newActive.Contains(item) && item.IsActive())
+				if (!NewActive.Contains(item) && item.IsActive())
 					item.Deactivate();
 			}
-			ActivatedControlls = newActive;
+			ActivatedControlls = NewActive;
 
 			foreach(var item in HoveredControlls)
 			{
-				if (!newHover.Contains(item) && item.IsHovered())
+				if (!NewHover.Contains(item) && item.IsHovered())
 					item.EndHover();
 			}
-			HoveredControlls = newHover;
+			HoveredControlls = NewHover;
+
+			NewHover = null;
+			NewActive = null;
 
 			return true;
 		}

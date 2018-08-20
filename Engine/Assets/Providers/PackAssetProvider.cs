@@ -71,7 +71,37 @@ namespace LudicrousElectron.Assets.Providers
 
         public List<string> FindAssets(string searchPattern)
 		{
-			return new List<string>(Assets.Keys.ToArray());
+			if (searchPattern != string.Empty)
+				searchPattern = searchPattern.Substring(1).ToUpperInvariant();
+			else if (searchPattern == "*.*")
+				searchPattern = string.Empty;
+
+			List<string> assets = new List<string>();
+			foreach (var asset in Assets.Keys)
+			{
+				if (searchPattern == string.Empty || Path.GetExtension(asset).ToUpperInvariant() == searchPattern)
+					assets.Add(asset);
+			}
+			return assets;
+		}
+
+		public virtual List<string> FindAssets(string pathStart, string searchPattern)
+		{
+			if (searchPattern != string.Empty)
+				searchPattern = searchPattern.Substring(1).ToUpperInvariant();
+			else if (searchPattern == "*.*")
+				searchPattern = string.Empty;
+
+			List<string> assets = new List<string>();
+			foreach (var asset in Assets.Keys)
+			{
+				if (pathStart != null && !asset.ToUpperInvariant().StartsWith(pathStart.ToUpperInvariant()))
+					continue;
+
+				if (searchPattern == string.Empty || Path.GetExtension(asset).ToUpperInvariant() == searchPattern)
+					assets.Add(asset);
+			}
+			return assets;
 		}
 
 		public Stream GetAssetStream(string assetPath)

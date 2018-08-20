@@ -11,16 +11,21 @@ namespace LudicrousElectron.Engine.Input
 		public static int PrimaryMouseButton = 0;
 		public static int SecondaryMouseButton = 1;
 
-		public class MouseFrameEventArgs : EventArgs
+		public class LogicalButtonState
 		{
-			public MouseState CursorState = new MouseState();
-			public int ContextID = -1;
-
 			public bool PrimaryDown = false;
 			public bool SecondaryDown = false;
 
 			public bool PrimaryClick = false;
 			public bool SecondaryClick = false;
+		}
+
+		public class MouseFrameEventArgs : EventArgs
+		{
+			public MouseState CursorState = new MouseState();
+			public int ContextID = -1;
+
+			public LogicalButtonState Buttons = new LogicalButtonState();
 
 			public Vector2 ScreenPosition = Vector2.Zero;
 			public Vector2 CursorPostion = Vector2.Zero;
@@ -39,8 +44,8 @@ namespace LudicrousElectron.Engine.Input
 			args.ContextID = currentContextID;
 			args.CursorState = Mouse.GetCursorState();
 
-			args.PrimaryDown = args.CursorState.IsButtonDown(MouseButton.Left + PrimaryMouseButton);
-			args.SecondaryDown = args.CursorState.IsButtonDown(MouseButton.Left + SecondaryMouseButton);
+			args.Buttons.PrimaryDown = args.CursorState.IsButtonDown(MouseButton.Left + PrimaryMouseButton);
+			args.Buttons.SecondaryDown = args.CursorState.IsButtonDown(MouseButton.Left + SecondaryMouseButton);
 			args.ScreenPosition = new Vector2(args.CursorState.X, args.CursorState.Y);
 
 			var origin = WindowManager.MainWindow.PointToClient(new System.Drawing.Point(args.CursorState.X,args.CursorState.Y));
@@ -49,13 +54,13 @@ namespace LudicrousElectron.Engine.Input
 
 			if (LastMouseState == null)
 			{
-				args.PrimaryClick = args.PrimaryDown;
-				args.SecondaryClick = args.SecondaryDown;
+				args.Buttons.PrimaryClick = args.Buttons.PrimaryDown;
+				args.Buttons.SecondaryClick = args.Buttons.SecondaryDown;
 			}
 			else
 			{
-				args.PrimaryClick = args.PrimaryDown && !LastMouseState.PrimaryDown && !LastMouseState.PrimaryClick;
-				args.SecondaryClick = args.SecondaryDown && !LastMouseState.SecondaryDown && !LastMouseState.SecondaryClick;
+				args.Buttons.PrimaryClick = args.Buttons.PrimaryDown && !LastMouseState.Buttons.PrimaryDown && !LastMouseState.Buttons.PrimaryClick;
+				args.Buttons.SecondaryClick = args.Buttons.SecondaryDown && !LastMouseState.Buttons.SecondaryDown && !LastMouseState.Buttons.SecondaryClick;
 			}
 
 			// let someone modify it, like for special input systems that must happen before actual processing

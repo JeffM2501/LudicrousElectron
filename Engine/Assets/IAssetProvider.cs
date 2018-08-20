@@ -9,6 +9,7 @@ namespace LudicrousElectron.Assets
 	public interface IAssetProvider
 	{
 		List<string> FindAssets(string searchPattern);
+		List<string> FindAssets(string pathStart, string searchPattern);
 		Stream GetAssetStream(string assetPath);
         string GetAssetFullPath(string assetPath);
     }

@@ -14,7 +14,7 @@ using LudicrousElectron.GUI.Drawing.Sprite;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-
+using LudicrousElectron.Engine.Input;
 
 namespace LudicrousElectron.GUI
 {
@@ -73,37 +73,48 @@ namespace LudicrousElectron.GUI
 
             Draw(layer);
 
-            while (layer.MatrixStackSize() > stackSize) // clean out an extra matrices that drawing may have left on the stack
-                layer.PopMatrix();
-
 			// move to our origin, so the children can be relative.
- 			layer.PushTranslation(origin.X, origin.Y, 0.25f);
- 
- 			foreach (var child in Children)
-                 child.Render(layer);
+ 			layer.PushTranslation(origin.X, origin.Y, 0);
+
+			foreach (var child in Children)
+			{
+				layer.PushTranslation(0, 0, 0.125f);
+				child.Render(layer);
+			}
  
             layer.PopMatrix();
-        }
 
-		public virtual List<GUIElement> GetElementsUnderPoint(Vector2 location)
+			while (layer.MatrixStackSize() > stackSize) // clean out an extra matrices that drawing may have left on the stack
+				layer.PopMatrix();
+		}
+
+		public virtual List<GUIElement> GetElementsUnderPoint(Vector2 location, InputManager.LogicalButtonState buttons)
 		{
 			List<GUIElement> elements = new List<GUIElement>();
 
 			if (Inited && !IgnoreMouse)
 			{
 				if (Rect.PointInRect(location))
+				{
+					ProcessMouseEvent(location, buttons);
 					elements.Add(this);
+				}
 
 				Vector2 childLoc = location - Rect.GetPixelOrigin();
 				foreach (var child in Children)
 				{
-					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc, buttons);
 					if (childElements.Count > 0)
 						elements.AddRange(childElements.ToArray());
 				}
 			}
 
 			return elements;
+		}
+
+		public virtual void ProcessMouseEvent(Vector2 location, InputManager.LogicalButtonState buttons)
+		{
+
 		}
 	}
 
@@ -128,7 +139,7 @@ namespace LudicrousElectron.GUI
 			// containers don't draw
 		}
 
-		public override List<GUIElement> GetElementsUnderPoint(Vector2 location)
+		public override List<GUIElement> GetElementsUnderPoint(Vector2 location, InputManager.LogicalButtonState buttons)
 		{
 			List<GUIElement> elements = new List<GUIElement>();
 
@@ -140,7 +151,7 @@ namespace LudicrousElectron.GUI
 				Vector2 childLoc = location - Rect.GetPixelOrigin();
 				foreach (var child in Children)
 				{
-					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc);
+					List<GUIElement> childElements = child.GetElementsUnderPoint(childLoc, buttons);
 					if (childElements.Count > 0)
 						elements.AddRange(childElements.ToArray());
 				}
@@ -192,7 +203,6 @@ namespace LudicrousElectron.GUI
 
         public override void Draw(GUIRenderLayer layer)
 		{
-
             CheckMaterial();
             layer.AddDrawable(this);
 		}

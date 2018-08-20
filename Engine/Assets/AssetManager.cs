@@ -34,6 +34,15 @@ namespace LudicrousElectron.Assets
 			return assets;
 		}
 
+		public static List<string> FindAssets(string startPath, string searchPattern)
+		{
+			List<string> assets = new List<string>();
+			foreach (var provider in AssetProviders)
+				assets.AddRange(provider.FindAssets(startPath, searchPattern).ToArray());
+
+			return assets;
+		}
+
 		public static Stream GetAssetStream(string assetPath)
 		{
 			Stream outStream = null;
