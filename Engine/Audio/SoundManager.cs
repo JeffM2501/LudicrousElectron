@@ -175,7 +175,7 @@ namespace LudicrousElectron.Engine.Audio
 
         public static float GetMasterSoundVolume()
         {
-            return SoundEffect.MasterVolume / 100.0f;
+            return SoundEffect.MasterVolume * 100.0f;
         }
 
         // sounds
