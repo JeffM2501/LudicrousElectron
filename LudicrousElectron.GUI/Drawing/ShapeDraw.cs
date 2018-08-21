@@ -118,7 +118,7 @@ namespace LudicrousElectron.GUI.Drawing
 			GL.Begin(PrimitiveType.Quads);
 			if (horizontal)
 			{
-;				GL.Color4(minColor);
+				GL.Color4(minColor);
 				GL.Vertex2(center.X - size.X, center.Y + size.Y);
 				GL.Vertex2(center.X - size.X, center.Y - size.Y);
 

@@ -84,8 +84,6 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
             info?.SetTextureFormat(format);
 
-            Color clearColor = Color.FromArgb(255, 0, 255);
-
 			if (subDiv != null && (subDiv.x > 0 || subDiv.y > 0))
 			{
 				subDiv.x = System.Math.Max(subDiv.x, 1);

@@ -45,7 +45,7 @@ namespace LudicrousElectron.Engine.RenderChain
 
             public int CompareTo(RenderInfo obj)
 			{
-				RenderInfo other = obj as RenderInfo;
+				RenderInfo other = obj;
 				if (other == null)
 					return 1;
 

@@ -148,7 +148,7 @@ namespace LudicrousElectron.Types
 
 		public static float CopySign(float val, float sign)
 		{
-			return (float)(System.Math.Abs(val) * (sign / System.Math.Abs(sign)));
+			return (System.Math.Abs(val) * (sign / System.Math.Abs(sign)));
 		}
 	}
 
@@ -276,55 +276,6 @@ namespace LudicrousElectron.Types
 		public static float M44(Matrix4 m) { return m.Row3.W; }
 		public static void M44(ref Matrix4 m, float value) { m.Row3.W = value; }
 
-		// matrix index methods
-		//         public static float m0(Matrix4 m) { return m.Row0.X; }
-		//         public static void m0(ref Matrix4 m, float value) { m.Row0.X = value; }
-		// 
-		//         public static float m1(Matrix4 m) { return m.Row0.Y; }
-		//         public static void m1(ref Matrix4 m, float value) { m.Row0.Y = value; }
-		// 
-		//         public static float m2(Matrix4 m) { return m.Row0.Z; }
-		//         public static void m2(ref Matrix4 m, float value) { m.Row0.Z = value; }
-		//      
-		//         public static float m3(Matrix4 m) { return m.Row0.W; }
-		//         public static void m3(ref Matrix4 m, float value) { m.Row0.W = value; }
-		// 
-		//         public static float m4(Matrix4 m) { return m.Row1.X; }
-		//         public static void m4(ref Matrix4 m, float value) { m.Row1.X = value; }
-		// 
-		//         public static float m5(Matrix4 m) { return m.Row1.Y; }
-		//         public static void m5(ref Matrix4 m, float value) { m.Row1.Y = value; }
-		// 
-		//         public static float m6(Matrix4 m) { return m.Row1.Z; }
-		//         public static void m6(ref Matrix4 m, float value) { m.Row1.Z = value; }
-		// 
-		//         public static float m7(Matrix4 m) { return m.Row1.W; }
-		//         public static void m7(ref Matrix4 m, float value) { m.Row1.W = value; }
-		// 
-		//         public static float m8(Matrix4 m) { return m.Row2.X; }
-		//         public static void m8(ref Matrix4 m, float value) { m.Row2.X = value; }
-		// 
-		//         public static float m9(Matrix4 m) { return m.Row2.Y; }
-		//         public static void m9(ref Matrix4 m, float value) { m.Row1.Y = value; }
-		// 
-		//         public static float m10(Matrix4 m) { return m.Row2.Z; }
-		//         public static void m10(ref Matrix4 m, float value) { m.Row2.Z = value; }
-		// 
-		//         public static float m11(Matrix4 m) { return m.Row2.W; }
-		//         public static void m11(ref Matrix4 m, float value) { m.Row2.W = value; }
-		// 
-		//         public static float m12(Matrix4 m) { return m.Row3.X; }
-		//         public static void m12(ref Matrix4 m, float value) { m.Row3.X = value; }
-		// 
-		//         public static float m13(Matrix4 m) { return m.Row3.Y; }
-		//         public static void m13(ref Matrix4 m, float value) { m.Row3.Y = value; }
-		// 
-		//         public static float m14(Matrix4 m) { return m.Row3.Z; }
-		//         public static void m14(ref Matrix4 m, float value) { m.Row3.Z = value; }
-		//      
-		//         public static float m15(Matrix4 m) { return m.Row3.W; }
-		//         public static void m15(ref Matrix4 m, float value) { m.Row3.W = value; }
-
 		// col major
 		public static float m0(Matrix4 m) { return m.Row0.X; }
 		public static void m0(ref Matrix4 m, float value) { m.Row0.X = value; }
@@ -387,7 +338,7 @@ namespace LudicrousElectron.Types
 			mat.M11 = (float)(cp * cy);
 			mat.M12 = (float)(cp * sy);
 			mat.M13 = (float)(-sp);
-			mat.M14 = (float)(0.0f);
+			mat.M14 = (0.0f);
 
 			double srsp = sr * sp;
 			double crsp = cr * sp;
@@ -432,17 +383,6 @@ namespace LudicrousElectron.Types
 
 		public static Quaternion FromMatrix(Matrix4 m1)
 		{
-			//             if (false)
-			//             {
-			//                 float w = (float)Math.Sqrt(1.0 + m1.M11 + m1.M22 + m1.M33) / 2.0f;
-			//                 float w4 = (4.0f * w);
-			//                 float x = (m1.M32 - m1.M23) / w4;
-			//                 float y = (m1.M13 - m1.M31) / w4;
-			//                 float z = (m1.M21 - m1.M12) / w4;
-			// 
-			//                 return new Quaternion(x, y, z, w);
-			//             }
-
 			float w = (float)System.Math.Sqrt(System.Math.Max(0, 1 + m1.M11 + m1.M22 + m1.M33)) / 2f;
 			float x = (float)System.Math.Sqrt(System.Math.Max(0, 1 + m1.M11 - m1.M22 - m1.M33)) / 2f;
 			float y = (float)System.Math.Sqrt(System.Math.Max(0, 1 - m1.M11 + m1.M22 - m1.M33)) / 2f;

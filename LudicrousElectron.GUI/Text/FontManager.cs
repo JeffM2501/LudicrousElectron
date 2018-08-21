@@ -35,7 +35,6 @@ namespace LudicrousElectron.GUI.Text
 
 			if (Workspace == null)
 			{
-				//Workspace = new Bitmap(2048, 2048, PixelFormat.Format32bppArgb);
                 Workspace = new Bitmap(2048, 2048,PixelFormat.Format32bppArgb);
                 WorkspaceGraphics = Graphics.FromImage(Workspace);
                 WorkspaceGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;

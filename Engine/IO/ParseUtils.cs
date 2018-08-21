@@ -24,12 +24,7 @@ namespace LudicrousElectron.Engine.IO
 		public static int GetHexVal(char hex)
 		{
 			int val = (int)hex;
-			//For uppercase A-F letters:
 			return val - (val < 58 ? 48 : 55);
-			//For lowercase a-f letters:
-			//return val - (val < 58 ? 48 : 87);
-			//Or the two combined, but a bit slower:
-			//return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
 		}
 	}
 }
