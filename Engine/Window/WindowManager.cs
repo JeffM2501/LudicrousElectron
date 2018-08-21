@@ -54,7 +54,7 @@ namespace LudicrousElectron.Engine.Window
                 base.OnLoad(e);
 
 				GL.Viewport(0, 0, this.Width, this.Height);
-                SetClearColor(ClearColor);
+                SetGLClearColor(ClearColor);
                 GL.Enable(EnableCap.CullFace);
                 GL.CullFace(CullFaceMode.Back);
                 GL.FrontFace(FrontFaceDirection.Ccw);
@@ -126,10 +126,10 @@ namespace LudicrousElectron.Engine.Window
                 WindowClosed(this);
             }
 
-            internal void SetClearColor(Color color)
-            {
-                GL.ClearColor(ClearColor);
-            }
+             internal void SetGLClearColor(Color color)
+             {
+                 GL.ClearColor(ClearColor);
+             }
         }
 
         internal static List<Window> ChildWindowList = new List<Window>();
@@ -196,7 +196,7 @@ namespace LudicrousElectron.Engine.Window
 		public static void SetClearColor(Color color)
 		{
 			ClearColor = color;
-			MainWindow.SetClearColor(color);
+			MainWindow.SetGLClearColor(color);
 		}
 
 		public static Color ClearColor { get; private set; } = Color.CornflowerBlue;

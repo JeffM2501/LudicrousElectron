@@ -175,9 +175,6 @@ namespace LudicrousElectron.GUI.Geometry
 					yOffset -= halfSize.Y - (PixelSize.Y * 0.5f);
 					break;
 
-				case OriginLocation.LowerLeft:
-					break;
-
 				case OriginLocation.LowerRight:
 					xOffset -= halfSize.X * 2;
 					break;
@@ -200,7 +197,8 @@ namespace LudicrousElectron.GUI.Geometry
 					yOffset -= halfSize.Y + (PixelSize.Y * 0.5f);
 					break;
 
-				default:
+                case OriginLocation.LowerLeft:
+                default:
 					break;
 			}
 
@@ -220,48 +218,6 @@ namespace LudicrousElectron.GUI.Geometry
             InscribedRadius = (float)PixelSize.X;
             if (PixelSize.Y < PixelSize.X)
                 InscribedRadius = (float)PixelSize.Y;
-        }
-
-        public void PushOriginMatrix(OriginLocation origin, GUIRenderLayer layer)
-        {
-            switch (origin)
-            {
-                case OriginLocation.LowerLeft: // where we start
-                    layer.PushMatrix(Matrix4.Identity);
-                    break;
-
-                case OriginLocation.MiddleLeft:
-                    layer.PushTranslation(0, PixelSize.Y, 0);
-                    break;
-
-                case OriginLocation.UpperLeft:
-                    layer.PushTranslation(0, PixelSize.Y * 2, 0);
-                    break;
-
-                case OriginLocation.UpperCenter:
-                    layer.PushTranslation(PixelSize.X, PixelSize.Y, 0);
-                    break;
-
-                case OriginLocation.UpperRight:
-                    layer.PushTranslation(PixelSize.X * 2, PixelSize.Y * 2, 0);
-                    break;
-
-                case OriginLocation.MiddleRight:
-                    layer.PushTranslation(PixelSize.X * 2, PixelSize.Y, 0);
-                    break;
-
-                case OriginLocation.LowerRight:
-                    layer.PushTranslation(PixelSize.X * 2, 0, 0);
-                    break;
-
-                case OriginLocation.LowerCenter:
-                    layer.PushTranslation(PixelSize.X, 0, 0);
-                    break;
-
-                case OriginLocation.Center:
-                    layer.PushTranslation(PixelSize.X, PixelSize.Y, 0);
-                    break;
-            }
         }
     }
 }

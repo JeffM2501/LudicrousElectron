@@ -408,7 +408,7 @@ namespace LudicrousElectron.Types
 			mat.M43 = translation.Z;
 		}
 	}
-	public class QuaternionHelper
+	public static class QuaternionHelper
 	{
 		public static Quaternion FromEuler(Vector3 angles)
 		{

@@ -37,11 +37,12 @@ namespace LudicrousElectron.GUI
 			MatrixStack.Push(Matrix4.CreateTranslation(target.Width * -0.5f, target.Height * -0.5f, -800));
 		}
 
-		public override void Sort()
-		{
-		}
+        public override void Sort()
+        {
+            // GUI layers can not sort they must be drawn in order, so we override this to prevent the base class from doing it's material based sort
+        }
 
-		public override void Render(WindowManager.Window target)
+        public override void Render(WindowManager.Window target)
 		{
 			RenderSetup(target);
 

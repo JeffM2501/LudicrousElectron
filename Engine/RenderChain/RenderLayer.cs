@@ -19,7 +19,7 @@ namespace LudicrousElectron.Engine.RenderChain
 		protected List<IRenderable> RenderItemList = new List<IRenderable>();
 		protected List<RenderLayer> ChildLayers = new List<RenderLayer>();
 
-		public class RenderInfo : IComparable
+		public class RenderInfo : IComparable<RenderInfo>
 		{
 			public Matrix4 objectMatrix = Matrix4.Identity;
 			public Drawable DrawObject = null;
@@ -30,7 +30,17 @@ namespace LudicrousElectron.Engine.RenderChain
 				objectMatrix = mat;
 			}
 
-			public int CompareTo(object obj)
+            public override int GetHashCode()
+            {
+                return objectMatrix.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj as RenderInfo != null && (obj as RenderInfo) == this;
+            }
+
+            public int CompareTo(RenderInfo obj)
 			{
 				RenderInfo other = obj as RenderInfo;
 				if (other == null)
@@ -51,7 +61,27 @@ namespace LudicrousElectron.Engine.RenderChain
 
 				return 0;
 			}
-		}
+
+            public static bool operator ==(RenderInfo left, RenderInfo right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator >(RenderInfo left, RenderInfo right)
+            {
+                return left.CompareTo(right) > 0;
+            }
+
+            public static bool operator <(RenderInfo left, RenderInfo right)
+            {
+                return left.CompareTo(right) < 0;
+            }
+
+            public static bool operator !=(RenderInfo left, RenderInfo right)
+            {
+                return !(left == right);
+            }
+        }
 		public List<RenderInfo> Drawables = new List<RenderInfo>();
 
         public RenderLayer()

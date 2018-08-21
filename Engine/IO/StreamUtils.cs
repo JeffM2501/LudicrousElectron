@@ -24,7 +24,9 @@ namespace LudicrousElectron.Engine.IO
 			byte size = (byte)s.ReadByte();
 			byte[] buffer = new byte[size];
 
-			s.Read(buffer, 0, size);
+            if (s.Read(buffer, 0, size) != size)
+                return string.Empty;
+
 			return Encoding.UTF8.GetString(buffer);
 		}
 
@@ -33,8 +35,10 @@ namespace LudicrousElectron.Engine.IO
 			int size = ReadInt(s);
 			byte[] buffer = new byte[size];
 
-			s.Read(buffer, 0, size);
-			return Encoding.UTF8.GetString(buffer);
+            if (s.Read(buffer, 0, size) != size)
+                return string.Empty;
+
+            return Encoding.UTF8.GetString(buffer);
 		}
 	}
 }

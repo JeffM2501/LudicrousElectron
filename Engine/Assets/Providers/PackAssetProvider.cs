@@ -36,22 +36,20 @@ namespace LudicrousElectron.Assets.Providers
 				fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 				int version = StreamUtils.ReadInt(fs);
 
-				switch(version)
+				if(version == 0)
 				{
-					case 0:
-						int count = StreamUtils.ReadInt(fs);
-						for(int i = 0; i < count; i++)
-						{
-							PackedAssetInfo info = new PackedAssetInfo();
-							info.FileName = StreamUtils.ReadPString(fs);
-							info.BufferOffset = StreamUtils.ReadInt(fs);
-							info.BufferSize = StreamUtils.ReadInt(fs);
+                    int count = StreamUtils.ReadInt(fs);
+                    for (int i = 0; i < count; i++)
+                    {
+                        PackedAssetInfo info = new PackedAssetInfo();
+                        info.FileName = StreamUtils.ReadPString(fs);
+                        info.BufferOffset = StreamUtils.ReadInt(fs);
+                        info.BufferSize = StreamUtils.ReadInt(fs);
 
-							if (info.BufferOffset > 0 && info.BufferSize > 0)
-								Assets.Add(info.FileName, info);
-						}
-						break;
-				}
+                        if (info.BufferOffset > 0 && info.BufferSize > 0)
+                            Assets.Add(info.FileName, info);
+                    }
+                }
 			}
 			catch (Exception)
 			{
