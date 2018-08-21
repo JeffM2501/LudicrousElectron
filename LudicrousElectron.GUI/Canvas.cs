@@ -168,8 +168,7 @@ namespace LudicrousElectron.GUI
 			foreach (var element in affectedElements)
 			{
 				UIButton button = element as UIButton;
-				if (HandleControlClick(button, buttons))
-					continue;
+                HandleControlClick(button, buttons);
 			}
 
 			foreach(var item in ActivatedControlls)

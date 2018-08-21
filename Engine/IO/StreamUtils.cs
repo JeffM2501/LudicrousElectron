@@ -12,7 +12,9 @@ namespace LudicrousElectron.Engine.IO
 		{
 			byte[] buffer = new byte[] { 0, 0, 0, 0 };
 
-			s.Read(buffer, 0, 4);
+            if (s.Read(buffer, 0, 4) != 4)
+                return int.MinValue;
+
 			if (BitConverter.IsLittleEndian)
 				Array.Reverse(buffer);
 

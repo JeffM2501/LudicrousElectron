@@ -128,7 +128,8 @@ namespace LudicrousElectron.Engine.Window
 
              internal void SetGLClearColor(Color color)
              {
-                 GL.ClearColor(ClearColor);
+                MakeCurrent();
+                GL.ClearColor(ClearColor);
              }
         }
 

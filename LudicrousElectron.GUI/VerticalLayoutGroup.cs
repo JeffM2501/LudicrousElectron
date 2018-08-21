@@ -37,7 +37,7 @@ namespace LudicrousElectron.GUI
 				Resize((int)LastParentSize.X, (int)LastParentSize.Y);
 		}
 
-		protected OriginLocation GetLowerAnchor(OriginLocation anchor)
+		public static OriginLocation GetLowerAnchor(OriginLocation anchor)
 		{
 			switch (anchor)
 			{

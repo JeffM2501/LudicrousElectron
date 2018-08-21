@@ -10,7 +10,7 @@ namespace LudicrousElectron.Engine.IO
 	{
 		public static byte[] HexStringToBytes(string hex)
 		{
-			if (hex.Length % 2 == 1)
+			if (hex.Length % 2 != 0)
 				return new byte[0];
 
 			byte[] result = new byte[hex.Length >> 1];

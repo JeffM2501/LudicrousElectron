@@ -120,9 +120,9 @@ namespace LudicrousElectron.Types
 		}
 	}
 
-	public class FloatHelper
+	public static class FloatHelper
 	{
-		protected static Random rand = new Random();
+		private static Random rand = new Random();
 
 		public static float DefaultTolerance = 0.0001f;
 

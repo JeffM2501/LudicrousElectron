@@ -247,8 +247,7 @@ namespace LudicrousElectron.GUI
         {
             switch (FillMode)
             {
-                default:
-                case UIFillModes.Tilled:
+                default: // and titled
                     ShapeBuffer.TexturedRect(this, Rect, CurrentMaterial.DiffuseTexture, ReverseU, ReverseV);
                     break;
 

@@ -14,7 +14,7 @@ namespace LudicrousElectron.GUI.Drawing
 {
 	public static class ShapeBuffer
 	{
-		public static void OutlineCenteredRect(PrimitivBuffer target, Vector2 center, Vector2 size, float width = 1)
+		public static void OutlineCenteredRect(PrimitivBuffer target, Vector2 center, Vector2 size, float width)
 		{
 			target.Clear();
 			target.OutlineWidth = width;

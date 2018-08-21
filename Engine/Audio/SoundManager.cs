@@ -12,8 +12,8 @@ namespace LudicrousElectron.Engine.Audio
 {
     public static class SoundManager
     {
-        public const int InvalidSoundID = -1;
-        public const int MaxSoundID = 10000;
+        public static readonly int InvalidSoundID = -1;
+        public static readonly int MaxSoundID = 10000;
 
         private static List<string> MusicSet = new List<string>();
 

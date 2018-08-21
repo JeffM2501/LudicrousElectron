@@ -37,7 +37,10 @@ namespace LudicrousElectron.Engine.RenderChain
 
             public override bool Equals(object obj)
             {
-                return obj as RenderInfo != null && (obj as RenderInfo) == this;
+                if (obj as RenderInfo == null)
+                    return false;
+
+                return objectMatrix.Equals((obj as RenderInfo).objectMatrix) && DrawObject == (obj as RenderInfo).DrawObject;
             }
 
             public int CompareTo(RenderInfo obj)
@@ -64,7 +67,7 @@ namespace LudicrousElectron.Engine.RenderChain
 
             public bool Equals(RenderInfo other)
             {
-                return Equals(other);
+                return objectMatrix.Equals(other.objectMatrix) && DrawObject == other.DrawObject;
             }
 
             public static bool operator ==(RenderInfo left, RenderInfo right)
@@ -178,8 +181,11 @@ namespace LudicrousElectron.Engine.RenderChain
 
 		public virtual void PushMatrix(Matrix4 mat, bool contact = true)
 		{
-			MatrixStack.Push(mat * MatrixStack.Peek());
-		}
+            if (contact)
+                MatrixStack.Push(mat * MatrixStack.Peek());
+            else
+                MatrixStack.Push(mat);
+        }
 
 		public virtual void PopMatrix()
 		{
@@ -199,10 +205,10 @@ namespace LudicrousElectron.Engine.RenderChain
 
 		public void PushTranslation(float x, float y, float z)
 		{
-			PushMatrix(Matrix4.CreateTranslation(x, y, z), true);
-		}
+            MatrixStack.Push(Matrix4.CreateTranslation(x, y, z) * MatrixStack.Peek());
+        }
 
-		public int MatrixStackSize()
+        public int MatrixStackSize()
 		{
 			return MatrixStack.Count;
 		}

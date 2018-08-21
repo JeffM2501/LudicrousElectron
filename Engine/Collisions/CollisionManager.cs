@@ -19,7 +19,10 @@ namespace LudicrousElectron.Engine.Collisions
 
 		public static void ProcessCollisions(float timeDelta)
 		{
-
+            if (CollisonWorld != null)
+            {
+                CollisonWorld.Step(timeDelta, 1, 1);
+            }
 		}
 
 		public static List<ICollisionable> QueryArea(Rect2Df area)

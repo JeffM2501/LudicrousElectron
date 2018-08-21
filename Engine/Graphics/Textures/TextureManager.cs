@@ -102,34 +102,6 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 					}
 				}
 			}
-			else if (AutoSprite)
-			{
-				for (int y = 0; y < info.ImageData.Height; y++)
-				{
-					for (int x = 0; x < info.ImageData.Width; x++)
-					{
-						if (info.ImageData.GetPixel(x, y) == clearColor)
-						{
-							int x1 = x + 1;
-							for (; x1 < info.ImageData.Width; x1++)
-							{
-								if (info.ImageData.GetPixel(x1, y) == clearColor)
-									break;
-							}
-
-							int y1 = y + 1;
-							for (; y1 < info.ImageData.Height; y1++)
-							{
-								if (info.ImageData.GetPixel(x, y1) == clearColor)
-									break;
-							}
-							if (x1 - x > 1 && y1 - y > 1 && x1 < info.ImageData.Width && y1 < info.ImageData.Height)
-								info.Sprites.Add(new Rect2Di(x + 1, y + 1, x1 - x - 1, y1 - y - 1));
-							x = x1 - 1;
-						}
-					}
-				}
-			}
 
 			Textures.Add(name, info);
 		}
