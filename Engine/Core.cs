@@ -84,6 +84,7 @@ namespace LudicrousElectron.Engine
 
         internal static void UpdateChild(int childID)
         {
+            // when we support children, do them here.
 		}
 
         internal static void RenderMain()
@@ -94,7 +95,7 @@ namespace LudicrousElectron.Engine
 
         internal static void RenderChild(int childID)
         {
-
+            // when we support children, do them here.
         }
-	}
+    }
 }

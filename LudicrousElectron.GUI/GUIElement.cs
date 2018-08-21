@@ -37,8 +37,8 @@ namespace LudicrousElectron.GUI
         public event EventHandler<GUIElement> GotDirty = null;
         public void SetDirty() { if (Inited) GotDirty?.Invoke(this, this); }
 
-		public GUIElement() { }
-		public GUIElement(RelativeRect rect)
+		protected GUIElement() { }
+        protected GUIElement(RelativeRect rect)
         {
             Rect = rect.Clone();
         }

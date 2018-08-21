@@ -39,11 +39,14 @@ namespace LudicrousElectron.GUI.Elements
 			Rect = new RelativeRect(rect.X, rect.Y, rect.Width, rect.Height);
 		}
 
-		public UIImage(string texture, RelativePoint origin, OriginLocation anchor = OriginLocation.Center,  RelativeSize width = null, RelativeSize height = null) : base()
+		public UIImage(string texture, RelativePoint origin, OriginLocation anchor = OriginLocation.Center,  RelativeSize _width = null, RelativeSize _height = null) : base()
 		{
 			IgnoreMouse = true;
 
-			DefaultMaterial = new GUIMaterial(texture, Color.White);
+            RelativeSize height = _height;
+            RelativeSize width = _width;
+
+            DefaultMaterial = new GUIMaterial(texture, Color.White);
             CheckMaterial();
 
             if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null || CurrentMaterial.DiffuseTexture.PixelSize.X == 0 || CurrentMaterial.DiffuseTexture.PixelSize.Y == 0)

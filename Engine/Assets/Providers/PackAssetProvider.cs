@@ -120,7 +120,12 @@ namespace LudicrousElectron.Assets.Providers
 				fs = BaseFile.OpenRead();
 				fs.Seek(info.BufferOffset, SeekOrigin.Begin);
 				byte[] buffer = new byte[info.BufferSize];
-				fs.Read(buffer, 0, info.BufferSize);
+				if (fs.Read(buffer, 0, info.BufferSize) != info.BufferSize)
+                {
+                    Assets.Clear();
+                    fs.Close();
+                    return null;
+                }
 				ms = new MemoryStream(buffer);
 			}
 			catch (Exception)

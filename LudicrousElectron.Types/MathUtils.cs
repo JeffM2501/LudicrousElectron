@@ -152,7 +152,7 @@ namespace LudicrousElectron.Types
 		}
 	}
 
-	public class Trig
+	public static class Trig
 	{
 		public static double DegreeToRadian(double angle)
 		{
@@ -190,9 +190,7 @@ namespace LudicrousElectron.Types
 		}
 	}
 
-   
-
-    public class FloatRand
+    public static class FloatRand
 	{
         private static Random RNG = new Random();
 
@@ -207,7 +205,7 @@ namespace LudicrousElectron.Types
 		}
 	}
 
-	public class MatrixHelper4
+	public static class MatrixHelper4
 	{
 		public static Matrix4 FromQuaternion(Quaternion quat)
 		{

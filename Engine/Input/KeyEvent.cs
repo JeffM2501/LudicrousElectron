@@ -8,7 +8,7 @@ using OpenTK.Input;
 
 namespace LudicrousElectron.Engine.Input
 {
-    public class KeyEvent
+    public class KeyEvent : IEquatable<KeyEvent>
     {
         public Key Code = Key.Unknown;  //< Code of the key that has been pressed
         public bool Alt = false;        //< Is the Alt key pressed?
@@ -39,6 +39,11 @@ namespace LudicrousElectron.Engine.Input
         public override int GetHashCode()
         {
             return Code.GetHashCode();
+        }
+
+        public bool Equals(KeyEvent other)
+        {
+            return this == other;
         }
     }
 }
