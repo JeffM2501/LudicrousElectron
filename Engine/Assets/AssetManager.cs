@@ -61,7 +61,7 @@ namespace LudicrousElectron.Assets
             foreach (var provider in AssetProviders)
             {
                 outPath = provider.GetAssetFullPath(assetPath);
-                if (outPath != string.Empty)
+                if (!string.IsNullOrEmpty(outPath))
                     return outPath;
             }
 

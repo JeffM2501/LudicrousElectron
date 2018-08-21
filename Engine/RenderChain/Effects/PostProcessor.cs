@@ -9,6 +9,8 @@ namespace LudicrousElectron.Engine.RenderChain.Effects
 {
     public class PostProcessor : RenderLayer
     {
+        public string Name { get; protected set; } = string.Empty;
+
         private static bool GlobalEffectEnabled = true;
         public static void EnableEffects(bool enabled) { GlobalEffectEnabled = enabled; }
        
@@ -19,11 +21,7 @@ namespace LudicrousElectron.Engine.RenderChain.Effects
 
         public PostProcessor(string name)
         {
-        }
-
-        public override void Render(WindowManager.Window target)
-        {
-           
+            Name = name;
         }
     }
 }

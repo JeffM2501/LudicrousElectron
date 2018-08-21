@@ -190,13 +190,15 @@ namespace LudicrousElectron.Types
 		}
 	}
 
-	public class FloatRand
-	{
-		static Random rand = new Random();
+   
 
-		public static float RandInRange(float min, float max)
+    public class FloatRand
+	{
+        private static Random RNG = new Random();
+
+        public static float RandInRange(float min, float max)
 		{
-			return (float)(rand.NextDouble() * (max - min) + min);
+			return (float)(RNG.NextDouble() * (max - min) + min);
 		}
 
 		public static float RandPlusMinus()

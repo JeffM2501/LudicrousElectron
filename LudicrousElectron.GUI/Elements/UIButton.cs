@@ -133,7 +133,7 @@ namespace LudicrousElectron.GUI.Elements
 
         public override void Resize(int x, int y)
 		{
-			if (LabelText != string.Empty && LabelControl == null)
+			if (!string.IsNullOrEmpty(LabelText) && LabelControl == null)
 				SetupLabel();
 
 			base.Resize(x, y);
@@ -222,7 +222,7 @@ namespace LudicrousElectron.GUI.Elements
             FlushMaterial();
             ButtonStartHover?.Invoke(this, this);
 
-			if (HoverSound != string.Empty)
+			if (!string.IsNullOrEmpty(HoverSound))
 				SoundManager.PlaySound(HoverSound);
 		}
 
@@ -242,7 +242,7 @@ namespace LudicrousElectron.GUI.Elements
 		{
 			Clicked?.Invoke(this, this);
 
-			if (ClickSound != string.Empty)
+			if (!string.IsNullOrEmpty(ClickSound))
 				SoundManager.PlaySound(ClickSound);
 		}
     }

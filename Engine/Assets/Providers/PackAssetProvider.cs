@@ -71,15 +71,16 @@ namespace LudicrousElectron.Assets.Providers
 
         public List<string> FindAssets(string searchPattern)
 		{
-			if (searchPattern != string.Empty)
-				searchPattern = searchPattern.Substring(1).ToUpperInvariant();
-			else if (searchPattern == "*.*")
-				searchPattern = string.Empty;
+            string actaulPattern = searchPattern;
+            if (!string.IsNullOrEmpty(actaulPattern))
+                actaulPattern = actaulPattern.Substring(1).ToUpperInvariant();
+            else
+                actaulPattern = string.Empty;
 
 			List<string> assets = new List<string>();
 			foreach (var asset in Assets.Keys)
 			{
-				if (searchPattern == string.Empty || Path.GetExtension(asset).ToUpperInvariant() == searchPattern)
+				if (string.IsNullOrEmpty(actaulPattern) || Path.GetExtension(asset).ToUpperInvariant() == actaulPattern)
 					assets.Add(asset);
 			}
 			return assets;
@@ -87,18 +88,19 @@ namespace LudicrousElectron.Assets.Providers
 
 		public virtual List<string> FindAssets(string pathStart, string searchPattern)
 		{
-			if (searchPattern != string.Empty)
-				searchPattern = searchPattern.Substring(1).ToUpperInvariant();
-			else if (searchPattern == "*.*")
-				searchPattern = string.Empty;
+            string actaulPattern = searchPattern;
+            if (!string.IsNullOrEmpty(actaulPattern))
+                actaulPattern = actaulPattern.Substring(1).ToUpperInvariant();
+            else
+                actaulPattern = string.Empty;
 
-			List<string> assets = new List<string>();
+            List<string> assets = new List<string>();
 			foreach (var asset in Assets.Keys)
 			{
 				if (pathStart != null && !asset.ToUpperInvariant().StartsWith(pathStart.ToUpperInvariant()))
 					continue;
 
-				if (searchPattern == string.Empty || Path.GetExtension(asset).ToUpperInvariant() == searchPattern)
+				if (string.IsNullOrEmpty(actaulPattern) || Path.GetExtension(asset).ToUpperInvariant() == actaulPattern)
 					assets.Add(asset);
 			}
 			return assets;

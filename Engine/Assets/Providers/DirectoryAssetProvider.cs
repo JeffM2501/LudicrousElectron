@@ -25,27 +25,26 @@ namespace LudicrousElectron.Assets.Providers
 
 		public virtual List<string> FindAssets(string searchPattern)
 		{
-			if (searchPattern == string.Empty)
-				searchPattern = "*.*";
+            string actualPattern = string.IsNullOrEmpty(searchPattern) ? "*.*" : searchPattern;
 
 			List<string> assetPaths = new List<string>();
 			if (RootDir != null)
-				SearchDir(RootDir, searchPattern, assetPaths);
+				SearchDir(RootDir, actualPattern, assetPaths);
 
 			return assetPaths;
 		}
 
 		public virtual List<string> FindAssets(string pathStart, string searchPattern)
 		{
-			if (searchPattern == string.Empty)
-				searchPattern = "*.*";
+            string actualPattern = string.IsNullOrEmpty(searchPattern) ? "*.*" : searchPattern;
 
-			List<string> assetPaths = new List<string>();
+
+            List<string> assetPaths = new List<string>();
 			if (RootDir != null)
 			{
 				DirectoryInfo subDir = new DirectoryInfo(Path.Combine(RootDir.FullName, pathStart));
 				if (subDir.Exists)
-					SearchDir(subDir, searchPattern, assetPaths);
+					SearchDir(subDir, actualPattern, assetPaths);
 			}
 
 			return assetPaths;
@@ -77,13 +76,15 @@ namespace LudicrousElectron.Assets.Providers
 			if (RootDir == null)
 				return path;
 
-			if (path.StartsWith("/"))
-				path = path.Substring(1);
+            string osPath = path;
+
+			if (osPath.StartsWith("/"))
+                osPath = osPath.Substring(1);
 
 			if (Path.DirectorySeparatorChar == '\\')
-				path = path.Replace("/", "\\");
+                osPath = osPath.Replace("/", "\\");
 
-			FileInfo file = new FileInfo(Path.Combine(RootDir.FullName, path));
+			FileInfo file = new FileInfo(Path.Combine(RootDir.FullName, osPath));
 
 			return file.FullName;
 		}

@@ -22,7 +22,7 @@ namespace LudicrousElectron.GUI.Text
 
 		private static PrivateFontCollection Fonts = new PrivateFontCollection();
 
-		public static List<FontFamily> TypefaceCache = new List<FontFamily> ();
+		private static List<FontFamily> TypefaceCache = new List<FontFamily> ();
 
 		private static Bitmap Workspace = null;
 		private static Graphics WorkspaceGraphics = null;
@@ -30,7 +30,7 @@ namespace LudicrousElectron.GUI.Text
 		public static int LoadFont(string name)
 		{
 			string fontFile = AssetManager.GetAssetFullPath(name);
-			if (fontFile == string.Empty)
+			if (string.IsNullOrEmpty(fontFile))
 				return -1;
 
 			if (Workspace == null)

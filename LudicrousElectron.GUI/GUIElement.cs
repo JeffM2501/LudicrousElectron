@@ -202,15 +202,15 @@ namespace LudicrousElectron.GUI
 		protected bool ReverseU = false;
 		protected bool ReverseV = false;
 
-        public SingleDrawGUIItem():base(){ }
-		public SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
+        protected SingleDrawGUIItem():base(){ }
+        protected SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
 
-		public SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
+        protected SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
 		{
             DefaultMaterial.Color = color;
 		}
 
-		public SingleDrawGUIItem(RelativeRect rect, Color color, string textureName) : base(rect)
+        protected SingleDrawGUIItem(RelativeRect rect, Color color, string textureName) : base(rect)
 		{
             DefaultMaterial = new GUIMaterial(textureName, color);
         }

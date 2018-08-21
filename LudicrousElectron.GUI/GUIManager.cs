@@ -59,7 +59,7 @@ namespace LudicrousElectron.GUI
 			public int ContextID = -1;
 		}
 
-		public static Dictionary<int, ContextInfo> Contexts = new Dictionary<int, ContextInfo>();
+		public static Dictionary<int, ContextInfo> Contexts { get; private set; } = new Dictionary<int, ContextInfo>();
 
 		static GUIManager()
 		{

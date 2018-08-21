@@ -141,7 +141,7 @@ namespace LudicrousElectron.Engine.Audio
         public static void PlayMusic(string filename)
         {
             string path = AssetManager.GetAssetFullPath(filename);
-            if (path == string.Empty)
+            if (string.IsNullOrEmpty(path))
                 return;
 
             MediaPlayer.Play(Song.FromUri(Path.GetFileNameWithoutExtension(filename), new Uri("file://" + path)));
@@ -349,7 +349,7 @@ namespace LudicrousElectron.Engine.Audio
 			SpeachEventArgs args = new SpeachEventArgs(t);
 			GetTextVoiceList?.Invoke(null, args);
 
-			if (args.Text != string.Empty)
+			if (!string.IsNullOrEmpty(args.Text))
 				return new List<string>(args.Text.Split(";".ToCharArray()));
 
 			return new List<string>();

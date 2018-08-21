@@ -106,7 +106,7 @@ namespace LudicrousElectron.Engine.Graphics.Textures
                     return;
             }
 
-            int GLID = int.MinValue;
+            int GLID;
             GL.GenTextures(1, out GLID);
 
             GL.Enable(EnableCap.Texture2D);

@@ -10,7 +10,7 @@ namespace LudicrousElectron.Engine.Input
 {
     public class KeyMap : Dictionary<string, Key>
     {
-        public static KeyMap Names = new KeyMap();
+        public static KeyMap Names { get; private set; } = new KeyMap();
 
         public KeyMap()
         {
