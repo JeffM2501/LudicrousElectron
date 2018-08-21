@@ -64,7 +64,7 @@ namespace LudicrousElectron.Engine.Window
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.ColorMaterial);
                 GL.ColorMaterial(MaterialFace.Front, ColorMaterialParameter.Diffuse);
-                // GL.Enable(EnableCap.LineSmooth);
+
                 GL.Enable(EnableCap.DepthTest);
 
                 GL.Disable(EnableCap.Lighting);
@@ -83,8 +83,7 @@ namespace LudicrousElectron.Engine.Window
 					this.Close();
 					return;
 				}
-
-				CurrentContextID = ContextID;
+                SetCurrentWindow(this);
 
 				InputManager.PollInput(CurrentContextID);
 
@@ -101,10 +100,9 @@ namespace LudicrousElectron.Engine.Window
 				if (RestartData != null)
 					return;
 
-				MakeCurrent();
-				CurrentContextID = ContextID;
+                SetCurrentWindow(this);
 
-				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
                 GL.LoadIdentity();
 
                 if (IsMasterDisplay)
@@ -138,7 +136,15 @@ namespace LudicrousElectron.Engine.Window
 
         public static Window MainWindow {get; internal set;} = null;
 
-        internal static int CurrentContextID = int.MinValue;
+        internal static int CurrentContextID { get; private set; } = int.MinValue;
+        private static void SetCurrentWindow(Window win)
+        {
+            if (win == null)
+                return;
+
+            win.MakeCurrent();
+            CurrentContextID = win.ContextID;
+        }
 
 		public class WindowInfo
 		{
@@ -215,7 +221,7 @@ namespace LudicrousElectron.Engine.Window
             MainWindow.ContextID = MainWindowID;
 			MainWindow.SetupInfo = info;
 
-			CurrentContextID = MainWindow.ContextID;
+            SetCurrentWindow(MainWindow);
 
 			MainWindowAAFactor = MainWindow.SetupInfo.AntiAliasingFactor; // so that prefs can save it when we close, it'll be the last one that actualy worked
 
