@@ -19,7 +19,7 @@ namespace LudicrousElectron.Engine.RenderChain
 		protected List<IRenderable> RenderItemList = new List<IRenderable>();
 		protected List<RenderLayer> ChildLayers = new List<RenderLayer>();
 
-		public class RenderInfo : IComparable<RenderInfo>
+		public class RenderInfo : IComparable<RenderInfo>, IEquatable<RenderInfo>
 		{
 			public Matrix4 objectMatrix = Matrix4.Identity;
 			public Drawable DrawObject = null;
@@ -61,6 +61,11 @@ namespace LudicrousElectron.Engine.RenderChain
 
 				return 0;
 			}
+
+            public bool Equals(RenderInfo other)
+            {
+                return Equals(other);
+            }
 
             public static bool operator ==(RenderInfo left, RenderInfo right)
             {
