@@ -47,6 +47,8 @@ namespace LudicrousElectron.GUI.Geometry
 		/// </summary>
 		public OriginLocation AnchorLocation = OriginLocation.Center;
 
+        public Vector2 MiniumPixelSize = new Vector2(-1, -1);
+
 		protected Vector2 PixelOrigin = Vector2.Zero;
         protected Vector2 PixelSize = Vector2.Zero;
         protected Size ParrentPixelSize = new Size(0, 0);
@@ -212,7 +214,14 @@ namespace LudicrousElectron.GUI.Geometry
 
             // figure out how big we are in pixels
             PixelSize = new Vector2(Width.ToScreen(x, y), Height.ToScreen(x, y));
-			PixelOrigin = ComputePixelOrigin(x, y);
+
+            if (MiniumPixelSize.X > 0 && PixelSize.X < MiniumPixelSize.X)
+                PixelSize.X = MiniumPixelSize.X;
+
+            if (MiniumPixelSize.Y > 0 && PixelSize.Y < MiniumPixelSize.Y)
+                PixelSize.Y = MiniumPixelSize.Y;
+
+            PixelOrigin = ComputePixelOrigin(x, y);
 
             // pick the smallest value, that's the largest radius we can fit
             InscribedRadius = (float)PixelSize.X;
