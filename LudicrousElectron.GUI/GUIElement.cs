@@ -159,7 +159,11 @@ namespace LudicrousElectron.GUI
 
 	public class LayoutContainer : GUIElement
 	{
-		public LayoutContainer(RelativeRect rect) : base (rect)
+        public float ChildSpacing = 5;
+        public float MaxChildSize = -1;
+
+        public bool FirstElementHasSpacing = false;
+        public LayoutContainer(RelativeRect rect) : base (rect)
 		{
 
 		}
@@ -189,9 +193,52 @@ namespace LudicrousElectron.GUI
 
 			return elements;
 		}
-	}
 
 
+        public static OriginLocation GetLowerAnchor(OriginLocation anchor)
+        {
+            switch (anchor)
+            {
+                case OriginLocation.Center:
+                case OriginLocation.UpperCenter:
+                case OriginLocation.LowerCenter:
+                    return OriginLocation.LowerCenter;
+
+                case OriginLocation.LowerLeft:
+                case OriginLocation.MiddleLeft:
+                case OriginLocation.UpperLeft:
+                default:
+                    return OriginLocation.LowerLeft;
+
+                case OriginLocation.LowerRight:
+                case OriginLocation.MiddleRight:
+                case OriginLocation.UpperRight:
+                    return OriginLocation.LowerRight;
+            }
+        }
+
+        public static OriginLocation GetLeftAnchor(OriginLocation anchor)
+        {
+            switch (anchor)
+            {
+                case OriginLocation.Center:
+                case OriginLocation.MiddleLeft:
+                case OriginLocation.MiddleRight:
+                    return OriginLocation.MiddleLeft;
+
+                case OriginLocation.UpperCenter:
+                case OriginLocation.UpperLeft:
+                case OriginLocation.UpperRight:
+                    return OriginLocation.UpperLeft;
+
+                case OriginLocation.LowerCenter:
+                case OriginLocation.LowerLeft:
+                case OriginLocation.LowerRight:
+                default:
+                    return OriginLocation.LowerLeft;
+            }
+        }
+    }
 
 	public abstract class SingleDrawGUIItem :  GUIElement
 	{

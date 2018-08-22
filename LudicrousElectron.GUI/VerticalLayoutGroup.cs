@@ -12,11 +12,6 @@ namespace LudicrousElectron.GUI
 		public bool FitChildToWidth = true;
 		public bool ConstantChildHeights = true;
 
-		public float ChildSpacing = 5;
-		public float MaxChildSize = -1;
-
-		public bool FirstElementHasSpacing = false;
-
 		public bool TopDown = true;
 
 		public VerticalLayoutGroup() : base(null) { }
@@ -35,28 +30,6 @@ namespace LudicrousElectron.GUI
 
 			if (Inited)
 				Resize((int)LastParentSize.X, (int)LastParentSize.Y);
-		}
-
-		public static OriginLocation GetLowerAnchor(OriginLocation anchor)
-		{
-			switch (anchor)
-			{
-				case OriginLocation.Center:
-				case OriginLocation.UpperCenter:
-				case OriginLocation.LowerCenter:
-					return OriginLocation.LowerCenter;
-
-				case OriginLocation.LowerLeft:
-				case OriginLocation.MiddleLeft:
-				case OriginLocation.UpperLeft:
-				default:
-					return OriginLocation.LowerLeft;
-
-				case OriginLocation.LowerRight:
-				case OriginLocation.MiddleRight:
-				case OriginLocation.UpperRight:
-					return OriginLocation.LowerRight;
-			}
 		}
 
 		public override void Resize(int x, int y)
