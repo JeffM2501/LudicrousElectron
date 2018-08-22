@@ -13,7 +13,7 @@ namespace LudicrousElectron.GUI.Geometry
 		public static RelativeSize GetRelativeHeightInAspect(RelativeSize width, float aspectWidth, float aspectHeight)
 		{
 			RelativeSize height = new RelativeSize();
-			height.UseWidth = width.UseWidth;
+			height.Mode = width.Mode;
 			if (aspectWidth == 0 || aspectHeight == 0)
 				return height;
 
@@ -26,7 +26,7 @@ namespace LudicrousElectron.GUI.Geometry
 		public static RelativeSize GetRelativeWidthInAspect(RelativeSize height, float aspectWidth, float aspectHeight)
 		{
 			RelativeSize width = new RelativeSize();
-			width.UseWidth = height.UseWidth;
+			width.Mode = height.Mode;
 			if (aspectWidth == 0 || aspectHeight == 0)
 				return width;
 

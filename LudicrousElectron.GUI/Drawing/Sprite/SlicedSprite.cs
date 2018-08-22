@@ -61,15 +61,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + halfHeight);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + halfHeight);
 
             minT = new Vector2(0.5f, 0.5f);
             maxT = new Vector2(0.5f, 1);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y);
-            maxV = new Vector2(origin.X + size.Y, origin.Y + halfHeight);
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y);
+            maxV = new Vector2(origin.X + size.X, origin.Y + halfHeight);
 
             minT = new Vector2(0.5f, 0.5f);
             maxT = new Vector2(1, 1);
@@ -88,15 +88,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y + halfHeight);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y - halfHeight);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y - halfHeight);
 
             minT = new Vector2(0.5f, 0.5f);
             maxT = new Vector2(0.5f, 0.5f);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + halfHeight);
-            maxV = new Vector2(origin.X + size.Y,  origin.Y + size.Y - halfHeight);
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y + halfHeight);
+            maxV = new Vector2(origin.X + size.X,  origin.Y + size.Y - halfHeight);
 
             minT = new Vector2(0.5f, 0.5f);
             maxT = new Vector2(1, 0.5f);
@@ -115,15 +115,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y + size.Y - halfHeight);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y);
 
             minT = new Vector2(0.5f, 0);
             maxT = new Vector2(0.5f, 0.5f);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y - halfHeight);
-            maxV = new Vector2(origin.X + size.Y, origin.Y + size.Y );
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y - halfHeight);
+            maxV = new Vector2(origin.X + size.X, origin.Y + size.Y );
 
             minT = new Vector2(0.5f, 0);
             maxT = new Vector2(1, 0.5f);
@@ -177,15 +177,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + halfHeight);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + halfHeight);
 
             minT = new Vector2(sliceInfo.LeftSlice, sliceInfo.TopSlice);
             maxT = new Vector2(sliceInfo.RightSlice, 1);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y);
-            maxV = new Vector2(origin.X + size.Y, origin.Y + halfHeight);
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y);
+            maxV = new Vector2(origin.X + size.X, origin.Y + halfHeight);
 
             minT = new Vector2(sliceInfo.RightSlice, sliceInfo.TopSlice);
             maxT = new Vector2(1, 1);
@@ -204,15 +204,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y + halfHeight);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y - halfHeight);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y - halfHeight);
 
             minT = new Vector2(sliceInfo.LeftSlice, sliceInfo.BottomSlice);
             maxT = new Vector2(sliceInfo.RightSlice, sliceInfo.TopSlice);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + halfHeight);
-            maxV = new Vector2(origin.X + size.Y, origin.Y + size.Y - halfHeight);
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y + halfHeight);
+            maxV = new Vector2(origin.X + size.X, origin.Y + size.Y - halfHeight);
 
             minT = new Vector2(sliceInfo.RightSlice, sliceInfo.BottomSlice);
             maxT = new Vector2(1, sliceInfo.TopSlice);
@@ -230,15 +230,15 @@ namespace LudicrousElectron.GUI.Drawing.Sprite
 
             // center
             minV = new Vector2(origin.X + halfWidth, origin.Y + size.Y - halfHeight);
-            maxV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y);
+            maxV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y);
 
             minT = new Vector2(sliceInfo.LeftSlice, 0);
             maxT = new Vector2(sliceInfo.RightSlice, sliceInfo.BottomSlice);
             AddQuad(target, minV, maxV, minT, maxT);
 
             // right
-            minV = new Vector2(origin.X + size.Y - halfWidth, origin.Y + size.Y - halfHeight);
-            maxV = new Vector2(origin.X + size.Y, origin.Y + size.Y);
+            minV = new Vector2(origin.X + size.X - halfWidth, origin.Y + size.Y - halfHeight);
+            maxV = new Vector2(origin.X + size.X, origin.Y + size.Y);
 
             minT = new Vector2(sliceInfo.RightSlice, 0);
             maxT = new Vector2(1, sliceInfo.BottomSlice);

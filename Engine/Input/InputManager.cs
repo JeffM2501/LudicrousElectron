@@ -18,6 +18,11 @@ namespace LudicrousElectron.Engine.Input
 
 			public bool PrimaryClick = false;
 			public bool SecondaryClick = false;
+
+            public bool AnyButtonIsDown()
+            {
+                return PrimaryClick || SecondaryClick || PrimaryDown || SecondaryDown;
+            }
 		}
 
 		public class MouseFrameEventArgs : EventArgs

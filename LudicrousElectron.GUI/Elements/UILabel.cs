@@ -169,10 +169,10 @@ namespace LudicrousElectron.GUI.Elements
                 return;
 
             Rect.Width = new RelativeSize(DrawInfo.Size.X, true);
-            Rect.Width.Raw = true;
+            Rect.Width.Mode = RelativeSize.SizeModes.Raw;
 
             Rect.Height = new RelativeSize(DrawInfo.Size.Y, true);
-            Rect.Height.Raw = true;
+            Rect.Height.Mode = RelativeSize.SizeModes.Raw;
 
             Rect.Resize(x, y);
             var pixelSize = Rect.GetPixelSize();

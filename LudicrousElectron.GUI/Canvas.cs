@@ -123,12 +123,12 @@ namespace LudicrousElectron.GUI
 		{
 			List<GUIElement> affectedElements = new List<GUIElement>();
 
-			// check the popup element
+			// check the popup element for clicks
 			if (PopUpCTL != null)
 			{
 				if (PopUpCTL.Rect.PointInRect(position))
 					affectedElements.AddRange(PopUpCTL.GetElementsUnderPoint(position, buttons));
-				else
+				else if (buttons.AnyButtonIsDown())
 					SetPopupElement(null);
 			}
 

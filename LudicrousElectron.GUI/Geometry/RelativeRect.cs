@@ -136,14 +136,14 @@ namespace LudicrousElectron.GUI.Geometry
 
 		public virtual void SetLocation(RelativeLoc x, RelativeLoc y)
         {
-            X = x;
-            Y= y;
+            X = x.Clone();
+            Y= y.Clone();
         }
 
         public virtual void SetSize(RelativeSize w, RelativeSize h)
         {
-            Width = w;
-            Height = h;
+            Width = w.Clone();
+            Height = h.Clone();
         }
 		public virtual void SetAnchor(OriginLocation anchor)
 		{

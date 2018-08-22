@@ -20,10 +20,10 @@ namespace LudicrousElectron.GUI.Elements
 			Rect.X = origin.X;
 			Rect.Y = origin.Y;
 
-			Rect.Width.Raw = true;
+			Rect.Width.Mode = RelativeSize.SizeModes.Raw;
 			Rect.Width.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.X;
-			Rect.Height.Raw = true;
-			Rect.Height.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.Y;
+			Rect.Height.Mode = RelativeSize.SizeModes.Raw;
+            Rect.Height.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.Y;
 		}
 
 		public UIImage(RelativeRect rect, string texture) : base()
@@ -56,12 +56,12 @@ namespace LudicrousElectron.GUI.Elements
 			{
 				// going raw.
 				width = new RelativeSize();
-				width.Raw = true;
-				width.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.X;
+				width.Mode = RelativeSize.SizeModes.Raw;
+                width.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.X;
 
 				height = new RelativeSize();
-				height.Raw = true;
-				height.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.Y;
+				height.Mode = RelativeSize.SizeModes.Raw;
+                height.Paramater = CurrentMaterial.DiffuseTexture.PixelSize.Y;
 
 			}
 			else if (width == null)

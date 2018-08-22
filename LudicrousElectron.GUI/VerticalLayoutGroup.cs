@@ -87,7 +87,7 @@ namespace LudicrousElectron.GUI
 
 					child.Rect.Y.RelativeTo = RelativeLoc.Edge.Raw;
 					child.Rect.Height.Paramater = childSize;
-					child.Rect.Height.Raw = true;
+                    child.Rect.Height.Mode = RelativeSize.SizeModes.Raw;
 
 					child.Rect.AnchorLocation = OriginLocation.LowerLeft;
 

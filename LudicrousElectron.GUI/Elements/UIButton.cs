@@ -15,9 +15,10 @@ namespace LudicrousElectron.GUI.Elements
 {
 	public class UIButton : SingleDrawGUIItem
     {
-        public GUIMaterial Active = null;
-		public GUIMaterial Disabled = null;
-        public GUIMaterial Hover = null;
+        public GUIMaterial ActiveMaterial = null;
+		public GUIMaterial DisabledMaterial = null;
+        public GUIMaterial HoverMaterial = null;
+        public GUIMaterial CheckedMaterial = null;
 
         protected string LabelText = string.Empty;
         protected int Font = -1;
@@ -26,12 +27,15 @@ namespace LudicrousElectron.GUI.Elements
         public Color ActiveTextColor = Color.WhiteSmoke;
         public Color DisabledTextColor = Color.DimGray;
         public Color HoverTextColor = Color.OldLace;
+        public Color CheckedTextColor = Color.Transparent;
 
         protected UILabel LabelControl = null;
 
         protected bool Enabled = true;
         protected bool Hovered = false;
         protected bool Activated = false;
+
+        protected bool Checked = false;
 
         public event EventHandler<UIButton> Clicked = null;
 
@@ -42,7 +46,9 @@ namespace LudicrousElectron.GUI.Elements
         public event EventHandler<UIButton> ButtonStartHover = null;
         public event EventHandler<UIButton> ButtonEndHover = null;
 
-		public string ClickSound = string.Empty;
+        public event EventHandler<UIButton> ButtonCheckChanged = null;
+
+        public string ClickSound = string.Empty;
 		public string HoverSound = string.Empty;
 
         public UIButton(RelativeRect rect) : base(rect)
@@ -106,13 +112,15 @@ namespace LudicrousElectron.GUI.Elements
         public override GUIMaterial GetCurrentMaterial()
         {
             if (!Enabled)
-                return Disabled == null ? DefaultMaterial : Disabled;
+                return DisabledMaterial == null ? DefaultMaterial : DisabledMaterial;
 
+            if (Checked)
+                 return CheckedMaterial == null ? (ActiveMaterial == null ? DefaultMaterial : ActiveMaterial) : CheckedMaterial;
             if (Activated)
-                return Active == null ? DefaultMaterial : Active;
+                return ActiveMaterial == null ? DefaultMaterial : ActiveMaterial;
 
             if (Hovered)
-                return Hover == null ? DefaultMaterial : Hover;
+                return HoverMaterial == null ? DefaultMaterial : HoverMaterial;
 
             return DefaultMaterial;
         }
@@ -121,6 +129,9 @@ namespace LudicrousElectron.GUI.Elements
         {
             if (!Enabled)
                 return DisabledTextColor;
+
+            if (Checked)
+                return CheckedTextColor != Color.Transparent ? CheckedTextColor : ActiveTextColor;
 
             if (Activated)
                 return ActiveTextColor;
@@ -236,7 +247,31 @@ namespace LudicrousElectron.GUI.Elements
             ButtonEndHover?.Invoke(this, this);
         }
 
-		public virtual bool IsHovered() { return Hovered; }
+        public virtual void Check()
+        {
+            if (Checked)
+                return;
+            Checked = true;
+
+            FlushMaterial();
+            ButtonCheckChanged?.Invoke(this, this);
+        }
+
+        public virtual void UnCheck()
+        {
+            if (!Checked)
+                return;
+            Checked = false;
+            FlushMaterial();
+            ButtonCheckChanged?.Invoke(this, this);
+        }
+
+        public virtual bool IsChecked()
+        {
+            return Checked;
+        }
+
+        public virtual bool IsHovered() { return Hovered; }
 
 		public virtual void Click()
 		{

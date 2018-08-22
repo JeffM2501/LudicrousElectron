@@ -8,30 +8,34 @@ namespace LudicrousElectron.GUI.Geometry
 {
     public class RelativeSize
     {
-        public bool UseWidth = true;
         public float Paramater = 0;
 
-		public bool Raw = false; // param is a raw pixel value already
+        public enum SizeModes
+        {
+            Width,
+            Height,
+            Raw,
+        }
+        public SizeModes Mode = SizeModes.Width;
 
         public RelativeSize() { }
 
         public RelativeSize(float param, bool width)
         {
             Paramater = param;
-            UseWidth = width;
+            Mode = width ? SizeModes.Width : SizeModes.Height;
         }
 
 		public RelativeSize(float param)
 		{
 			Paramater = param;
-			Raw = true;
-		}
+            Mode = SizeModes.Raw;
+        }
 
 		public RelativeSize(RelativeSize o, float offset)
         {
             Paramater = o.Paramater - offset;
-            UseWidth = o.UseWidth;
-            Raw = o.Raw;
+            Mode = o.Mode;
         }
 
         public RelativeSize Clone()
@@ -41,7 +45,17 @@ namespace LudicrousElectron.GUI.Geometry
 
         public float ToScreen(int x, int y)
         {
-            return Raw ? Paramater : ((UseWidth ? x : y) * Paramater);
+            switch (Mode)
+            {
+                case SizeModes.Width:
+                    return x * Paramater;
+
+                case SizeModes.Height:
+                    return y * Paramater;
+
+                default:
+                    return Paramater;
+            }
         }
 
         public static RelativeSize FullWidth = new RelativeSize(1, true);
@@ -67,7 +81,8 @@ namespace LudicrousElectron.GUI.Geometry
         public static RelativeSize BorderWidth = new RelativeSize(RelativeLoc.BorderOffset, true);
         public static RelativeSize BorderHeight = new RelativeSize(RelativeLoc.BorderOffset, false);
 
-        public static RelativeSize FixedPixelSize (int pixels) { RelativeSize r = new RelativeSize(); r.Paramater = pixels; r.Raw = true; return r; }
+        public static RelativeSize FixedPixelSize (int pixels) { return new RelativeSize(pixels); }
+        public static RelativeSize FixedPixelSize(float pixels) { return new RelativeSize(pixels); }
 
         public static RelativeSize operator + (RelativeSize o, float offset)
         {

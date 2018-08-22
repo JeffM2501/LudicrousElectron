@@ -30,7 +30,7 @@ namespace LudicrousElectron.GUI
         public List<GUIElement> Children = new List<GUIElement>();
 
         protected bool Inited = false;
-		protected bool IgnoreMouse = false;
+		public bool IgnoreMouse = false;
 
 		protected Vector2 LastParentSize = new Vector2(-1, -1);
 
@@ -75,7 +75,7 @@ namespace LudicrousElectron.GUI
         {
             Vector2 origin = Vector2.Zero;
             if (Parent != null)
-                Parent.GetScreenOrigin();
+                origin = Parent.GetScreenOrigin();
 
             return origin + Rect.GetPixelOrigin();
         }
