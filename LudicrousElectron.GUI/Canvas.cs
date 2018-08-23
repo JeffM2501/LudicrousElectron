@@ -24,6 +24,8 @@ namespace LudicrousElectron.GUI
 		protected List<UIButton> HoveredControlls = new List<UIButton>();
 		protected List<UIButton> ActivatedControlls = new List<UIButton>();
 
+        internal bool Active = false;
+
 		public void AddElement(GUIElement element, int layer = 0)
         {
 			if (!GUIElements.ContainsKey(layer))
@@ -87,6 +89,17 @@ namespace LudicrousElectron.GUI
 
 			PopUpCTL?.Resize(BoundWindow.Width, BoundWindow.Height);
 		}
+
+        public virtual void Reset()
+        {
+            foreach (var l in GUIElements)
+            {
+                foreach (var element in l.Value)
+                    element.FlushMaterials(true);
+            }
+            if (Active)
+                Resize();
+        }
 
 		List<UIButton> NewHover = new List<UIButton>();
 		List<UIButton> NewActive = new List<UIButton>();

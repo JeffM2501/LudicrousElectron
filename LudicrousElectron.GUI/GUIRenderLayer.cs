@@ -61,11 +61,23 @@ namespace LudicrousElectron.GUI
 		{
 			ClearDrawables();
 
+            if (CurrentCanvas != null)
+                CurrentCanvas.Active = false;
+
 			CurrentCanvas = newCanvas;
-			CurrentCanvas.Resize();
+            Reset();
 		}
 
-		internal bool HandleMouseInput(InputManager.MouseFrameEventArgs state)
+        public void Reset()
+        {
+            if (CurrentCanvas != null)
+            {
+                CurrentCanvas.Active = true;
+                CurrentCanvas.Reset();
+            }
+        }
+
+        internal bool HandleMouseInput(InputManager.MouseFrameEventArgs state)
 		{
 			if (CurrentContext == null || state.CursorPostion.X < 0 || state.CursorPostion.X > CurrentContext.Width || state.CursorPostion.Y < 0 || state.CursorPostion.Y > CurrentContext.Height)
 				return false;

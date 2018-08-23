@@ -144,9 +144,19 @@ namespace LudicrousElectron.GUI
 
 		public virtual void ProcessMouseEvent(Vector2 location, InputManager.LogicalButtonState buttons)
 		{
-
+            // the child class may want to do something with this.
 		}
-	}
+
+        public virtual void FlushMaterials(bool withChildren = false)
+        {
+            if (withChildren)
+            {
+                foreach (var child in Children)
+                    child.FlushMaterials(true);
+            }
+        }
+
+    }
 
     public enum UIFillModes
     {
@@ -267,9 +277,10 @@ namespace LudicrousElectron.GUI
             return DefaultMaterial;
         }
 
-        public virtual void FlushMaterial()
+        public override void FlushMaterials( bool withChildren = false)
         {
             CurrentMaterial = null;
+            base.FlushMaterials(withChildren);
         }
 
         protected virtual void CheckMaterial()

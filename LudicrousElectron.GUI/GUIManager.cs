@@ -172,5 +172,11 @@ namespace LudicrousElectron.GUI
 
 			return Contexts[context].Canvases.Peek() as T;
 		}
+
+        public static void Reset()
+        {
+            foreach (var context in Contexts.Values)
+                context.Layer.Reset();
+        }
 	}
 }

@@ -99,13 +99,13 @@ namespace LudicrousElectron.GUI.Elements
             AddChild(LabelControl);
         }
 
-        public override void FlushMaterial()
+        public override void FlushMaterials(bool children = false)
         {
-            base.FlushMaterial();
+            base.FlushMaterials(children);
             if (LabelControl != null)
             {
                 LabelControl.DefaultMaterial.Color = GetCurrentTextColor();
-                LabelControl.FlushMaterial();
+                LabelControl.FlushMaterials(children);
             }
         }
 
@@ -187,7 +187,7 @@ namespace LudicrousElectron.GUI.Elements
 				return;
 
             Enabled = true;
-            FlushMaterial();
+            FlushMaterials();
             ButtonEnabled?.Invoke(this, this);
         }
 
@@ -197,7 +197,7 @@ namespace LudicrousElectron.GUI.Elements
 				return;
 
 			Enabled = false;
-            FlushMaterial();
+            FlushMaterials();
             ButtonDisabled?.Invoke(this, this);
         }
 
@@ -208,7 +208,7 @@ namespace LudicrousElectron.GUI.Elements
 			if (Activated)
 				return;
 			Activated = true;
-            FlushMaterial();
+            FlushMaterials();
             ButtonAcivated?.Invoke(this, this);
         }
 
@@ -218,7 +218,7 @@ namespace LudicrousElectron.GUI.Elements
 				return;
 
 			Activated = false;
-            FlushMaterial();
+            FlushMaterials();
             ButtonDeactivated?.Invoke(this, this);
         }
 
@@ -230,7 +230,7 @@ namespace LudicrousElectron.GUI.Elements
 				return;
 
 			Hovered = true;
-            FlushMaterial();
+            FlushMaterials();
             ButtonStartHover?.Invoke(this, this);
 
 			if (!string.IsNullOrEmpty(HoverSound))
@@ -243,7 +243,7 @@ namespace LudicrousElectron.GUI.Elements
 				return;
 
 			Hovered = false;
-            FlushMaterial();
+            FlushMaterials();
             ButtonEndHover?.Invoke(this, this);
         }
 
@@ -253,7 +253,7 @@ namespace LudicrousElectron.GUI.Elements
                 return;
             Checked = true;
 
-            FlushMaterial();
+            FlushMaterials();
             ButtonCheckChanged?.Invoke(this, this);
         }
 
@@ -262,7 +262,7 @@ namespace LudicrousElectron.GUI.Elements
             if (!Checked)
                 return;
             Checked = false;
-            FlushMaterial();
+            FlushMaterials();
             ButtonCheckChanged?.Invoke(this, this);
         }
 
