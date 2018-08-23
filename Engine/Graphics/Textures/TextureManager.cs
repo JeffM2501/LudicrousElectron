@@ -7,9 +7,6 @@ using System.Diagnostics;
 using LudicrousElectron.Types;
 using LudicrousElectron.Assets;
 
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
-
 
 namespace LudicrousElectron.Engine.Graphics.Textures
 {
@@ -124,7 +121,12 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 			texture.RelativeName = name;
 			texture.FullPath = string.Empty;
 			texture.ImageData = bitmap;
-            texture. PixelSize = new OpenTK.Vector2(bitmap.Width, bitmap.Height);
+            texture.PixelSize = new OpenTK.Vector2(bitmap.Width, bitmap.Height);
+
+
+            if (AssetManager.AssetExists(name + ".info"))
+                texture.MetaData.AddRange(AssetManager.GetAssetLines(name + ".info"));
+
             return texture;
 		}
 

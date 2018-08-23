@@ -155,7 +155,6 @@ namespace LudicrousElectron.GUI
                     child.FlushMaterials(true);
             }
         }
-
     }
 
     public enum UIFillModes
@@ -165,6 +164,7 @@ namespace LudicrousElectron.GUI
         StretchMiddle,
         Stretch4Quad,
         Fill9Sprite,
+        SmartStprite,
     }
 
 	public class LayoutContainer : GUIElement
@@ -323,6 +323,18 @@ namespace LudicrousElectron.GUI
 
                 case UIFillModes.Fill9Sprite:
                     SlicedSprite.NineSlice(this, Rect, CurrentMaterial.DiffuseTexture.PixelSize);
+                    break;
+
+                case UIFillModes.SmartStprite:
+                    if (CurrentMaterial == null || CurrentMaterial.DiffuseTexture == null)
+                        ShapeBuffer.TexturedRect(this, Rect, UVScale, ReverseU, ReverseV);
+                    else
+                    {
+                        if (CurrentMaterial.DiffuseTexture != null && CurrentMaterial.DiffuseTexture.HasMetaData("9Sprite"))
+                            SlicedSprite.NineSlice(this, Rect, CurrentMaterial.DiffuseTexture.PixelSize);
+                        else
+                            SlicedSprite.FourSlice(this, Rect, CurrentMaterial.DiffuseTexture.PixelSize);
+                    }
                     break;
             }      
         }

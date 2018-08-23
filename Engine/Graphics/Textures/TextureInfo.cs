@@ -38,6 +38,13 @@ namespace LudicrousElectron.Engine.Graphics.Textures
 
 		protected bool Loaded = false;
 
+        public List<string> MetaData = new List<string>();
+
+        public bool HasMetaData(string name)
+        {
+            return MetaData.Contains(name);
+        }
+
         public enum TextureFormats
         {
             TextureMap, // mip mapped

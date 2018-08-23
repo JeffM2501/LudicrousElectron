@@ -55,6 +55,31 @@ namespace LudicrousElectron.Assets
 			return outStream;
 		}
 
+        public static string GetAssetText(string assetPath)
+        {
+            Stream s = GetAssetStream(assetPath);
+            if (s == null)
+                return string.Empty;
+
+            StreamReader reader = new StreamReader(s);
+            return reader.ReadToEnd();
+        }
+
+        public static string[] GetAssetLines(string assetPath)
+        {
+            List<string> lines = new List<string>();
+            Stream s = GetAssetStream(assetPath);
+            if (s == null)
+                return lines.ToArray();
+
+            StreamReader reader = new StreamReader(s);
+            while (!reader.EndOfStream)
+                lines.Add(reader.ReadLine());
+
+            reader.Close();
+            return lines.ToArray();
+        }
+
         public static string GetAssetFullPath(string assetPath)
         {
             string outPath = string.Empty;
