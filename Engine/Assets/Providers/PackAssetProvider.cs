@@ -163,5 +163,13 @@ namespace LudicrousElectron.Assets.Providers
 
             return tmp.FullName;
         }
+
+        public bool AssetExists(string assetPath)
+        {
+            if (BaseFile == null || !BaseFile.Exists || !Assets.ContainsKey(assetPath))
+                return false;
+
+            return true;
+        }
     }
 }

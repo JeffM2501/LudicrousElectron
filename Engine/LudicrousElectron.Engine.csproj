@@ -42,6 +42,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +56,7 @@
     <Compile Include="Assets\IAssetProvider.cs" />
     <Compile Include="Assets\Providers\DirectoryAssetProvider.cs" />
     <Compile Include="Assets\Providers\PackAssetProvider.cs" />
+    <Compile Include="Assets\Providers\ZipPackageAssetProvider.cs" />
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Collisions\CollisionManager.cs" />
     <Compile Include="Collisions\ICollisionable.cs" />

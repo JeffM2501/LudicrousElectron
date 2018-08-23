@@ -12,5 +12,6 @@ namespace LudicrousElectron.Assets
 		List<string> FindAssets(string pathStart, string searchPattern);
 		Stream GetAssetStream(string assetPath);
         string GetAssetFullPath(string assetPath);
+        bool AssetExists(string assetPath);
     }
 }

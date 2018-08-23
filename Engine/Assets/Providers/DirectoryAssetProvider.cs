@@ -112,5 +112,14 @@ namespace LudicrousElectron.Assets.Providers
 
             return fullPath;
         }
+
+        public bool AssetExists(string assetPath)
+        {
+            if (assetPath.Contains(".."))
+                return false;
+
+            string fullPath = GetAbsPath(assetPath);
+            return File.Exists(fullPath);
+        }
     }
 }

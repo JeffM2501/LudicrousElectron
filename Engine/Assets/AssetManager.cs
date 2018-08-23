@@ -67,5 +67,17 @@ namespace LudicrousElectron.Assets
 
             return outPath;
         }
-	}
+
+        public static bool AssetExists(string assetPath)
+        {
+            string outPath = string.Empty;
+            foreach (var provider in AssetProviders)
+            {
+                if (provider.AssetExists(assetPath))
+                    return true;
+            }
+
+            return false;
+        }
+    }
 }
