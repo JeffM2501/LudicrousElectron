@@ -70,7 +70,6 @@ namespace LudicrousElectron.Assets
 
         public static bool AssetExists(string assetPath)
         {
-            string outPath = string.Empty;
             foreach (var provider in AssetProviders)
             {
                 if (provider.AssetExists(assetPath))

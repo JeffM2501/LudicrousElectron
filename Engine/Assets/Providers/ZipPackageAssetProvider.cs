@@ -117,6 +117,7 @@ namespace LudicrousElectron.Assets.Providers
             }
             catch (Exception)
             {
+                // if it can't be opened, just give em back a null.
             }
 
             return null;
