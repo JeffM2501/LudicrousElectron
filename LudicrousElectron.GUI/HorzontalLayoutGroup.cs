@@ -45,7 +45,7 @@ namespace LudicrousElectron.GUI
             if (ConstantChildWidths)
             {
                 float childSize = (PixelSize.Y - (Children.Count * ChildSpacing)) / (Children.Count);
-                if (childSize > MaxChildSize)
+                if (MaxChildSize > 0 && childSize > MaxChildSize)
                     childSize = MaxChildSize;
 
                 float originX = FirstElementHasSpacing ? ChildSpacing : 0;
@@ -85,7 +85,7 @@ namespace LudicrousElectron.GUI
                     else
                         child.Rect.Y.Paramater = originX;
 
-                    child.Rect.AnchorLocation = GetLowerAnchor(child.Rect.AnchorLocation);
+                    child.Rect.AnchorLocation = OriginTools.GetLowerAnchor(child.Rect.AnchorLocation);
 
                     // resize the child with the correct origin
                     child.Resize((int)PixelSize.X, (int)PixelSize.Y);

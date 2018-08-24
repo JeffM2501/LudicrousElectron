@@ -18,13 +18,87 @@ namespace LudicrousElectron.GUI.Geometry
 		LowerCenter,
 	}
 
+    public static class OriginTools
+    {
+        public static OriginLocation GetLowerAnchor(OriginLocation anchor)
+        {
+            switch (anchor)
+            {
+                case OriginLocation.Center:
+                case OriginLocation.UpperCenter:
+                case OriginLocation.LowerCenter:
+                    return OriginLocation.LowerCenter;
+
+                case OriginLocation.LowerLeft:
+                case OriginLocation.MiddleLeft:
+                case OriginLocation.UpperLeft:
+                default:
+                    return OriginLocation.LowerLeft;
+
+                case OriginLocation.LowerRight:
+                case OriginLocation.MiddleRight:
+                case OriginLocation.UpperRight:
+                    return OriginLocation.LowerRight;
+            }
+        }
+
+        public static OriginLocation GetLeftAnchor(OriginLocation anchor)
+        {
+            switch (anchor)
+            {
+                case OriginLocation.Center:
+                case OriginLocation.MiddleLeft:
+                case OriginLocation.MiddleRight:
+                    return OriginLocation.MiddleLeft;
+
+                case OriginLocation.UpperCenter:
+                case OriginLocation.UpperLeft:
+                case OriginLocation.UpperRight:
+                    return OriginLocation.UpperLeft;
+
+                case OriginLocation.LowerCenter:
+                case OriginLocation.LowerLeft:
+                case OriginLocation.LowerRight:
+                default:
+                    return OriginLocation.LowerLeft;
+            }
+        }
+
+        public static OriginLocation GetMiddleAnhcor(OriginLocation anchor)
+        {
+            switch (anchor)
+            {
+                case OriginLocation.MiddleLeft:
+                case OriginLocation.MiddleRight:
+                case OriginLocation.Center:
+                    return anchor;
+
+                case OriginLocation.UpperLeft:
+                case OriginLocation.LowerLeft:
+                    return OriginLocation.MiddleLeft;
+
+                case OriginLocation.UpperRight:
+                case OriginLocation.LowerRight:
+                    return OriginLocation.MiddleRight;
+
+                default:
+                    return OriginLocation.Center;
+            }
+        }
+    }
+
 	public class RelativeRect
     {
 		public static readonly RelativeRect Full = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullHeight);
 
-		/// <summary>
-		/// X position of the origin relative to the parent.
-		/// </summary>
+        public static readonly RelativeRect FullLeft = new RelativeRect(RelativeLoc.XLeft, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullHeight, OriginLocation.MiddleLeft);
+        public static readonly RelativeRect FullRight = new RelativeRect(RelativeLoc.XRight, RelativeLoc.YCenter, RelativeSize.FullWidth, RelativeSize.FullHeight, OriginLocation.MiddleRight);
+        public static readonly RelativeRect FullTop = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YUpper, RelativeSize.FullWidth, RelativeSize.FullHeight, OriginLocation.UpperCenter);
+        public static readonly RelativeRect FullBottom = new RelativeRect(RelativeLoc.XCenter, RelativeLoc.YLower, RelativeSize.FullWidth, RelativeSize.FullHeight, OriginLocation.LowerCenter);
+
+        /// <summary>
+        /// X position of the origin relative to the parent.
+        /// </summary>
         public RelativeLoc X = new RelativeLoc();
 
 		/// <summary>

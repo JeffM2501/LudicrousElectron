@@ -14,6 +14,8 @@ namespace LudicrousElectron.GUI.Elements
 		public string Text = string.Empty;
 		public int Font = -1;
 
+        public int MaxTextSize = -1;
+
         protected FontManager.FontDrawInfo DrawInfo = null;
 
         public enum TextFittingModes
@@ -127,6 +129,9 @@ namespace LudicrousElectron.GUI.Elements
             float textWidth = 0;
 
             string effectiveText = Text;
+
+            if (MaxTextSize > 0 && fontHeight > MaxTextSize)
+                fontHeight = MaxTextSize;
 
             switch (FittingMode)
             {
