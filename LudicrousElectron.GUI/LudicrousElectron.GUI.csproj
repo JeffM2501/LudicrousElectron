@@ -62,6 +62,7 @@
     <Compile Include="Geometry\RelativeRect.cs" />
     <Compile Include="Geometry\RelativeSize.cs" />
     <Compile Include="Geometry\RelativeTools.cs" />
+    <Compile Include="GridLayoutGroup.cs" />
     <Compile Include="GUIElement.cs" />
     <Compile Include="GUIManager.cs" />
     <Compile Include="GUIRenderLayer.cs" />

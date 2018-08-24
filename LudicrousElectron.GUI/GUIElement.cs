@@ -23,6 +23,8 @@ namespace LudicrousElectron.GUI
 		public string Name = string.Empty;
         public object Tag = null;
 
+        internal object LayoutTag = null;
+
 		public Canvas ParentCanvas = null;
         public GUIElement Parent = null;
 
