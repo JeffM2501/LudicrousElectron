@@ -103,7 +103,7 @@ namespace LudicrousElectron.GUI
             return new Vector2(x, (PixelSize.Y - y) - CellSize.Y);
         }
 
-        protected Vector2 GetChildOrigin(Vector2 cellOrigin, Vector2 cellSize, float actualHeight, OriginLocation anchor)
+        protected static Vector2 GetChildOrigin(Vector2 cellOrigin, Vector2 cellSize, float actualHeight, OriginLocation anchor)
         {
             float halfX = cellSize.X * 0.5f;
             float halfY = cellSize.Y * 0.5f;
@@ -174,13 +174,11 @@ namespace LudicrousElectron.GUI
 
             foreach (var child in Children)
             {
-                Vector2 thisCellSize = Vector2.Zero;
-
                 GridLayoutInfo info = child.LayoutTag as GridLayoutInfo;
                 if (info == null)
                     continue;
 
-                thisCellSize = info.ColSpan ? ColSpanSize : CellSize;
+                Vector2 thisCellSize = info.ColSpan ? ColSpanSize : CellSize;
 
                 OriginLocation location = child.Rect.AnchorLocation;
                 float itemHeight = CellSize.Y;
