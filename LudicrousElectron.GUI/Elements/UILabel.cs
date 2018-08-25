@@ -16,6 +16,8 @@ namespace LudicrousElectron.GUI.Elements
 
         public int MaxTextSize = -1;
 
+        public int ActualFontSize { get; protected set; } = -1;
+
         protected FontManager.FontDrawInfo DrawInfo = null;
 
         public enum TextFittingModes
@@ -125,13 +127,13 @@ namespace LudicrousElectron.GUI.Elements
 
             float pixelHeight = heightCache.ToScreen(x, y) * 0.75f;
             float pixelWidth = widthCache.ToScreen(x, y);
-            int fontHeight = (int)(pixelHeight + 1);
+            ActualFontSize = (int)(pixelHeight + 1);
             float textWidth = 0;
 
             string effectiveText = Text;
 
-            if (MaxTextSize > 0 && fontHeight > MaxTextSize)
-                fontHeight = MaxTextSize;
+            if (MaxTextSize > 0 && ActualFontSize > MaxTextSize)
+                ActualFontSize = MaxTextSize;
 
             switch (FittingMode)
             {
@@ -141,7 +143,7 @@ namespace LudicrousElectron.GUI.Elements
                 case TextFittingModes.ByHeightTrim:
                     effectiveText = String.Copy(Text);
 
-                    textWidth = FontManager.MeasureText(Font, fontHeight, effectiveText).X;
+                    textWidth = FontManager.MeasureText(Font, ActualFontSize, effectiveText).X;
 
                     while(textWidth > pixelWidth)
                     {
@@ -150,26 +152,26 @@ namespace LudicrousElectron.GUI.Elements
                         else
                             effectiveText = effectiveText.Substring(0, effectiveText.Length - 1);
 
-                        textWidth = FontManager.MeasureText(Font, fontHeight, effectiveText).X;
+                        textWidth = FontManager.MeasureText(Font, ActualFontSize, effectiveText).X;
                     }
                     break;
 
                 case TextFittingModes.ByWidth:
-                    textWidth = FontManager.MeasureText(Font, fontHeight, Text).X;
+                    textWidth = FontManager.MeasureText(Font, ActualFontSize, Text).X;
 
                     while (textWidth > pixelWidth)
                     {
-                        fontHeight -= 1;
-                        if (fontHeight <= 5) // that's the smallest we can go, it just wont' fit
+                        ActualFontSize -= 1;
+                        if (ActualFontSize <= 5) // that's the smallest we can go, it just wont' fit
                             break;
 
-                        textWidth = FontManager.MeasureText(Font, fontHeight, effectiveText).X;
+                        textWidth = FontManager.MeasureText(Font, ActualFontSize, effectiveText).X;
                     }
                     break;
 
             }
 
-            DrawInfo = FontManager.DrawText(Font, fontHeight, effectiveText);
+            DrawInfo = FontManager.DrawText(Font, ActualFontSize, effectiveText);
             if (DrawInfo == null)
                 return;
 

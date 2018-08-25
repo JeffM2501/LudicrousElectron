@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+
 using LudicrousElectron.Engine.Window;
 using OpenTK;
 using OpenTK.Input;
@@ -11,7 +13,12 @@ namespace LudicrousElectron.Engine.Input
 		public static int PrimaryMouseButton = 0;
 		public static int SecondaryMouseButton = 1;
 
-		public class LogicalButtonState
+        internal static List<KeyPressEventArgs> PendingKeypresses = new List<KeyPressEventArgs>();
+
+        private static bool CaputreStringInput = false;
+        internal static readonly char Backspace = (char)8;
+
+        public class LogicalButtonState
 		{
 			public bool PrimaryDown = false;
 			public bool SecondaryDown = false;
@@ -40,10 +47,9 @@ namespace LudicrousElectron.Engine.Input
 
 		public static event EventHandler<MouseFrameEventArgs> ProcessMouseInput = null;
 
-
 		private static MouseFrameEventArgs LastMouseState = null;
 
-		internal static void PollInput(int currentContextID)
+        internal static void PollInput(int currentContextID)
 		{
 			MouseFrameEventArgs args = new MouseFrameEventArgs();
 			args.ContextID = currentContextID;
@@ -75,7 +81,70 @@ namespace LudicrousElectron.Engine.Input
 			ProcessMouseInput?.Invoke(null, args);
 
 			LastMouseState = args;
-
 		}
+
+        public static void StartInputStringCapture()
+        {
+            CaputreStringInput = true;
+        }
+
+        public static void EndInputStringCapture()
+        {
+            CaputreStringInput = false;
+        }
+
+        internal static void ProcessKeyPress(KeyPressEventArgs e)
+        {
+            if (!CaputreStringInput)
+                return;
+
+            PendingKeypresses.Add(e);
+        }
+
+        public static bool CapturingStringInput()
+        {
+            return CaputreStringInput;
+        }
+
+        public static bool ProcessKeysOnString(ref string text, ref bool escaped, bool allowEnter = false, bool eatTabs = false)
+        {
+            if (!CaputreStringInput || PendingKeypresses.Count == 0)
+                return false;
+
+            string ogString = string.Copy(text);
+            escaped = false;
+
+            foreach (var item in PendingKeypresses.ToArray())
+            {
+                PendingKeypresses.Remove(item);
+
+                if (item.KeyChar == Backspace && text.Length > 0)
+                    text = text.Substring(0, text.Length - 2);
+                else if (item.KeyChar == '\r')
+                {
+                    if (!allowEnter)
+                    {
+                        escaped = true;
+                        return ogString == text;
+                    }
+                    else
+                        text += "\r";
+                }
+                else if (item.KeyChar == '\t')
+                {
+                    if (!eatTabs)
+                    {
+                        escaped = true;
+                        return ogString != text;
+                    }
+                    else
+                        text += "\t";
+                }
+                else if (!char.IsControl(item.KeyChar))
+                    text += item.KeyChar;
+            }
+
+            return ogString != text;
+        }
 	}
 }

@@ -20,6 +20,7 @@ namespace LudicrousElectron.GUI
         protected SortedDictionary<int,List<GUIElement>> GUIElements = new SortedDictionary<int,List<GUIElement>>();
 
 		protected GUIElement PopUpCTL = null;
+        protected UITextEntry FocusedTextControl = null;
 
 		protected List<UIButton> HoveredControlls = new List<UIButton>();
 		protected List<UIButton> ActivatedControlls = new List<UIButton>();
@@ -57,6 +58,43 @@ namespace LudicrousElectron.GUI
 					element.Resize(BoundWindow.Width, BoundWindow.Height);
 			}
 		}
+
+        public void SetFocusedTextArea(UITextEntry element)
+        {
+            if (FocusedTextControl != null)
+            {
+                FocusedTextControl.ClearFocus();
+                FocusedTextControl = null;
+            }
+
+            FocusedTextControl = element;
+            if (FocusedTextControl != null)
+            {
+                FocusedTextControl.SetFocus();
+                if (BoundWindow != null)
+                    FocusedTextControl.Resize(BoundWindow.Width, BoundWindow.Height);
+            }
+        }
+
+        public bool TextAreaFocused()
+        {
+            return FocusedTextControl != null;
+        }
+
+        internal void ProcessTextInput()
+        {
+            if (!TextAreaFocused())
+                return;
+
+            string text = string.Copy(FocusedTextControl.GetCurrentText());
+            bool escaped = false;
+            if (InputManager.ProcessKeysOnString(ref text, ref escaped, false, false))
+            {
+                FocusedTextControl.ChangeText(text);
+                if (escaped)
+                    FocusedTextControl.ClearFocus();
+            }
+        }
 
 		public virtual void Render(GUIRenderLayer layer)
 		{

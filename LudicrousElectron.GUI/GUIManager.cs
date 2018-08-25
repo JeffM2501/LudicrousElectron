@@ -69,6 +69,8 @@ namespace LudicrousElectron.GUI
 
 			InputManager.ProcessMouseInput += InputManager_ProcessMouseInput;
 
+            Engine.Core.Update += Core_Update;
+
 			if (WindowManager.Inited())
 			{
 				ContextInfo info = new ContextInfo();
@@ -87,7 +89,32 @@ namespace LudicrousElectron.GUI
 			}
 		}
 
-		private static void InputManager_ProcessMouseInput(object sender, InputManager.MouseFrameEventArgs e)
+        private static void Core_Update(object sender, Engine.Core.EngineState e)
+        {
+            if (InputManager.CapturingStringInput())
+            {
+                if (WindowManager.MainWindow.Focused)
+                    HandleStringInput(WindowManager.MainWindow.ContextID);
+                else
+                {
+                    foreach(var child in WindowManager.ChildWindows)
+                    {
+                        if (child.Focused)
+                            HandleStringInput(child.ContextID);
+                    }
+                }
+            }
+        }
+
+        private static void HandleStringInput(int contextID)
+        {
+            if (!Contexts.ContainsKey(contextID) || Contexts[contextID].Layer == null || Contexts[contextID].Canvases.Count == 0)
+                return;
+
+            Contexts[contextID].Layer.CurrentCanvas.ProcessTextInput();
+        }
+
+        private static void InputManager_ProcessMouseInput(object sender, InputManager.MouseFrameEventArgs e)
 		{
 			if (!Contexts.ContainsKey(e.ContextID) || Contexts[e.ContextID].Layer == null|| Contexts[e.ContextID].Canvases.Count ==0)
 				return;

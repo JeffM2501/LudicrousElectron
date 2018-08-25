@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -124,6 +125,18 @@ namespace LudicrousElectron.GUI.Geometry
 			Width = widht;
 			Height = height;
 		}
+
+        public RelativeSizeXY(float widht, float height)
+        {
+            Width = new RelativeSize(widht);
+            Height = new RelativeSize(height);
+        }
+
+        public RelativeSizeXY(Vector2 size)
+        {
+            Width = new RelativeSize(size.X);
+            Height = new RelativeSize(size.Y);
+        }
 
         public RelativeSizeXY Clone()
         {

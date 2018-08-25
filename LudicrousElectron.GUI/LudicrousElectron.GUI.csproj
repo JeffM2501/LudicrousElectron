@@ -58,6 +58,7 @@
     <Compile Include="Elements\UIImage.cs" />
     <Compile Include="Elements\UILabel.cs" />
     <Compile Include="Elements\UIPanel.cs" />
+    <Compile Include="Elements\UITextEntry.cs" />
     <Compile Include="Geometry\RelativeLoc.cs" />
     <Compile Include="Geometry\RelativeRect.cs" />
     <Compile Include="Geometry\RelativeSize.cs" />

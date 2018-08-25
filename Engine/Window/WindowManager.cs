@@ -221,6 +221,8 @@ namespace LudicrousElectron.Engine.Window
             MainWindow.ContextID = MainWindowID;
 			MainWindow.SetupInfo = info;
 
+            MainWindow.KeyPress += Window_KeyPress;
+
             SetCurrentWindow(MainWindow);
 
 			MainWindowAAFactor = MainWindow.SetupInfo.AntiAliasingFactor; // so that prefs can save it when we close, it'll be the last one that actualy worked
@@ -236,7 +238,12 @@ namespace LudicrousElectron.Engine.Window
 			return true;
 		}
 
-		public static bool Inited()
+        private static void Window_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            InputManager.ProcessKeyPress(e);
+        }
+
+        public static bool Inited()
 		{
 			return MainWindow != null;
 		}
