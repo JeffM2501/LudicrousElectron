@@ -104,28 +104,37 @@ namespace LudicrousElectron.GUI.Elements
             var thisSize = Rect.GetPixelSize();
             TextLabel.Resize((int)thisSize.X, (int)thisSize.Y);
 
+			SetupCursor();
+
 			CursorPostion.Y = 0;
 			SetCursorPostion();
+		}
 
-			if (CursorChar == char.MinValue)
-                CursorImage = null;
-            else
+		protected void SetupCursor()
+		{
+			if(CursorChar == char.MinValue)
+				CursorImage = null;
+            else 
             {
-                var cursor = FontManager.DrawText(Font, TextLabel.ActualFontSize, CursorChar.ToString());
+				int fontSize = (int)(Rect.GetPixelSize().Y * 0.75);
+				if (TextLabel != null)
+					fontSize = TextLabel.ActualFontSize;
 
-                CursorImage = new UIImage(new RelativeRect(RelativePoint.LowerLeft, new RelativeSizeXY(cursor.Size), OriginLocation.LowerCenter), cursor.CachedTexture.RelativeName);
+				var cursor = FontManager.DrawText(Font, fontSize, CursorChar.ToString());
+
+				CursorImage = new UIImage(new RelativeRect(RelativePoint.LowerLeft, new RelativeSizeXY(cursor.Size), OriginLocation.LowerCenter), cursor.CachedTexture.RelativeName);
 				CursorImage.WriteDepth = false;
 
 				Color color = CursorColor;
-                if (color == Color.Transparent)
-                    color = FocusedTextColor;
-                if (color == Color.Transparent)
-                    color = DefaultTextColor;
+				if (color == Color.Transparent)
+					color = FocusedTextColor;
+				if (color == Color.Transparent)
+					color = DefaultTextColor;
 
-                CursorImage.CurrentMaterial = GUIManager.GetMaterial(cursor.CachedTexture, color);
-                CursorImage.Resize((int)LastParentSize.X, (int)LastParentSize.Y);
-            }
-        }
+				CursorImage.CurrentMaterial = GUIManager.GetMaterial(cursor.CachedTexture, color);
+				CursorImage.Resize((int)LastParentSize.X, (int)LastParentSize.Y);
+			}
+		}
 
         public override void FlushMaterials(bool children = false)
         {
@@ -155,6 +164,12 @@ namespace LudicrousElectron.GUI.Elements
 
 		protected void SetCursorPostion()
 		{
+			if (CursorImage == null)
+				SetupCursor();
+
+			if (CursorImage == null)
+				return;
+
 			if (GetCurrentText() == string.Empty)
 				CursorPostion.X = CursorImage.Rect.GetPixelSize().X * 0.5f;
 			else
@@ -172,6 +187,7 @@ namespace LudicrousElectron.GUI.Elements
             else
                 hadEnter = newText.Contains("\r");
 
+			bool wasEmpty = CurrentText == string.Empty;
             CurrentText = newText;
 
             if (TextLabel != null)
@@ -179,10 +195,12 @@ namespace LudicrousElectron.GUI.Elements
 				TextLabel.Text = GetCurrentText();
 				TextLabel.ForceRefresh();
 				SetCursorPostion();
-
 			}
 
-            TextChanged?.Invoke(this, this);
+			if (wasEmpty)
+				SetupCursor();
+
+			TextChanged?.Invoke(this, this);
             if (hadEnter)
                 EnterPressed?.Invoke(this, this);
         }
@@ -191,7 +209,7 @@ namespace LudicrousElectron.GUI.Elements
         {
             base.Resize(x, y);
 
-            if (!string.IsNullOrEmpty(CurrentText) && TextLabel == null)
+            if (TextLabel == null)
                 SetupLabel();
 
             CheckMaterial();
@@ -208,7 +226,7 @@ namespace LudicrousElectron.GUI.Elements
         {
             base.Draw(layer);
 
-            if (DrawCursor && Focused)
+            if (DrawCursor && Focused && CursorImage != null)
             {
 				Vector2 origin = Rect.GetPixelOrigin();
 
