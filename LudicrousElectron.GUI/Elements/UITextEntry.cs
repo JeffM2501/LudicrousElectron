@@ -210,7 +210,7 @@ namespace LudicrousElectron.GUI.Elements
 
             if (DrawCursor && Focused)
             {
-				Vector2 origin = Rect.GetPixelOrigin();/* + TextLabel.Rect.GetPixelOrigin()*/;
+				Vector2 origin = Rect.GetPixelOrigin();
 
                 layer.PushTranslation(origin.X + CursorPostion.X, origin.Y + CursorPostion.Y, 10);
                 layer.AddDrawable(CursorImage);
