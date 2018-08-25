@@ -200,6 +200,8 @@ namespace LudicrousElectron.GUI
 				}
 			}
 
+			bool clearFocus = buttons.PrimaryClick;
+
 			if (affectedElements.Count == 0) // nothing is affected, clear out the states
 			{
 				foreach (var item in ActivatedControlls)
@@ -215,10 +217,12 @@ namespace LudicrousElectron.GUI
 						item.EndHover();
 				}
 				HoveredControlls.Clear();
+
+				if (clearFocus)
+					SetFocusedTextArea(null);
+
 				return false;
 			}
-
-			bool clearFocus = buttons.PrimaryClick;
 
 			NewHover = new List<UIButton>();
 			NewActive = new List<UIButton>();
