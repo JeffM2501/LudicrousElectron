@@ -95,24 +95,28 @@ namespace LudicrousElectron.GUI.Elements
             if (Font == -1)
                 Font = FontManager.DefaultFont;
 
-            TextLabel = new UILabel(Font, GetCurrentText(), RelativePoint.MiddleLeft, RelativeSize.FullHeight + (0.35f), null, OriginLocation.MiddleLeft,UILabel.TextFittingModes.ByHeightTrim );
-            TextLabel.DefaultMaterial.Color = GetCurrentTextColor();
+            TextLabel = new UILabel(Font, GetCurrentText(), RelativePoint.MiddleLeft, RelativeSize.FullHeight + (0.35f), null, OriginLocation.MiddleLeft,UILabel.TextFittingModes.ByHeightReverseTrim);
+			TextLabel.WriteDepth = false;
+
+			TextLabel.DefaultMaterial.Color = GetCurrentTextColor();
             AddChild(TextLabel);
 
             var thisSize = Rect.GetPixelSize();
             TextLabel.Resize((int)thisSize.X, (int)thisSize.Y);
 
-            CursorPostion.X = TextLabel.Rect.GetPixelSize().X;
-            CursorPostion.Y = TextLabel.Rect.GetPixelOrigin().Y;
+			CursorPostion.Y = 0;
+			SetCursorPostion();
 
-            if (CursorChar == char.MinValue)
+			if (CursorChar == char.MinValue)
                 CursorImage = null;
             else
             {
                 var cursor = FontManager.DrawText(Font, TextLabel.ActualFontSize, CursorChar.ToString());
 
-                CursorImage = new UIImage(new RelativeRect(RelativePoint.LowerLeft, new RelativeSizeXY(cursor.Size), OriginLocation.LowerLeft), cursor.CachedTexture.RelativeName);
-                Color color = CursorColor;
+                CursorImage = new UIImage(new RelativeRect(RelativePoint.LowerLeft, new RelativeSizeXY(cursor.Size), OriginLocation.LowerCenter), cursor.CachedTexture.RelativeName);
+				CursorImage.WriteDepth = false;
+
+				Color color = CursorColor;
                 if (color == Color.Transparent)
                     color = FocusedTextColor;
                 if (color == Color.Transparent)
@@ -149,27 +153,37 @@ namespace LudicrousElectron.GUI.Elements
             return DefaultTextColor;
         }
 
+		protected void SetCursorPostion()
+		{
+			if (GetCurrentText() == string.Empty)
+				CursorPostion.X = CursorImage.Rect.GetPixelSize().X * 0.5f;
+			else
+				CursorPostion.X = TextLabel.Rect.GetPixelSize().X;
+		}
+
         internal void ChangeText(string newText)
         {
-            bool hadenter = false;
-            if (CurrentText.Length < newText.Length)
+           bool hadEnter = false;
+            if (CurrentText.Length < 0 && CurrentText.Length < newText.Length)
             {
                 if (newText.Substring(CurrentText.Length - 1).Contains("\r"))
-                    hadenter = true;
+                    hadEnter = true;
             }
             else
-                hadenter = newText.Contains("\r");
+                hadEnter = newText.Contains("\r");
 
             CurrentText = newText;
 
             if (TextLabel != null)
             {
-                TextLabel.ForceRefresh();
-                CursorPostion.X = TextLabel.Rect.GetPixelSize().X;
-            }
+				TextLabel.Text = GetCurrentText();
+				TextLabel.ForceRefresh();
+				SetCursorPostion();
+
+			}
 
             TextChanged?.Invoke(this, this);
-            if (hadenter)
+            if (hadEnter)
                 EnterPressed?.Invoke(this, this);
         }
 
@@ -187,9 +201,8 @@ namespace LudicrousElectron.GUI.Elements
             else
                 HandleTexturedRect();
 
-            CursorPostion.X = TextLabel.Rect.GetPixelSize().X;
-            CursorPostion.Y = TextLabel.Rect.GetPixelOrigin().Y;
-        }
+			SetCursorPostion();
+		}
 
         public override void Draw(GUIRenderLayer layer)
         {
@@ -197,9 +210,9 @@ namespace LudicrousElectron.GUI.Elements
 
             if (DrawCursor && Focused)
             {
-                Vector2 origin = Rect.GetPixelOrigin() + TextLabel.Rect.GetPixelOrigin();
+				Vector2 origin = Rect.GetPixelOrigin();/* + TextLabel.Rect.GetPixelOrigin()*/;
 
-                layer.PushTranslation(origin.X + CursorPostion.X -( CursorImage.Rect.GetPixelSize().X * 0.25f), origin.Y + CursorPostion.Y, 10);
+                layer.PushTranslation(origin.X + CursorPostion.X, origin.Y + CursorPostion.Y, 10);
                 layer.AddDrawable(CursorImage);
                 layer.PopMatrix();
             }

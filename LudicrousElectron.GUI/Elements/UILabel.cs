@@ -24,6 +24,7 @@ namespace LudicrousElectron.GUI.Elements
         {
             ByHeightExtend,
             ByHeightTrim,
+			ByHeightReverseTrim,
             ByWidth,
         }
 
@@ -156,7 +157,23 @@ namespace LudicrousElectron.GUI.Elements
                     }
                     break;
 
-                case TextFittingModes.ByWidth:
+				case TextFittingModes.ByHeightReverseTrim:
+					effectiveText = String.Copy(Text);
+
+					textWidth = FontManager.MeasureText(Font, ActualFontSize, effectiveText).X;
+
+					while (textWidth > pixelWidth)
+					{
+						if (textWidth > pixelWidth * 2)
+							effectiveText = effectiveText.Substring(effectiveText.Length / 2);
+						else
+							effectiveText = effectiveText.Substring(1);
+
+						textWidth = FontManager.MeasureText(Font, ActualFontSize, effectiveText).X;
+					}
+					break;
+
+				case TextFittingModes.ByWidth:
                     textWidth = FontManager.MeasureText(Font, ActualFontSize, Text).X;
 
                     while (textWidth > pixelWidth)

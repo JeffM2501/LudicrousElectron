@@ -10,6 +10,9 @@ namespace LudicrousElectron.Engine.Graphics
 	{
 		public Material CurrentMaterial = null;
 
+		public bool ReadDepth = true;
+		public bool WriteDepth = true;
+
 		public virtual bool Draw() { return false; }
 	}
 }

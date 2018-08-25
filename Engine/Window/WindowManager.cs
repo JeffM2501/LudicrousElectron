@@ -221,7 +221,8 @@ namespace LudicrousElectron.Engine.Window
             MainWindow.ContextID = MainWindowID;
 			MainWindow.SetupInfo = info;
 
-            MainWindow.KeyPress += Window_KeyPress;
+			MainWindow.KeyPress += Window_KeyPress;
+			MainWindow.KeyDown += Window_KeyDown;
 
             SetCurrentWindow(MainWindow);
 
@@ -238,7 +239,12 @@ namespace LudicrousElectron.Engine.Window
 			return true;
 		}
 
-        private static void Window_KeyPress(object sender, KeyPressEventArgs e)
+		private static void Window_KeyDown(object sender, KeyboardKeyEventArgs e)
+		{
+			InputManager.ProcessKeyDown(e);
+		}
+
+		private static void Window_KeyPress(object sender, KeyPressEventArgs e)
         {
             InputManager.ProcessKeyPress(e);
         }

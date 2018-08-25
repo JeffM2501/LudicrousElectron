@@ -13,7 +13,7 @@ namespace LudicrousElectron.Engine.Input
 		public static int PrimaryMouseButton = 0;
 		public static int SecondaryMouseButton = 1;
 
-        internal static List<KeyPressEventArgs> PendingKeypresses = new List<KeyPressEventArgs>();
+        internal static List<char> PendingKeypresses = new List<char>();
 
         private static bool CaputreStringInput = false;
         internal static readonly char Backspace = (char)8;
@@ -98,8 +98,22 @@ namespace LudicrousElectron.Engine.Input
             if (!CaputreStringInput)
                 return;
 
-            PendingKeypresses.Add(e);
+            PendingKeypresses.Add(e.KeyChar);
         }
+
+		internal static void ProcessKeyDown(KeyboardKeyEventArgs e)
+		{
+			if (!CaputreStringInput)
+				return;
+
+			if (!e.Alt && !e.Control && !e.Shift)
+			{
+				if (e.Key == Key.Enter)
+					PendingKeypresses.Add('\r');
+				else if (e.Key == Key.BackSpace || e.Key == Key.Delete)
+					PendingKeypresses.Add(Backspace);
+			}
+		}
 
         public static bool CapturingStringInput()
         {
@@ -114,37 +128,41 @@ namespace LudicrousElectron.Engine.Input
             string ogString = string.Copy(text);
             escaped = false;
 
+			StringBuilder builder = new StringBuilder(text);
             foreach (var item in PendingKeypresses.ToArray())
             {
                 PendingKeypresses.Remove(item);
 
-                if (item.KeyChar == Backspace && text.Length > 0)
-                    text = text.Substring(0, text.Length - 2);
-                else if (item.KeyChar == '\r')
+				if (item == Backspace && builder.Length > 0)
+					builder.Remove(builder.Length - 1, 1);
+                else if (item == '\r')
                 {
-                    if (!allowEnter)
-                    {
-                        escaped = true;
-                        return ogString == text;
-                    }
-                    else
-                        text += "\r";
+					if (!allowEnter)
+					{
+						escaped = true;
+						text = builder.ToString();
+						return ogString == text;
+					}
+					else
+						builder.AppendLine();
                 }
-                else if (item.KeyChar == '\t')
+                else if (item == '\t')
                 {
                     if (!eatTabs)
                     {
                         escaped = true;
-                        return ogString != text;
+						text = builder.ToString();
+						return ogString != text;
                     }
                     else
-                        text += "\t";
+						builder.Append("\t");
                 }
-                else if (!char.IsControl(item.KeyChar))
-                    text += item.KeyChar;
+                else if (!char.IsControl(item))
+					builder.Append(item);
             }
 
-            return ogString != text;
+			text = builder.ToString();
+			return ogString != text;
         }
 	}
 }

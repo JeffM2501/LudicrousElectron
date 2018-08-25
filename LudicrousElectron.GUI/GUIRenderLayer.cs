@@ -61,7 +61,10 @@ namespace LudicrousElectron.GUI
 		{
 			ClearDrawables();
 
-            if (CurrentCanvas != null)
+			if (InputManager.CapturingStringInput())
+				InputManager.EndInputStringCapture();
+
+			if (CurrentCanvas != null)
                 CurrentCanvas.Active = false;
 
 			CurrentCanvas = newCanvas;

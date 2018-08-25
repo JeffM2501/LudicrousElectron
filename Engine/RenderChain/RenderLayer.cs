@@ -173,9 +173,20 @@ namespace LudicrousElectron.Engine.RenderChain
 					BindMaterial(item.DrawObject.CurrentMaterial);
 					lastMat = item.DrawObject.CurrentMaterial;
 				}
+
+				if (!item.DrawObject.ReadDepth)
+					GL.DepthFunc(DepthFunction.Never);
+				if (!item.DrawObject.WriteDepth)
+					GL.DepthMask(false);
+
 				GL.LoadMatrix(ref item.objectMatrix);
 				if (item.DrawObject.Draw())
 					lastMat = null;
+
+				if (!item.DrawObject.WriteDepth)
+					GL.DepthMask(true);
+				if (!item.DrawObject.ReadDepth)
+					GL.DepthFunc(DepthFunction.Less);
 			}
 		}
 

@@ -73,8 +73,13 @@ namespace LudicrousElectron.GUI
                 FocusedTextControl.SetFocus();
                 if (BoundWindow != null)
                     FocusedTextControl.Resize(BoundWindow.Width, BoundWindow.Height);
-            }
-        }
+
+				if (!InputManager.CapturingStringInput())
+					InputManager.StartInputStringCapture();
+			}
+			else if (InputManager.CapturingStringInput())
+				InputManager.EndInputStringCapture();
+		}
 
         public bool TextAreaFocused()
         {
@@ -213,6 +218,8 @@ namespace LudicrousElectron.GUI
 				return false;
 			}
 
+			bool clearFocus = buttons.PrimaryClick;
+
 			NewHover = new List<UIButton>();
 			NewActive = new List<UIButton>();
 
@@ -220,6 +227,9 @@ namespace LudicrousElectron.GUI
 			{
 				UIButton button = element as UIButton;
                 HandleControlClick(button, buttons);
+
+				if (element == FocusedTextControl)
+					clearFocus = false;
 			}
 
 			foreach(var item in ActivatedControlls)
@@ -238,6 +248,9 @@ namespace LudicrousElectron.GUI
 
 			NewHover = null;
 			NewActive = null;
+
+			if (clearFocus)
+				SetFocusedTextArea(null);
 
 			return true;
 		}
