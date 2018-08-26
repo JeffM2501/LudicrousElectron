@@ -59,6 +59,11 @@ namespace LudicrousElectron.GUI
             Children.Add(child);
         }
 
+		public virtual void RemoveChild(GUIElement child)
+		{
+			Children.Remove(child);
+		}
+
 		public abstract void Draw(GUIRenderLayer layer);
         public virtual void Resize(int x, int y)
         {
@@ -209,6 +214,8 @@ namespace LudicrousElectron.GUI
 
 	public abstract class SingleDrawGUIItem :  GUIElement
 	{
+		public bool Show = true;
+
         public GUIMaterial DefaultMaterial = new GUIMaterial();
         public UIFillModes FillMode = UIFillModes.Tilled;
 
@@ -249,7 +256,8 @@ namespace LudicrousElectron.GUI
         public override void Draw(GUIRenderLayer layer)
 		{
             CheckMaterial();
-            layer.AddDrawable(this);
+			if (Show)
+				layer.AddDrawable(this);
 		}
 
 		public virtual void FlipTextureAxes(int x, int y)
