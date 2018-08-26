@@ -9,9 +9,10 @@ using OpenTK;
 
 namespace LudicrousElectron.GUI.Elements
 {
-
 	public class UIPanel : SingleDrawGUIItem
 	{
+		public bool NoDraw = false;
+
         public UIPanel(RelativeRect rect, Color color) : base(rect,color)
 		{
 			IgnoreMouse = true;
@@ -27,7 +28,15 @@ namespace LudicrousElectron.GUI.Elements
 			IgnoreMouse = true;
 		}
 
-        public override void Resize(int x, int y)
+		public override bool Draw()
+		{
+			if (NoDraw)
+				return true;
+
+			return base.Draw();
+		}
+
+		public override void Resize(int x, int y)
         {
             base.Resize(x, y);
 

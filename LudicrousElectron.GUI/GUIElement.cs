@@ -39,6 +39,27 @@ namespace LudicrousElectron.GUI
         public event EventHandler<GUIElement> GotDirty = null;
         public void SetDirty() { if (Inited) GotDirty?.Invoke(this, this); }
 
+		public bool Shown { get; protected set; } = true;
+		public void SetVisibility(bool vis)
+		{
+			Shown = vis;
+			foreach (var child in Children)
+				child.SetVisibility(vis);
+		}
+		public void Show()
+		{
+			Shown = true;
+			foreach (var child in Children)
+				child.Show();
+		}
+
+		public void Hide()
+		{
+			Shown = false;
+			foreach (var child in Children)
+				child.Hide();
+		}
+
 		protected GUIElement() { }
         protected GUIElement(RelativeRect rect)
         {
@@ -57,6 +78,7 @@ namespace LudicrousElectron.GUI
             child.Parent = this;
             child.ParentCanvas = ParentCanvas;
             Children.Add(child);
+			child.SetVisibility(Shown);
         }
 
 		public virtual void RemoveChild(GUIElement child)
@@ -65,7 +87,18 @@ namespace LudicrousElectron.GUI
 		}
 
 		public abstract void Draw(GUIRenderLayer layer);
-        public virtual void Resize(int x, int y)
+
+		public void Resize(float x, float y)
+		{
+			Resize((int)x, (int)y);
+		}
+
+		public void Resize(Vector2 size)
+		{
+			Resize((int)size.X, (int)size.Y);
+		}
+
+		public virtual void Resize(int x, int y)
         {
 			LastParentSize.X = x;
 			LastParentSize.Y = y;
@@ -214,8 +247,6 @@ namespace LudicrousElectron.GUI
 
 	public abstract class SingleDrawGUIItem :  GUIElement
 	{
-		public bool Show = true;
-
         public GUIMaterial DefaultMaterial = new GUIMaterial();
         public UIFillModes FillMode = UIFillModes.Tilled;
 
@@ -223,7 +254,7 @@ namespace LudicrousElectron.GUI
 		protected bool ReverseU = false;
 		protected bool ReverseV = false;
 
-        protected SingleDrawGUIItem():base(){ }
+		protected SingleDrawGUIItem():base(){ }
         protected SingleDrawGUIItem(RelativeRect rect) : base(rect) {}
 
         protected SingleDrawGUIItem(RelativeRect rect, Color color) : base(rect)
@@ -253,10 +284,10 @@ namespace LudicrousElectron.GUI
                 CurrentMaterial = GUIManager.GetMaterial(GetCurrentMaterial());
         }
 
-        public override void Draw(GUIRenderLayer layer)
+		public override void Draw(GUIRenderLayer layer)
 		{
             CheckMaterial();
-			if (Show)
+			if (Shown)
 				layer.AddDrawable(this);
 		}
 
