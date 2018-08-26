@@ -167,9 +167,6 @@ namespace LudicrousElectron.GUI.Elements
 			if (CursorImage == null)
 				SetupCursor();
 
-			if (CursorImage == null)
-				return;
-
 			if (GetCurrentText() == string.Empty)
 				CursorPostion.X = CursorImage.Rect.GetPixelSize().X * 0.5f;
 			else
