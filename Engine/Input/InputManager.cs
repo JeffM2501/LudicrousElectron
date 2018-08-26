@@ -26,6 +26,9 @@ namespace LudicrousElectron.Engine.Input
 			public bool PrimaryClick = false;
 			public bool SecondaryClick = false;
 
+			public int WheelTick = 0;
+			public int WheelAbs = 0;
+
             public bool AnyButtonIsDown()
             {
                 return PrimaryClick || SecondaryClick || PrimaryDown || SecondaryDown;
@@ -58,6 +61,12 @@ namespace LudicrousElectron.Engine.Input
 			args.Buttons.PrimaryDown = args.CursorState.IsButtonDown(MouseButton.Left + PrimaryMouseButton);
 			args.Buttons.SecondaryDown = args.CursorState.IsButtonDown(MouseButton.Left + SecondaryMouseButton);
 			args.ScreenPosition = new Vector2(args.CursorState.X, args.CursorState.Y);
+
+			args.Buttons.WheelAbs = args.CursorState.Wheel;
+			if (LastMouseState == null)
+				args.Buttons.WheelTick = 0;
+			else
+				args.Buttons.WheelTick = args.Buttons.WheelAbs - LastMouseState.Buttons.WheelAbs;
 
 			var origin = WindowManager.MainWindow.PointToClient(new System.Drawing.Point(args.CursorState.X,args.CursorState.Y));
 
