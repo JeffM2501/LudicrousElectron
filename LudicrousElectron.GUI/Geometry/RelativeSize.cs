@@ -44,7 +44,17 @@ namespace LudicrousElectron.GUI.Geometry
             return new RelativeSize(this, 0);
         }
 
-        public float ToScreen(int x, int y)
+		public float ToScreen(float x, float y)
+		{
+			return ToScreen((int)x, (int)y);
+		}
+
+		public float ToScreen(Vector2 size)
+		{
+			return ToScreen(size.X,size.Y);
+		}
+
+		public float ToScreen(int x, int y)
         {
             switch (Mode)
             {

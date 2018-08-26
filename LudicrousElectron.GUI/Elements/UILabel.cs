@@ -118,6 +118,16 @@ namespace LudicrousElectron.GUI.Elements
             }
         }
 
+		public int GetNominalFontHeight(float pixelHeight)
+		{
+			int fontSize = (int)((pixelHeight * 0.75f) + 1);
+
+			if (MaxTextSize > 0 && fontSize > MaxTextSize)
+				fontSize = MaxTextSize;
+
+			return fontSize;
+		}
+
         public override void Resize(int x, int y)
 		{
 			LastParentSize.X = x;
@@ -126,15 +136,11 @@ namespace LudicrousElectron.GUI.Elements
             RelativeSize heightCache = Rect.Height;
             RelativeSize widthCache = Rect.Width;
 
-            float pixelHeight = heightCache.ToScreen(x, y) * 0.75f;
             float pixelWidth = widthCache.ToScreen(x, y);
-            ActualFontSize = (int)(pixelHeight + 1);
+            ActualFontSize = GetNominalFontHeight(Rect.Height.ToScreen(LastParentSize));
             float textWidth = 0;
 
             string effectiveText = Text;
-
-            if (MaxTextSize > 0 && ActualFontSize > MaxTextSize)
-                ActualFontSize = MaxTextSize;
 
             switch (FittingMode)
             {
@@ -208,7 +214,7 @@ namespace LudicrousElectron.GUI.Elements
 
             foreach (var child in Children)
             {
-                child.Resize((int)pixelSize.X, (int)pixelSize.Y);
+                child.Resize(pixelSize);
             }
 
             Rect.Height = heightCache;

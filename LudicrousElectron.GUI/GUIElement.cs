@@ -108,7 +108,7 @@ namespace LudicrousElectron.GUI
             Rect.Resize(x, y);
             var PixelSize = Rect.GetPixelSize();
             foreach (var child in Children)
-                child.Resize((int)PixelSize.X, (int)PixelSize.Y);
+                child.Resize(PixelSize);
         }
 
         public virtual Vector2 GetScreenOrigin()

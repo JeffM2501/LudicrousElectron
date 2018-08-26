@@ -64,7 +64,7 @@ namespace LudicrousElectron.GUI
 
                     child.Rect.AnchorLocation = OriginLocation.LowerLeft;
 
-                    child.Resize((int)PixelSize.X, (int)PixelSize.Y);
+                    child.Resize(PixelSize);
 
                     originX += childSize + ChildSpacing;
                 }
@@ -76,7 +76,7 @@ namespace LudicrousElectron.GUI
                 foreach (var child in Children)
                 {
                     // we resize the child to get it's height first
-                    child.Resize((int)PixelSize.X, (int)PixelSize.Y);
+                    child.Resize(PixelSize);
 
                     float thisWidth = child.Rect.GetPixelSize().Y;
 
@@ -88,7 +88,7 @@ namespace LudicrousElectron.GUI
                     child.Rect.AnchorLocation = OriginTools.GetLowerAnchor(child.Rect.AnchorLocation);
 
                     // resize the child with the correct origin
-                    child.Resize((int)PixelSize.X, (int)PixelSize.Y);
+                    child.Resize(PixelSize);
 
                     originX += thisWidth + ChildSpacing;
                 }

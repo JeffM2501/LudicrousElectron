@@ -220,7 +220,7 @@ namespace LudicrousElectron.GUI
                 child.Rect.Height.Paramater = itemHeight;
 
                 // have the child size itself and it's children to it's new location
-                child.Resize((int)PixelSize.X, (int)PixelSize.Y);
+                child.Resize(PixelSize);
             }
         }
     }

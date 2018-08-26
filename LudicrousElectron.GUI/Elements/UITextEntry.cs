@@ -102,7 +102,7 @@ namespace LudicrousElectron.GUI.Elements
             AddChild(TextLabel);
 
             var thisSize = Rect.GetPixelSize();
-            TextLabel.Resize((int)thisSize.X, (int)thisSize.Y);
+            TextLabel.Resize(thisSize);
 
 			SetupCursor();
 
@@ -132,7 +132,7 @@ namespace LudicrousElectron.GUI.Elements
 					color = DefaultTextColor;
 
 				CursorImage.CurrentMaterial = GUIManager.GetMaterial(cursor.CachedTexture, color);
-				CursorImage.Resize((int)LastParentSize.X, (int)LastParentSize.Y);
+				CursorImage.Resize(LastParentSize);
 			}
 		}
 
