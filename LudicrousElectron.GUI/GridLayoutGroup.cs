@@ -13,7 +13,13 @@ namespace LudicrousElectron.GUI
     {
         public int Rows = 1;
         public int Columns = 1;
-        public List<int> ColSpanRows = new List<int>(); // the rows that span all
+
+		protected class ColSpanInfo
+		{
+			public int StartRow = 0;
+			public int Lenght = 1;
+		}
+        protected List<ColSpanInfo> ColSpanRows = new List<ColSpanInfo>(); // the rows that span all
 
         public float CellPadding = 0;
 
@@ -21,7 +27,6 @@ namespace LudicrousElectron.GUI
         {
             public int Row = 0;
             public int Col = 0;
-            public bool ColSpan = false;
         }
 
         public GridLayoutGroup() : base(null) { }
@@ -38,22 +43,16 @@ namespace LudicrousElectron.GUI
             Columns = cols;
         }
 
-        public GridLayoutGroup(RelativeRect rect, int rows, int cols, IEnumerable<int> fullrows) : base(rect)
-        {
-            IgnoreMouse = false;
-            Rows = rows;
-            Columns = cols;
-            ColSpanRows.AddRange(fullrows);
-        }
-
         public override void AddChild(GUIElement child)
         {
             GridLayoutInfo info = new GridLayoutInfo();
 
             for(int i = 0; i < Children.Count; i++)
             {
-                if (ColSpanRows.Contains(info.Row))
-                    info.Row++;
+				var colInfo = ColSpanRows.Find((x) => x.StartRow == info.Row);
+
+				if (colInfo != null)
+                    info.Row += colInfo.Lenght;
                 else
                 {
                     info.Col++;
@@ -67,7 +66,6 @@ namespace LudicrousElectron.GUI
                 if (info.Row > Rows)
                     return;
             }
-            info.ColSpan = info.Col == 0 && ColSpanRows.Contains(info.Row);
             child.LayoutTag = info;
             base.AddChild(child);
 
@@ -75,13 +73,18 @@ namespace LudicrousElectron.GUI
                 Resize((int)LastParentSize.X, (int)LastParentSize.Y);
         }
 
-        public bool SetColSpan(int row)
+        public bool SetColSpan(int row, int count = 1)
         {
             if (Children.Count != 0)
                 return false; // can't change layout after items are added.
 
-            if (!ColSpanRows.Contains(row))
-                ColSpanRows.Add(row);
+			if (ColSpanRows.Find((x) => x.StartRow == row) != null)
+				return false;
+
+			ColSpanInfo info = new ColSpanInfo();
+			info.StartRow = row;
+			info.Lenght = count;
+            ColSpanRows.Add(info);
 
             return true;
         }
@@ -92,11 +95,13 @@ namespace LudicrousElectron.GUI
         protected Vector2 ColSpanSize = Vector2.Zero;
 
         // find the lower left of the cell
-        protected Vector2 GetCellOrigin(int row, int col)
+        protected Vector2 GetCellOrigin(int row, int col, int count = 1)
         {
-            float y = CellPadding;
-            y += (row * CellSize.Y) + (row * CellPadding);
+			int startRow = row + count - 1;
 
+			float y = CellPadding;
+			y += (startRow * CellSize.Y) + (startRow * CellPadding);
+          
             float x = CellPadding;
             x += (col * CellSize.X) + (col * CellPadding);
 
@@ -178,18 +183,29 @@ namespace LudicrousElectron.GUI
                 if (info == null)
                     continue;
 
-                Vector2 thisCellSize = info.ColSpan ? ColSpanSize : CellSize;
+				Vector2 thisCellSize = CellSize;
+
+				var colInfo = ColSpanRows.Find((i) => i.StartRow == info.Row);
+				if (colInfo != null)
+				{
+					thisCellSize.X = ColSpanSize.X;
+					thisCellSize.Y = (ColSpanSize.Y * colInfo.Lenght) + (CellPadding * (colInfo.Lenght - 1));
+				}
 
                 OriginLocation location = child.Rect.AnchorLocation;
-                float itemHeight = CellSize.Y;
-                if (MaxChildSize > 0 && thisCellSize.Y > MaxChildSize)
-                {
-                    itemHeight = MaxChildSize;
-                    location = OriginTools.GetMiddleAnhcor(location);
-                }
+                float itemHeight = thisCellSize.Y;
+
+				if (colInfo == null || colInfo.Lenght == 1) // if the cell is larger than one high, they can't clamp it
+				{
+					if (MaxChildSize > 0 && thisCellSize.Y > MaxChildSize)
+					{
+						itemHeight = MaxChildSize;
+						location = OriginTools.GetMiddleAnhcor(location);
+					}
+				}
 
                 // compute where the child's origin needs to be for it's anchor relative to the cell
-                Vector2 childOrigin = GetChildOrigin(GetCellOrigin(info.Row, info.ColSpan ? 0 : info.Col), thisCellSize, itemHeight, location);
+                Vector2 childOrigin = GetChildOrigin(GetCellOrigin(info.Row, colInfo != null ? 0 : info.Col, colInfo != null ? colInfo.Lenght : 1), thisCellSize, itemHeight, location);
 
                 child.Rect.X.RelativeTo = RelativeLoc.Edge.Raw;
                 child.Rect.X.Paramater = childOrigin.X;
