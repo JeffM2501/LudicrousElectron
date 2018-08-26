@@ -109,13 +109,8 @@ namespace LudicrousElectron.Engine.Audio
                     toKill.Add(sound.Key);
                     EffectEnded?.Invoke(null, new SoundEventArgs(sound.Key));
                 }
-                else if (UsePostionalSound && NeedListenerUpdate)
-                {
-                    if (sound.Value.Emitter != null)
-                    {
-                        sound.Value.Instance.Apply3D(Listener, sound.Value.Emitter);
-                    }
-                }
+                else if (UsePostionalSound && NeedListenerUpdate && sound.Value.Emitter != null)
+					sound.Value.Instance.Apply3D(Listener, sound.Value.Emitter);
             }
             NeedListenerUpdate = false;
 
@@ -127,14 +122,11 @@ namespace LudicrousElectron.Engine.Audio
 
         private static void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
         {
-            if (MusicSet.Count > 0)
+            if (MusicSet.Count > 0 && MediaPlayer.State == MediaState.Stopped)
             {
-                if (MediaPlayer.State == MediaState.Stopped)
-                {
-                    string filename = MusicSet[0];
-                    MusicSet.RemoveAt(0);
-                    PlayMusic(filename);
-                }
+                string filename = MusicSet[0];
+                MusicSet.RemoveAt(0);
+                PlayMusic(filename);
             }
         }
 

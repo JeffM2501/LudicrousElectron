@@ -195,13 +195,10 @@ namespace LudicrousElectron.GUI
                 OriginLocation location = child.Rect.AnchorLocation;
                 float itemHeight = thisCellSize.Y;
 
-				if (colInfo == null || colInfo.Lenght == 1) // if the cell is larger than one high, they can't clamp it
+				if ((colInfo == null || colInfo.Lenght == 1) && (MaxChildSize > 0 && thisCellSize.Y > MaxChildSize)) // if the cell is larger than one high, they can't clamp it
 				{
-					if (MaxChildSize > 0 && thisCellSize.Y > MaxChildSize)
-					{
-						itemHeight = MaxChildSize;
-						location = OriginTools.GetMiddleAnhcor(location);
-					}
+					itemHeight = MaxChildSize;
+					location = OriginTools.GetMiddleAnhcor(location);
 				}
 
                 // compute where the child's origin needs to be for it's anchor relative to the cell

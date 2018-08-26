@@ -363,8 +363,6 @@ namespace LudicrousElectron.Types
 	{
 		public static Quaternion FromEuler(Vector3 angles)
 		{
-			double x, y, z, w;
-
 			double c1 = System.Math.Cos(angles.Y * 0.5f);
 			double c2 = System.Math.Cos(angles.Z * 0.5f);
 			double c3 = System.Math.Cos(angles.X * 0.5f);
@@ -373,10 +371,10 @@ namespace LudicrousElectron.Types
 			double s2 = System.Math.Sin(angles.Z * 0.5f);
 			double s3 = System.Math.Sin(angles.X * 0.5f);
 
-			w = c1 * c2 * c3 - s1 * s2 * s3;
-			x = s1 * s2 * c3 + c1 * c2 * s3;
-			y = s1 * c2 * c3 + c1 * s2 * s3;
-			z = c1 * s2 * c3 - s1 * c2 * s3;
+			double w = c1 * c2 * c3 - s1 * s2 * s3;
+			double x = s1 * s2 * c3 + c1 * c2 * s3;
+			double y = s1 * c2 * c3 + c1 * s2 * s3;
+			double z = c1 * s2 * c3 - s1 * c2 * s3;
 
 			return new Quaternion((float)x, (float)y, (float)z, (float)w);
 		}
