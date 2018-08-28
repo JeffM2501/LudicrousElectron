@@ -4,15 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 using LudicrousElectron.Engine.Audio;
-using LudicrousElectron.Engine.Collisions;
 using LudicrousElectron.Engine.Graphics.Textures;
 using LudicrousElectron.Engine.Window;
-
-using OpenTK.Input;
+using LudicrousElectron.Entities.Collisions;
 
 namespace LudicrousElectron.Engine
 {

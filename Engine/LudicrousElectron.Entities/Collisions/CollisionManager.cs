@@ -8,7 +8,7 @@ using Box2DNet.Dynamics;
 
 using LudicrousElectron.Types;
 
-namespace LudicrousElectron.Engine.Collisions
+namespace LudicrousElectron.Entities.Collisions
 {
 	public static class CollisionManager
 	{

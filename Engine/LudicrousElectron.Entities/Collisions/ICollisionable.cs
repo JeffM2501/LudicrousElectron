@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LudicrousElectron.Engine.Collisions
+namespace LudicrousElectron.Entities.Collisions
 {
 	public interface ICollisionable
 	{
