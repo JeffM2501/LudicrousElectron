@@ -82,13 +82,13 @@
       <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
       <Name>FNA</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LudicrousElectron.Entities\LudicrousElectron.Entities.csproj">
+      <Project>{ddd156cd-ae0d-4581-b895-4fe8fb58a88c}</Project>
+      <Name>LudicrousElectron.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LudicrousElectron.Types\LudicrousElectron.Types.csproj">
       <Project>{fb7f6b89-80bb-4f09-8384-39107b57b754}</Project>
       <Name>LudicrousElectron.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="LudicrousElectron.Entities\LudicrousElectron.Entities.csproj">
-      <Project>{ddd156cd-ae0d-4581-b895-4fe8fb58a88c}</Project>
-      <Name>LudicrousElectron.Entities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
