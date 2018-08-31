@@ -18,7 +18,7 @@ namespace LudicrousElectron.Engine
 
 		internal delegate void RerunCallback();
 
-		private static RerunCallback RerunFunciton = null;
+		private static RerunCallback RerunFunction = null;
 		private static bool IsRerun = false;
 
         public class EngineState : EventArgs
@@ -125,9 +125,9 @@ namespace LudicrousElectron.Engine
 
 				if (IsRerun)
 				{
-					RerunFunciton?.Invoke();
+					RerunFunction?.Invoke();
 					IsRerun = false;
-					RerunFunciton = null;
+					RerunFunction = null;
 				}
 				else
 					reallyDone = true;
@@ -141,7 +141,7 @@ namespace LudicrousElectron.Engine
 
 		internal static void ReRun(RerunCallback callback)
 		{
-			RerunFunciton = callback;
+			RerunFunction = callback;
 			IsRerun = true;
 		}
 
