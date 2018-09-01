@@ -21,6 +21,11 @@ namespace LudicrousElectron.Engine
 		private static RerunCallback RerunFunction = null;
 		private static bool IsRerun = false;
 
+        private static string WANIP = string.Empty;
+        private static bool WANIPValid = false;
+
+        public static string WANIPService = "https://api.ipify.org";
+
         public class EngineState : EventArgs
         {
             public int CurrentContextID = -1;
@@ -110,8 +115,20 @@ namespace LudicrousElectron.Engine
 			CollisionManager.Initalize();
             TextureManager.Startup();
 
+
+            WebClient wanPIClient = new WebClient();
+
+            wanPIClient.DownloadStringCompleted += WanPIClient_DownloadStringCompleted;
+            wanPIClient.DownloadStringAsync(new Uri(WANIPService));
+
             Running = true;
 		}
+
+        private static void WanPIClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            WANIPValid = true;
+            WANIP = e.Result;
+        }
 
         public static void Run()
 		{
@@ -222,5 +239,18 @@ namespace LudicrousElectron.Engine
 
 			return "127.0.0.1";
 		}
+
+        public static string GetWANIPString()
+        {
+            if (!WANIPValid)
+                System.Threading.Thread.Sleep(1000);
+            if (!WANIPValid)
+                System.Threading.Thread.Sleep(5000);
+
+            if (!WANIPValid)
+                return GetLocalIPString();
+
+            return WANIP;
+        }
     }
 }
