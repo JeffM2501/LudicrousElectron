@@ -226,7 +226,7 @@ namespace LudicrousElectron.GUI.Elements
 
 		public virtual void StartHover()
         {
-			if (Hovered)
+			if (Hovered || !Shown)
 				return;
 
 			Hovered = true;
@@ -239,7 +239,7 @@ namespace LudicrousElectron.GUI.Elements
 
         public virtual void EndHover()
         {
-			if (!Hovered)
+			if (!Hovered || !Shown)
 				return;
 
 			Hovered = false;
@@ -249,7 +249,7 @@ namespace LudicrousElectron.GUI.Elements
 
         public virtual void Check()
         {
-            if (Checked)
+            if (Checked || !Shown)
                 return;
             Checked = true;
 
@@ -259,7 +259,7 @@ namespace LudicrousElectron.GUI.Elements
 
         public virtual void UnCheck()
         {
-            if (!Checked)
+            if (!Checked || !Shown)
                 return;
             Checked = false;
             FlushMaterials();
@@ -275,6 +275,9 @@ namespace LudicrousElectron.GUI.Elements
 
 		public virtual void Click()
 		{
+            if (!Shown)
+                return;
+
 			Clicked?.Invoke(this, this);
 
 			if (!string.IsNullOrEmpty(ClickSound))
