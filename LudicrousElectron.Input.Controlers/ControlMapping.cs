@@ -199,7 +199,7 @@ namespace LudicrousElectron.Input.Controlers
 							PositiveIndex = 0;
 							if (parts[0] != string.Empty)
 							{
-								Keyboard.KeyCodes code = Keyboard.KeyCodes.Unknown;
+								Keyboard.KeyCodes code;
 								if (Enum.TryParse(parts[0], out code))
 									PositiveIndex = (int)code;
 							}
@@ -207,7 +207,7 @@ namespace LudicrousElectron.Input.Controlers
 							if (parts.Length > 1 || parts[1] != string.Empty)
 							{
 								NegativeButton = board.Keys;
-								Keyboard.KeyCodes code = Keyboard.KeyCodes.Unknown;
+								Keyboard.KeyCodes code;
 								if (Enum.TryParse(parts[0], out code))
 									NegativeIndex = (int)code;
 							}
@@ -449,7 +449,7 @@ namespace LudicrousElectron.Input.Controlers
 
 		public event EventHandler<DeviceNotFoundEventArguments> DeviceNotFound = null;
 
-		protected void BindInput(Command cmd, Command.Input input, Device device = null, Device.Control control = null)
+		private static void BindInput(Command cmd, Command.Input input, Device device = null, Device.Control control = null)
 		{
 			cmd.Inputs.Add(input);
 

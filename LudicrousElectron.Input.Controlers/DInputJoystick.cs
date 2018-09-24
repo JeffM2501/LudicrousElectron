@@ -280,8 +280,8 @@ namespace LudicrousElectron.Input.Controlers
 					if (item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.Axis) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.RelativeAxis) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.AbsoluteAxis))
 					{
 						axes.Add(item);
-						var axis = new DInputAxis(JoystickOffset.X + item.Offset);// + (item.ObjectId.InstanceNumber * 4));
-						axis.Name = /*item.Name + "(" + */ axis.Offset.ToString()/* + ")"*/;
+						var axis = new DInputAxis(JoystickOffset.X + item.Offset);
+						axis.Name = axis.Offset.ToString();
 						DAxes.Add(axis);
 					}
 					else if (item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.PushButton) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.Button) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.ToggleButton))
@@ -321,7 +321,6 @@ namespace LudicrousElectron.Input.Controlers
 
 		public override void UpdateState()
 		{
-			List<double> axes = new List<double>();
 			if (Aquired)
 			{
 				JoystickState state = new JoystickState();

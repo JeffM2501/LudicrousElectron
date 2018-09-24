@@ -45,7 +45,6 @@ namespace LudicrousElectron.Input.Controlers
 
 			if (CommandToTest as ControlMapping.Axis != null)
             {
-                ControlMapping.Axis axis = CommandToTest as ControlMapping.Axis;
 				ControlMapping.Axis.AxisInput aInput = new ControlMapping.Axis.AxisInput();
 
 				if (InputToUpdate != null && InputToUpdate as ControlMapping.Axis.AxisInput != null)
@@ -94,7 +93,6 @@ namespace LudicrousElectron.Input.Controlers
 			}
             else if (CommandToTest as ControlMapping.Button != null)
             {
-                ControlMapping.Button button = CommandToTest as ControlMapping.Button;
 				ControlMapping.Button.ButtonInput bInput = new ControlMapping.Button.ButtonInput();
 
 				if (InputToUpdate != null && InputToUpdate as ControlMapping.Button.ButtonInput != null)
