@@ -12,7 +12,7 @@ namespace LudicrousElectron.Input.Controlers
     public class DInputKeyboard : Keyboard
     {
         public override string DeviceName { get => Device.InstanceName; }
-        public override string GUID { get => Device.InstanceGuid.ToString(); protected set { return; } }
+        public override string GUID { get => Device.InstanceGuid.ToString(); }
 
         protected DeviceInstance Device = null;
 
@@ -23,7 +23,7 @@ namespace LudicrousElectron.Input.Controlers
 
             public DIKeys(DirectInput di)
             {
-                DIBoard = new SharpDX.DirectInput.Keyboard(di); ;
+                DIBoard = new SharpDX.DirectInput.Keyboard(di);
             }
 
             public override double GetValue(int index)

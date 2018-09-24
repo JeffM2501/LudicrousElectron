@@ -13,7 +13,7 @@ namespace LudicrousElectron.Input.Controlers
 		internal static DirectInput DInput = null;
 
 		public override string DeviceName { get => Device.InstanceName; }
-		public override string GUID { get => Device.InstanceGuid.ToString(); protected set { return; } }
+		public override string GUID { get => Device.InstanceGuid.ToString(); }
 
 		protected DeviceInstance Device = null;
 
@@ -81,9 +81,6 @@ namespace LudicrousElectron.Input.Controlers
 						NominalAxis = NomialAxes.Z;
 						break;
 					case JoystickOffset.Sliders0:
-						NominalAxis = NomialAxes.Other;
-						MotionMode = MotionModes.AbsoluteParametric;
-						break;
 					case JoystickOffset.Sliders1:
 						NominalAxis = NomialAxes.Other;
 						MotionMode = MotionModes.AbsoluteParametric;
@@ -268,7 +265,6 @@ namespace LudicrousElectron.Input.Controlers
 		public DInputJoystick(DirectInput di, DeviceInstance instance)
 		{
 			Device = instance;
-			GUID = instance.InstanceGuid.ToString();
 
 			DIStick = new SharpDX.DirectInput.Joystick(di, instance.InstanceGuid);
 			DIStick.Properties.BufferSize = 2048;
@@ -279,8 +275,6 @@ namespace LudicrousElectron.Input.Controlers
 			{
 				try
 				{
-					var info = DIStick.GetObjectPropertiesById(item.ObjectId);
-
 					item.Offset = RemapAxisOffset(item.Name, item.Offset);
 
 					if (item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.Axis) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.RelativeAxis) || item.ObjectId.Flags.HasFlag(DeviceObjectTypeFlags.AbsoluteAxis))
@@ -298,14 +292,10 @@ namespace LudicrousElectron.Input.Controlers
 					{
 						DHats.Add(new DHat(JoystickOffset.PointOfViewControllers0 + (item.ObjectId.InstanceNumber * 4)));
 					}
-					else
-					{
-
-					}
 				}
 				catch (Exception)
 				{
-
+					// skip the object
 				}
 			}
 
@@ -353,10 +343,6 @@ namespace LudicrousElectron.Input.Controlers
 					{
 						Controls[item.Offset].BufferUpdate(item);
 						CallCTLChange(Controls[item.Offset] as Control);
-					}
-					else
-					{
-						int i = (int)item.Offset;
 					}
 				}
 			}

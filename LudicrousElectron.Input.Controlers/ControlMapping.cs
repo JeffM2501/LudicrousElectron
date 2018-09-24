@@ -386,7 +386,7 @@ namespace LudicrousElectron.Input.Controlers
 						if (board == null)
 							return;
 
-						Keyboard.KeyCodes code = Keyboard.KeyCodes.Unknown;
+						Keyboard.KeyCodes code;
 						if (Enum.TryParse(BoundInputName, out code))
 							BoundIndex = (int)code;
 					}

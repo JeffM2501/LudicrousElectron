@@ -58,7 +58,7 @@ namespace LudicrousElectron.Input.Controlers
                 }
                 catch (Exception)
                 {
-
+					// just continue on to the next device, ignore this one
                 }
             }
             

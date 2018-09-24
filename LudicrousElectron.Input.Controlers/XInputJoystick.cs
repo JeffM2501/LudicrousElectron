@@ -14,7 +14,7 @@ namespace LudicrousElectron.Input.Controlers
         protected Controller XIController = null;
 
         public override string DeviceName { get => "XBox Controller"; }
-        public override string GUID { get => "XINPUT_CONTROLLER_" + XIController.UserIndex.ToString(); protected set { return; } }
+        public override string GUID { get => "XINPUT_CONTROLLER_" + XIController.UserIndex.ToString(); }
 
 		public override StickTypes StickType => StickTypes.Gamepad;
 

@@ -130,18 +130,14 @@ namespace LudicrousElectron.Input.Controlers
 
 			if (CommandToTest as ControlMapping.Axis != null)
             {
-                ControlMapping.Axis axis = CommandToTest as ControlMapping.Axis;
 				ControlMapping.Axis.AxisInput aInput = new ControlMapping.Axis.AxisInput();
 
 				if (InputToUpdate != null && InputToUpdate as ControlMapping.Axis.AxisInput != null)
 					aInput = InputToUpdate as ControlMapping.Axis.AxisInput;
 
 				aInput.BoundInput = ControlMapping.Command.Input.BoundInputTypes.Key;
-                if (!SetPositiveKeyAxis && aInput.DeviceName != string.Empty)
-                {
-                    if (aInput.DeviceName != board.DeviceName)
-                        return;
-                }
+                if (!SetPositiveKeyAxis && aInput.DeviceName != string.Empty && aInput.DeviceName != board.DeviceName)
+					return;
 
 				aInput.DeviceName = board.DeviceName;
 				aInput.DeviceGUID = board.GUID;
@@ -162,7 +158,6 @@ namespace LudicrousElectron.Input.Controlers
             }
             else if (CommandToTest as ControlMapping.Button != null)
             {
-                ControlMapping.Button button = CommandToTest as ControlMapping.Button;
 				ControlMapping.Button.ButtonInput bInput = new ControlMapping.Button.ButtonInput();
 
 				if (InputToUpdate != null && InputToUpdate as ControlMapping.Button.ButtonInput != null)

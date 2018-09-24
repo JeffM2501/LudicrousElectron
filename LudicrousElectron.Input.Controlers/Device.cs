@@ -9,7 +9,7 @@ namespace LudicrousElectron.Input.Controlers
     public class Device
     {
         public virtual string DeviceName { get; } = string.Empty;
-        public virtual string GUID { get; protected set; } = string.Empty;
+        public virtual string GUID { get; } = string.Empty;
 
         public class Control : EventArgs
         {
