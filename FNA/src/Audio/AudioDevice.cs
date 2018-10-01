@@ -125,9 +125,7 @@ namespace Microsoft.Xna.Framework.Audio
 				FNALoggerEXT.LogWarn("ALDevice already exists, overwriting!");
 			}
 
-			bool disableSound = Environment.GetEnvironmentVariable(
-				"FNA_AUDIO_DISABLE_SOUND"
-			) == "1";
+			bool disableSound = Environment.GetEnvironmentVariable( "FNA_AUDIO_DISABLE_SOUND" ) == "1";
 
 			if (disableSound)
 			{
