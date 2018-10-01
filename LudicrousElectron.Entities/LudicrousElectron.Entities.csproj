@@ -46,10 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Box2DNet\Box2DNet\Box2DNet.csproj">
-      <Project>{8dce88bd-5355-4aed-b7fa-6844ec4fb9b2}</Project>
-      <Name>Box2DNet</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LudicrousElectron.Types\LudicrousElectron.Types.csproj">
       <Project>{fb7f6b89-80bb-4f09-8384-39107b57b754}</Project>
       <Name>LudicrousElectron.Types</Name>

@@ -111,10 +111,7 @@ namespace LudicrousElectron.Engine
         public static void Setup()
 		{
 			SoundManager.Setup();
-
-			CollisionManager.Initalize();
             TextureManager.Startup();
-
 
             WebClient wanPIClient = new WebClient();
 

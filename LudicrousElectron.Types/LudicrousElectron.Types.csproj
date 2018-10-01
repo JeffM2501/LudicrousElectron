@@ -50,6 +50,8 @@
     <Compile Include="Rect2Di.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vector2i.cs" />
+    <Compile Include="Volumes\IntersectionTypes.cs" />
+    <Compile Include="Volumes\Sphere.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />

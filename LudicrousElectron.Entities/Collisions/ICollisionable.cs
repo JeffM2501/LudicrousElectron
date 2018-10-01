@@ -8,5 +8,6 @@ namespace LudicrousElectron.Entities.Collisions
 {
 	public interface ICollisionable
 	{
+
 	}
 }
