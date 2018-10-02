@@ -68,6 +68,7 @@
     <Compile Include="GUIManager.cs" />
     <Compile Include="GUIRenderLayer.cs" />
     <Compile Include="HorzontalLayoutGroup.cs" />
+    <Compile Include="ICollisionable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\FontManager.cs" />
     <Compile Include="VerticalLayoutGroup.cs" />
