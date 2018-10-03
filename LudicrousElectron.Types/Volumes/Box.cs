@@ -10,9 +10,9 @@ namespace LudicrousElectron.Types.Volumes
 {
     public class Box : Volume
     {
-        public virtual Vector3d Center { get; set; } = Vector3d.Zero;
+        public virtual Vector3d Center { get; } = Vector3d.Zero;
         public Vector3 Size = Vector3.Zero;
-        public virtual Quaterniond Orientation { get; set; } = Quaterniond.Identity;
+        public virtual Quaterniond Orientation { get; } = Quaterniond.Identity;
 
         public override ColissionResults CheckCollision(Volume other)
         {

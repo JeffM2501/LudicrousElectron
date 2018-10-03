@@ -11,7 +11,7 @@ namespace LudicrousElectron.Types.Volumes
     public class Sphere : Volume
     {
         public double Radius = 0;
-        public virtual Vector3d CenterPoint { get; set; } = Vector3d.Zero;
+        public virtual Vector3d CenterPoint { get; } = Vector3d.Zero;
 
         public override ColissionResults CheckCollision(Volume other)
         {
