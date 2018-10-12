@@ -16,5 +16,10 @@ namespace LudicrousElectron.Entities.Collisions.Volumes
         public GetCenterCB GetCenter = null;
 
         public override Vector3d CenterPoint { get { if (GetCenter != null) return GetCenter(); return Vector3d.Zero; } }
-    }
+
+		public CollisionSphere()
+		{
+			Radius = 100;
+		}
+	}
 }
